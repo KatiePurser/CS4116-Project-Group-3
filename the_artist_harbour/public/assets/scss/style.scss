@@ -1,0 +1,27 @@
+:root {
+    --primary-color: #82689A;
+    --secondary-color: #E2D4F0;
+    --success-color: #5ec777;
+    --danger-color: #b9555f;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+
+    --navbar-shadow: rgba(0, 0, 0, 0.1);
+    --btn-bg: #E2D4F0;
+    --btn-hover-bg: #68616e;
+    --text-color: white;
+    
+}
+
+/* Custom classes using variables */
+.bg-primary-custom { background-color: var(--primary-color) !important; }
+.text-primary-custom { color: var(--primary-color) !important; }
+.btn-primary-custom {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary { background-color: var(--secondary-color);
+}
+
+/* Use this way: <button class="btn btn-primary-custom">Custom Button</button> */
