@@ -1,0 +1,1 @@
+<!-- Site wide configuration like DB credentials... -->
