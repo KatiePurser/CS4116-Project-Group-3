@@ -7,7 +7,7 @@
     <title>MyApp</title>
 
     <!-- Font we have chosen for design -->
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">

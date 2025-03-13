@@ -7,7 +7,7 @@
     <title>MyApp</title>
 
     <!-- Font we have chosen for design -->
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -20,8 +20,9 @@
 
     <style>
         .navbar {
-            padding: 15px;
             background-color: #82689A;
+            position: fixed;
+
         }
 
         .nav-link {
@@ -31,23 +32,22 @@
         }
 
         .nav-link:hover {
-            color: #49375a;
+            color: #49375a !important;
         }
 
         .navbar-brand {
             font-weight: bold;
             font-size: 1.5rem;
-            color: white;
+            color: white !important;
         }
 
         .navbar-brand:hover {
-            color: #49375a;
+            color: #49375a !important;
         }
 
         .search-bar {
             padding: 10px;
             max-width: 500px;
-            /* Responsive */
             width: 100%;
         }
     </style>
@@ -76,19 +76,7 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="profile.php">Profile</a></li>
-
-                    <!-- making this list item into a drop down box for catagories -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-bs-toggle="dropdown">
-                            Categories
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="Workshops.php">Workshops</a></li>
-                            <li><a class="dropdown-item" href="Commissions.php">Commissions</a></li>
-                        </ul>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="profile.php">Business</a></li>
                 </ul>
 
                 <div class="d-flex align-items-center flex-grow-1">
@@ -111,11 +99,6 @@
             </div>
         </div>
     </nav>
-
-
-
-
-
 </body>
 
 </html>
