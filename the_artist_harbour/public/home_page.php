@@ -26,9 +26,9 @@
         //if there are at least 10 entries in the table, iterate through the top 10 and lay them out
         //if there are less than 10, just display however many there are 
             
-        while(){
+        // while(){
             
-        }
+        // }
         ?>
 
         <div class="row">
