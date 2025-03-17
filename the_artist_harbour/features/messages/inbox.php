@@ -1,3 +1,9 @@
+<?php
+// filepath: c:\xampp\htdocs\the_artist_harbour\features\messages\inbox.php
+
+// Include the file that fetches and groups senders
+include __DIR__ . '/fetch_senders.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,47 +16,49 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        div {
+            padding: 0 !important;
+        }
+    </style>
 </head>
 
 <body>
-    <?php include __DIR__ . '/../../templates/header.php'; ?>
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-2 px-0">
+            <div class="col-12">
+                <?php include __DIR__ . '/../../templates/header.php'; ?>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-1">
                 <?php include __DIR__ . '/../../templates/sidebar.php'; ?>
             </div>
 
-            <div class="col-md-3 border-end">
-                <h2>Inbox</h2>
-                <ul class="list-group">
-                    <li class="list-group-item">Message 1</li>
-                    <li class="list-group-item">Message 2</li>
-                    <li class="list-group-item">Message 3</li>
-                    <li class="list-group-item">Message 4</li>
+            <!-- Inbox Panel -->
+            <div class="col-5">
+                <ul id="inbox">
+                    <?php foreach ($senders as $sender_id => $sender_name): ?>
+                        <li class="sender-item">
+                            <a href="?sender_id=<?php echo $sender_id; ?>">
+                                <?php echo $sender_name; ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
 
-            <div class="col-md-7">
-                <h2>Chat</h2>
-                <div class="chat-box border p-3 mb-3" style="height: 400px; overflow-y: scroll;">
-                    <div class="message mb-2">
-                        <strong>User 1:</strong> Hello!
-                    </div>
-                    <div class="message mb-2">
-                        <strong>User 2:</strong> Hi!
-                    </div>
-                    <!-- Add script to retrieve messages from the db -->
-                </div>
-                <form>
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Type a message">
-                        <button class="btn btn-primary" type="button">Send</button>
-                    </div>
-                </form>
+            <!-- Chat Panel -->
+            <div class="col-6" id="chat-panel">
+                <?php include __DIR__ . '/fetch_message_content.php'; ?>
             </div>
         </div>
+
     </div>
+
 </body>
 
 </html>
