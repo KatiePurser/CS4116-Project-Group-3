@@ -5,4 +5,8 @@
     font-family: "Amarante", cursive;
     font-weight: 400;
   }
+
+  body {
+    padding-top: 73.6px; /* Height of header */
+  }
   

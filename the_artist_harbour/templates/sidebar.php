@@ -29,9 +29,6 @@
             <li class="sidebar-item"><a class="sidebar-link" href="#">Messages</a></li>
         </ul>
     </div>
-    <div class="sidebar-sign-out">
-        <button class="sidebar-sign-out-button">Sign Out</button>
-    </div>
 </nav>
 
 <style>
@@ -40,18 +37,22 @@
     }
 
     .sidebar {
-        background-color: #82689A;
-        height: 100vh;
         position: fixed;
-        display: flex;
-        flex-direction: column;
-        width: 10%;
-        border-top: 2px solid white;
-        padding: none;
+        top: 73.6px;
+        left: 0;
+        height: calc(100vh - 73.6px);
+        background-color: #82689A;
+        color: white;
+        overflow-y: auto;
+        width: 8.333%;
+
     }
 
     .sidebar-menu {
         flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        width: 100%
     }
 
     .sidebar-nav-list {
@@ -74,23 +75,6 @@
 
     .sidebar-link:hover,
     .sidebar-link:focus {
-        color: #49375a;
-    }
-
-    .sidebar-sign-out {
-        text-align: center;
-    }
-
-    .sidebar-sign-out-button {
-        background: none;
-        border: none;
-        color: white;
-        cursor: pointer;
-        font-size: 1rem;
-    }
-
-    .sidebar-sign-out-button:hover,
-    .sidebar-sign-out-button:focus {
         color: #49375a;
     }
 

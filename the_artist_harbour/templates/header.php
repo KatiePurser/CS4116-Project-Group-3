@@ -43,10 +43,11 @@
 
 <style>
     .navbar {
-        background-color: #82689A;
-        width: 100%;
-        position: sticky;
+        position: fixed;
         top: 0;
+        width: 100%;
+        z-index: 1000;
+        background-color: #82689A;
     }
 
     .nav-link {

@@ -1,3 +1,6 @@
+<?php
+require_once __DIR__ . '/fetch_senders.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,47 +13,82 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        div {
+            padding: 0 !important;
+        }
+
+        .inbox {
+            background-color: #DDD2E5;
+        }
+
+        .inbox-title-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            text-align: center;
+            border-bottom: 1px solid #49375a;
+        }
+
+        .inbox-title {
+            padding: 10px;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #49375a;
+        }
+
+        .container-fluid {
+            background-color: #DDD2E5;
+        }
+    </style>
 </head>
 
 <body>
-    <?php include __DIR__ . '/../../templates/header.php'; ?>
-
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-2 px-0">
+        <div class="row g-0">
+            <div class="col-12">
+                <?php include __DIR__ . '/../../templates/header.php'; ?>
+            </div>
+        </div>
+
+        <div class="row g-0">
+            <!-- Sidebar -->
+            <div class="col-1">
                 <?php include __DIR__ . '/../../templates/sidebar.php'; ?>
             </div>
 
-            <div class="col-md-3 border-end">
-                <h2>Inbox</h2>
-                <ul class="list-group">
-                    <li class="list-group-item">Message 1</li>
-                    <li class="list-group-item">Message 2</li>
-                    <li class="list-group-item">Message 3</li>
-                    <li class="list-group-item">Message 4</li>
+            <!-- Inbox Panel -->
+            <div class="col-3 inbox">
+
+                <div class="inbox-title-container">
+                    <p class="inbox-title">Messages</p>
+                </div>
+
+                <ul id="inbox">
+                    <?php if (!empty($senders)): ?>
+                        <?php foreach ($senders as $sender_id => $sender_name): ?>
+                            <li class="sender-item">
+                                <a href="?sender_id=<?php echo $sender_id; ?>">
+                                    <?php echo $sender_name; ?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li>Inbox is Empty!</li>
+                    <?php endif; ?>
                 </ul>
             </div>
 
-            <div class="col-md-7">
-                <h2>Chat</h2>
-                <div class="chat-box border p-3 mb-3" style="height: 400px; overflow-y: scroll;">
-                    <div class="message mb-2">
-                        <strong>User 1:</strong> Hello!
-                    </div>
-                    <div class="message mb-2">
-                        <strong>User 2:</strong> Hi!
-                    </div>
-                    <!-- Add script to retrieve messages from the db -->
-                </div>
-                <form>
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Type a message">
-                        <button class="btn btn-primary" type="button">Send</button>
-                    </div>
-                </form>
+            <!-- Chat Panel -->
+            <div class="col-8" id="chat-panel">
+                <?php require_once __DIR__ . '/fetch_message_content.php'; ?>
             </div>
         </div>
+
     </div>
+
 </body>
 
 </html>
