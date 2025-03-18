@@ -1,32 +1,30 @@
-<!-- Dropdown menu for small screens-->
-<div class="dropdown-container d-lg-none p-2">
-    <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            Dashboard
-        </button>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Account Details</a></li>
-            <li><a class="dropdown-item" href="#">Service Requests</a></li>
-            <li><a class="dropdown-item" href="#">Business Profile</a></li>
-            <li><a class="dropdown-item" href="#">Messages</a></li>
-            <li>
-                <hr class="dropdown-divider">
-            </li>
-            <li>
-                <button class="dropdown-item sidebar-sign-out-button">Sign Out</button>
-            </li>
-        </ul>
-    </div>
-</div>
-
-<!-- Sidebar menu for large screens-->
-<nav class="sidebar d-none d-lg-flex">
+<nav class="sidebar">
     <div class="sidebar-menu">
         <ul class="sidebar-nav-list">
-            <li class="sidebar-item"><a class="sidebar-link" href="#">Account Details</a></li>
-            <li class="sidebar-item"><a class="sidebar-link" href="#">Service Requests</a></li>
-            <li class="sidebar-item"><a class="sidebar-link" href="#">Business Profile</a></li>
-            <li class="sidebar-item"><a class="sidebar-link" href="#">Messages</a></li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" href="#">
+                    <i class="bi bi-person"></i>
+                    <span class="d-none d-xl-inline">Account Details</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" href="#">
+                    <i class="bi bi-briefcase"></i>
+                    <span class="d-none d-xl-inline">Service Requests</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" href="#">
+                    <i class="bi bi-building"></i>
+                    <span class="d-none d-xl-inline">Business Profile</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" href="#">
+                    <i class="bi bi-envelope"></i>
+                    <span class="d-none d-xl-inline">Messages</span>
+                </a>
+            </li>
         </ul>
     </div>
 </nav>
@@ -34,6 +32,7 @@
 <style>
     body {
         margin: 0;
+        font-size: 16px;
     }
 
     .sidebar {
@@ -45,14 +44,14 @@
         color: white;
         overflow-y: auto;
         width: 8.333%;
-
+        transition: width 0.3s;
     }
 
     .sidebar-menu {
         flex-grow: 1;
         display: flex;
         flex-direction: column;
-        width: 100%
+        width: 100%;
     }
 
     .sidebar-nav-list {
@@ -71,6 +70,13 @@
         color: white;
         text-decoration: none;
         font-weight: bold;
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem;
+    }
+
+    .sidebar-link i {
+        margin-right: 10px;
     }
 
     .sidebar-link:hover,
@@ -84,43 +90,50 @@
         border: none;
     }
 
-    .dropdown-container {
-        position: fixed;
+
+    @media (max-width: 1200px) {
+        .sidebar-link {
+            justify-content: center;
+        }
+
+        .sidebar-link i {
+            font-size: 1.2rem;
+        }
     }
 
-    .dropdown-menu {
-        background-color: #82689A;
-        text-align: center;
-        color: white;
+    @media (max-width: 992px) {
+        .sidebar-link {
+            justify-content: center;
+        }
+
+        .sidebar-link i {
+            font-size: 1.2rem;
+        }
+
     }
 
-    .dropdown-item {
-        color: white;
-    }
-
-    .dropdown-toggle {
-        background-color: #82689A;
-        color: white;
-        border: none;
-    }
-
-    .dropdown-toggle:hover {
-        background-color: #49375a;
-    }
-
-    .dropdown-toggle:focus {
-        background-color: #49375a !important;
-        box-shadow: none;
-    }
-
-    .dropdown-toggle:active {
-        background-color: #49375a !important;
-        box-shadow: none;
-    }
-
-    @media (max-width: 991px) {
+    @media (max-width: 768px) {
         .sidebar {
-            width: 100%;
+            width: 16.667%;
+        }
+
+        .sidebar-link {
+            justify-content: center;
+        }
+
+        .sidebar-link i {
+            font-size: 1.2rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .sidebar-link {
+            justify-content: center;
+        }
+
+        .sidebar-link i {
+            font-size: 1.2rem;
+
         }
     }
 </style>
