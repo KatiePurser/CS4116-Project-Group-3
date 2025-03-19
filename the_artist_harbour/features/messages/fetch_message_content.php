@@ -1,9 +1,11 @@
 <?php
 require_once __DIR__ . '/../../utilities/databaseHandler.php';
 
+$response = [];
+
 if (isset($_GET['sender_id'])) {
     $sender_id = $_GET['sender_id'];
-    $receiver_id = 2; // Replace with real ID
+    $receiver_id = 5; // Replace with real ID
 
     $sql = "SELECT * FROM messages 
             WHERE (sender_id = $sender_id AND receiver_id = $receiver_id) 
@@ -14,16 +16,18 @@ if (isset($_GET['sender_id'])) {
     if ($messages !== null && count($messages) > 0) {
         foreach ($messages as $message) {
             $is_sender = $message['sender_id'] == $sender_id;
-            $message_class = $is_sender ? 'sender-message' : 'receiver-message';
-            echo "<div class='message $message_class'>";
-            echo "<p>" . $message['text'] . "</p>";
-            echo "<small>Sent on: " . $message['created_at'] . "</small>";
-            echo "</div><hr>";
+            $response[] = [
+                'text' => $message['text'],
+                'created_at' => $message['created_at'],
+                'is_sender' => $is_sender
+            ];
         }
     } else {
-        echo "No messages found between you and this sender.";
+        $response['error'] = "No messages found between you and this sender.";
     }
 } else {
-    echo "<h1>Select a conversation to view</h1>";
+    $response['error'] = "No sender ID provided.";
 }
+
+return $response;
 ?>

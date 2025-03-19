@@ -25,11 +25,11 @@
         </div>
 
         <div class="row g-0">
-            <div class="col-1">
+            <div class="col-2 col-md-1">
                 <?php include __DIR__ . '/templates/sidebar.php'; ?>
             </div>
 
-            <div class="col-11">
+            <div class="col-10 col-md-11">
                 <h1>CONTENT</h1>
                 <h1>CONTENT</h1>
                 <h1>CONTENT</h1>
