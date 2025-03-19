@@ -13,7 +13,7 @@
         
     </head>
     <body>
-        <?php include __DIR__ . '/../includes/header.php'; ?>
+        <?php include __DIR__ . '/../templates/header.php'; ?>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12 text-center">
@@ -27,63 +27,84 @@
             include_once("DatabaseHandler.php");
             //connect to DB
             $sql = "SELECT * FROM services ORDER BY rating";
-            $result = make_select_query($sql);
+            $result = DatabaseHandler::make_select_query($sql);
             $sql = "SELECT COUNT(*) FROM services";
-            $count = make_select_query($sql);
-            if($count>=12){
-                $i=0;
-                while($i<3){
-                    $service = mysqli_fetch_assoc($result);
-                    ?>
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="card hovercard text-center">
-                                <img class="card-img-top" src="<?php echo $service['image']; ?>">
-                                <div class="card-body">
-                                    <h3 class="card-title"><?php echo $service['name']; ?></h3>
-                                    <h4 class="card-subtitle"><?php echo $service['price']; ?></h4>
-                                    <p class="card-text"><?php echo $service['rating']; ?></p>
-                                </div>
+            $count = DatabaseHandler::make_select_query($sql);
+            while($i<12 && $i<=$count-4){
+                $service = mysqli_fetch_assoc($result);
+                ?>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="card hovercard text-center">
+                            <img class="card-img-top" src="<?php echo $service['image']; ?>">
+                            <div class="card-body">
+                                <h3 class="card-title"><?php echo $service['name']; ?></h3>
+                                <h4 class="card-subtitle"><?php echo $service['price']; ?></h4>
+                                <p class="card-text"><?php echo $service['rating']; ?></p>
                             </div>
                         </div>
                     </div>
-                        </div>
-                        <?php $service = mysqli_fetch_assoc($result); ?>
-                        <div class="col-4">
-                            <div class="card hovercard text-center">
-                                <img class="card-img-top" src="<?php echo $service['image']; ?>">
-                                <div class="card-body">
-                                    <h3 class="card-title"><?php echo $service['name']; ?></h3>
-                                    <h4 class="card-subtitle"><?php echo $service['price']; ?></h4>
-                                    <p class="card-text"><?php echo $service['rating']; ?></p>
-                                </div>
-                            </div>
-                        </div>
-                        <?php $service = mysqli_fetch_assoc($result); ?>
-                        <div class="col-4">
-                            <div class="card hovercard text-center">
-                                <img class="card-img-top" src="<?php echo $service['image']; ?>">
-                                <div class="card-body">
-                                    <h3 class="card-title"><?php echo $service['name']; ?></h3>
-                                    <h4 class="card-subtitle"><?php echo $service['price']; ?></h4>
-                                    <p class="card-text"><?php echo $service['rating']; ?></p>
-                                </div>
-                            </div>
-                        </div>
-                        <?php $service = mysqli_fetch_assoc($result); ?>
-                        <div class="col-4">
-                            <div class="card hovercard text-center">
-                                <img class="card-img-top" src="<?php echo $service['image']; ?>">
-                                <div class="card-body">
-                                    <h3 class="card-title"><?php echo $service['name']; ?></h3>
-                                    <h4 class="card-subtitle"><?php echo $service['price']; ?></h4>
-                                    <p class="card-text"><?php echo $service['rating']; ?></p>
-                                </div>
+                </div>
+                    </div>
+                    <?php $service = mysqli_fetch_assoc($result); 
+                    $i++;?>
+                    <div class="col-4">
+                        <div class="card hovercard text-center">
+                            <img class="card-img-top" src="<?php echo $service['image']; ?>">
+                            <div class="card-body">
+                                <h3 class="card-title"><?php echo $service['name']; ?></h3>
+                                <h4 class="card-subtitle"><?php echo $service['price']; ?></h4>
+                                <p class="card-text"><?php echo $service['rating']; ?></p>
                             </div>
                         </div>
                     </div>
-                    <?php $i++; ?>
-        <?php }} ?>
+                    <?php $service = mysqli_fetch_assoc($result); 
+                    $i++;?>
+                    <div class="col-4">
+                        <div class="card hovercard text-center">
+                            <img class="card-img-top" src="<?php echo $service['image']; ?>">
+                            <div class="card-body">
+                                <h3 class="card-title"><?php echo $service['name']; ?></h3>
+                                <h4 class="card-subtitle"><?php echo $service['price']; ?></h4>
+                                <p class="card-text"><?php echo $service['rating']; ?></p>
+                            </div>
+                        </div>
+                    </div>
+                    <?php $service = mysqli_fetch_assoc($result); 
+                    $i++;?>
+                    <div class="col-4">
+                        <div class="card hovercard text-center">
+                            <img class="card-img-top" src="<?php echo $service['image']; ?>">
+                            <div class="card-body">
+                                <h3 class="card-title"><?php echo $service['name']; ?></h3>
+                                <h4 class="card-subtitle"><?php echo $service['price']; ?></h4>
+                                <p class="card-text"><?php echo $service['rating']; ?></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php $i++; 
+            }?>
+            <div class="row">
+                <?php while($i<$count){
+                    $service = mysqli_fetch_assoc($result); ?>
+                    <div class="col-4">
+                        <div class="card hovercard text-center">
+                            <img class="card-img-top" src="<?php echo $service['image']; ?>">
+                            <div class="card-body">
+                                <h3 class="card-title"><?php echo $service['name']; ?></h3>
+                                <h4 class="card-subtitle"><?php echo $service['price']; ?></h4>
+                                <p class="card-text"><?php echo $service['rating']; ?></p>
+                            </div>
+                        </div>
+                    </div>
+                <?php $i++; } ?>
+
+            </div>
+
+            <div class="row">
+                <?php include __DIR__ . '/../templates/footer.php'; ?>
+            </div>
 
         //PHP script to retrieve top rated services from database -
         //SELECT * FROM services ORDER BY rating 
