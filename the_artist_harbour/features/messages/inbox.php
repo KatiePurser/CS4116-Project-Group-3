@@ -4,6 +4,7 @@ $senders = $data['senders'];
 $latest_message_time = $data['latest_message_time'];
 $latest_sender_id = $data['latest_sender_id'];
 
+// Ensure sender_id is set to latest_sender_id if not provided
 if (!isset($_GET['sender_id'])) {
     header("Location: ?sender_id=$latest_sender_id");
     exit();
