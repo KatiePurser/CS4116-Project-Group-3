@@ -34,96 +34,103 @@
             include_once("../utilities/DatabaseHandler.php");
             include_once("../utilities/ServiceDetails.php");
             //connect to DB
-            $sql = "SELECT  FROM services ORDER BY rating";
+            // $sql = "SELECT * FROM services ORDER BY rating";
+            $sql = "SELECT * FROM services";    //will need to figure out how to order by rating, which is stored in reviews table
             $result = DatabaseHandler::make_select_query($sql);
-            $sql = "SELECT COUNT(*) FROM services";
-            $count = DatabaseHandler::make_select_query($sql);
+            // $sql = "SELECT COUNT(*) FROM services";
+            // $count = DatabaseHandler::make_select_query($sql);
             $i=0;
-            while($i<12 && $i<=$count-4){
+            $service = $result[0];
+            while($i<12 && $i<=(count($result)-4)) {
                 ?>
             <div class="row justify-content-center">
-                <div class="card-group">
+                <div class="card-group justify-content-center">
                     <form action="about_us.html">
-                        <?php $service = mysqli_fetch_assoc($result); //may need to swap the DB functions for just mysqli functions
-                        $i++;?>
                         <button type="submit">
                             <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                             <div class="card hovercard text-center">
                                 <img class="card-img-top" src="https://placecats.com/300/200">
                                 <div class="card-body">
                                     <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                    <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"]); ?> </h4>
-                                    <p class="card-text"><?php echo ServiceDetails::getServiceRating($service["id"]); ?></p>
+                                    <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"])."\n"; ?> </h4>
+                                    <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["id"]); 
+                                    echo $rating;?></p>
                                 </div>
                             </div>
                         </button>
                     </form>
+                    <?php $service = next($result); 
+                    $i++;?>
                     <form action="about_us.html">
-                        <?php $service = mysqli_fetch_assoc($result); 
-                        $i++;?>
                         <button type="submit">
                             <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                             <div class="card hovercard text-center">
                                 <img class="card-img-top" src="https://placecats.com/300/200">
                                 <div class="card-body">
                                     <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                    <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"]); ?></h4>
-                                    <p class="card-text"><?php echo ServiceDetails::getServiceRating($service["id"]); ?></p>
+                                    <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"])."\n"; ?></h4>
+                                    <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["id"]); 
+                                    echo $rating;?></p>
                                 </div>
                             </div>
                         </button>
                     </form>
+                    <?php $service = next($result); 
+                    $i++;?>
                     <form action="about_us.html">
-                        <?php $service = mysqli_fetch_assoc($result); 
-                        $i++;?>
                         <button type="submit">
                             <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                             <div class="card hovercard text-center">
                                 <img class="card-img-top" src="https://placecats.com/300/200">
                                 <div class="card-body">
                                     <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                    <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"]); ?></h4>
-                                    <p class="card-text"><?php echo ServiceDetails::getServiceRating($service["id"]); ?></p>
+                                    <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"])."\n"; ?></h4>
+                                    <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["id"]); 
+                                    echo $rating;?></p>
                                 </div>
                             </div>
                         </button>
                     </form>
+                    <?php $service = next($result); 
+                    $i++;?>
                     <form action="about_us.html">
-                        <?php $service = mysqli_fetch_assoc($result); 
-                        $i++;?>
-                        <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                         <button type="submit">
+                            <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                             <div class="card hovercard text-center">
                                 <img class="card-img-top" src="https://placecats.com/300/200">
                                 <div class="card-body">
                                     <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                    <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"]); ?></h4>
-                                    <p class="card-text"><?php echo ServiceDetails::getServiceRating($service["id"]); ?></p>
+                                    <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"])."\n"; ?></h4>
+                                    <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["id"]); 
+                                    echo $rating;?></p>
                                 </div>
                             </div>
                         </button>
                     </form>
+                    <?php $service = next($result); 
+                    $i++;?>
                 </div>
             </div>
             <?php } ?>
             <div class="row">
-                <div class="card-group">
-                    <?php while($i<$count){ ?>
+                <div class="card-group justify-content-center">
+                    <?php while($i<count($result)){ ?>
                         <form action="about_us.html">
-                            <?php $service = mysqli_fetch_assoc($result); 
-                            $i++;?>
                             <button type="submit">
                                 <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                                 <div class="card hovercard text-center">
                                     <img class="card-img-top" src="https://placecats.com/300/200">
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                        <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"]); ?> </h4>
-                                        <p class="card-text"><?php echo ServiceDetails::getServiceRating($service["id"]); ?></p>
+                                        <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"])."\n"; ?> </h4>
+                                        <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["id"]); 
+                                    echo $rating;?></p>
                                     </div>
                                 </div>
                             </button>
                         </form>
+                        <?php $service = next($result);  
+                        $i++;?>
                     <?php } ?>
                 </div>
             </div>
