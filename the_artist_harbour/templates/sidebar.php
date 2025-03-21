@@ -4,19 +4,19 @@
             <li class="sidebar-item">
                 <a class="sidebar-link" href="#">
                     <i class="bi bi-person"></i>
-                    <span class="d-none d-xl-inline">Account Details</span>
+                    <span class="d-none d-xl-inline">Account</span>
                 </a>
             </li>
             <li class="sidebar-item">
                 <a class="sidebar-link" href="#">
                     <i class="bi bi-briefcase"></i>
-                    <span class="d-none d-xl-inline">Service Requests</span>
+                    <span class="d-none d-xl-inline">Requests</span>
                 </a>
             </li>
             <li class="sidebar-item">
                 <a class="sidebar-link" href="#">
                     <i class="bi bi-building"></i>
-                    <span class="d-none d-xl-inline">Business Profile</span>
+                    <span class="d-none d-xl-inline">Business</span>
                 </a>
             </li>
             <li class="sidebar-item">
@@ -72,7 +72,7 @@
         font-weight: bold;
         display: flex;
         align-items: center;
-        font-size: 0.9rem;
+        font-size: 1rem;
     }
 
     .sidebar-link i {

@@ -17,6 +17,8 @@ if (isset($_GET['sender_id'])) {
         foreach ($messages as $message) {
             $is_sender = $message['sender_id'] == $sender_id;
             $response[] = [
+                'id' => $message['id'],
+                'sender_id' => $message['sender_id'],
                 'text' => $message['text'],
                 'created_at' => $message['created_at'],
                 'is_sender' => $is_sender
@@ -26,7 +28,7 @@ if (isset($_GET['sender_id'])) {
         $response['error'] = "No messages found between you and this sender.";
     }
 } else {
-    $response['error'] = "No sender ID provided.";
+    $response['error'] = "Please select a conversation!";
 }
 
 return $response;
