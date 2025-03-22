@@ -1,7 +1,7 @@
 <?php
 $data = require __DIR__ . '/fetch_senders.php';
 $senders = $data['senders'];
-$latest_message_time = $data['latest_message_time'];
+$latest_messages = $data['latest_message_time'];
 $latest_sender_id = $data['latest_sender_id'];
 
 // Ensure sender_id is set to latest_sender_id if not provided
@@ -58,14 +58,31 @@ $conversation = require __DIR__ . '/fetch_message_content.php';
                     <?php if (!empty($senders)): ?>
                         <?php foreach ($senders as $id => $name): ?>
                             <li class="sender-item">
-                                <a href="?sender_id=<?php echo $id; ?>">
-                                    <button class="btn">
-                                        <div class="btn-body">
-                                            <span><?php echo $name; ?></span>
-                                            <span
-                                                class="message-time"><?php echo date('d-m-Y H:i', strtotime($latest_message_time[$id])); ?></span>
+                                <a href="?sender_id=<?php echo $id; ?>" class="btn">
+                                    <div class="btn-body">
+                                        <div><span><?php echo $name; ?></span></div>
+
+                                        <div>
+                                            <!-- RENDERING ACCEPT OR DECLINE FOR INSIGHT REQUEST -->
+                                            <?php if (isset($latest_messages[$id]) && $latest_messages[$id]['accepted'] == 0): ?>
+                                                <span>
+                                                    <form method="post" action="insight_request.php"
+                                                        class="d-inline insight-action">
+                                                        <input type="hidden" name="message_id"
+                                                            value="<?php echo $latest_messages[$id]['message_id']; ?>">
+                                                        <button type="submit" name="action" value="accept"
+                                                            class="btn btn-success btn-sm">Accept</button>
+                                                        <button type="submit" name="action" value="decline"
+                                                            class="btn btn-danger btn-sm">Decline</button>
+                                                    </form>
+                                                </span>
+                                            <?php else: ?>
+                                                <span
+                                                    class="message-time"><?php echo date('d-m-Y H:i', strtotime($latest_messages[$id]['time'])); ?></span>
+                                            <?php endif; ?>
                                         </div>
-                                    </button>
+
+                                    </div>
                                 </a>
                             </li>
                         <?php endforeach; ?>
