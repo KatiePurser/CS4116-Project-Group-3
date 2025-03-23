@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../../utilities/databaseHandler.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message_id = $_POST['message_id'];
     $action = $_POST['action'];
+    $sender_id = $_POST['sender_id'];
 
     if ($action === 'accept') {
         $sql = "UPDATE messages SET accepted = 1 WHERE id = $message_id";
@@ -16,9 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $result = DatabaseHandler::make_modify_query($sql);
     if ($result) {
-        header("Location: ../inbox.php");
+        header("Location: ../inbox.php?sender_id=$sender_id");
     } else {
-        header("Location: ../inbox.php");
+        header("Location: ../inbox.php?sender_id=$sender_id");
     }
     exit();
 }

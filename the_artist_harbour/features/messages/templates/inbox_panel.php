@@ -20,6 +20,7 @@
                                         <form method="post" action="scripts/insight_request.php" class="d-inline insight-action">
                                             <input type="hidden" name="message_id"
                                                 value="<?php echo $latest_messages[$id]['message_id']; ?>">
+                                            <input type="hidden" name="sender_id" value="<?php echo $id; ?>">
                                             <button type="submit" name="action" value="accept"
                                                 class="btn btn-success btn-sm">Accept</button>
                                             <button type="submit" name="action" value="decline"
