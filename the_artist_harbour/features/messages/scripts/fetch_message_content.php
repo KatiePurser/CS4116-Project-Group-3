@@ -1,11 +1,11 @@
 <?php
-require_once __DIR__ . '/../../utilities/databaseHandler.php';
+require_once __DIR__ . '/../../../utilities/databaseHandler.php';
 
 $response = [];
 
 if (isset($_GET['sender_id'])) {
     $sender_id = $_GET['sender_id'];
-    $receiver_id = 5; // Replace with real ID
+    $receiver_id = 2; // Replace with real ID
 
     $sql = "SELECT * FROM messages 
             WHERE (sender_id = $sender_id AND receiver_id = $receiver_id) 
