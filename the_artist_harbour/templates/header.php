@@ -8,10 +8,13 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
         <div class="container d-flex align-items-center justify-content-between">
 
             <div class="d-flex align-items-center flex-grow-1">
-                <img src="/CS4116-Project-Group-3/the_artist_harbour/public/images/boat_logo_small.png" alt="Boat"
-                    class="img-fluid me-2" style="max-height: 40px;">
-                <a class="navbar-brand amarante-regular fs-4 fs-lg-2" href="index.php">The Artist Harbour</a>
-            </div>
+                <!-- Search Bar  -->
+                <form class="d-flex search-bar" method="get" action="features/search/search_page.php">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input class="form-control form-control-sm" type="search" placeholder="Search" name="search">
+                    </div>
+                </form>
 
             <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
