@@ -7,62 +7,29 @@
  */
 
 class ServiceDetails{
-
-    private static $servername = "the-artist-harbour.cl64o2auodev.eu-north-1.rds.amazonaws.com";
-    private static $username = "admin";
-    private static $password = "password2025";
-    private static $dbname = "artist_harbour_db";
-
     public static function getServicePrice($serviceId){
-        include_once("../utilities/DatabaseHandler.php");
-
-        //what ended up working
-
-        // $conn = new mysqli(static::$servername, static::$username, static::$password, static::$dbname);
-        
-        // if ($conn->connect_error) {
-        //     error_log("Connection failed: " . $conn->connect_error);
-        //     return null;
-        // }
-
-        // $stmt = $conn->prepare("SELECT * FROM services WHERE id=?");
-        // $stmt->bind_param("s", $serviceId);
-        // $stmt->execute();
-        // $result = $stmt->get_result();
-        // $prices = $result->fetch_assoc();
-
-        //what I tried (not working)
+        require_once __DIR__ . '/databaseHandler.php';
 
         $sql = "SELECT min_price, max_price FROM services WHERE id = $serviceId";
         $prices = DatabaseHandler::make_select_query($sql);
+        $service_price = $prices[0];
 
-
-        if(!isset($prices["min_price"]) && !isset($prices["max_price"])){
-            echo"UH OH";
-        }else if(!isset($prices["min_price"])){
-            return "€{$prices["max_price"]}";
+        if($service_price["min_price"]===null){
+            return "€".$service_price["max_price"];
         }else{
-            return "€{$prices["min_price"]} - €{$prices["max_price"]}";
+            return "€".$service_price["min_price"]." - €".$service_price["max_price"];
         }
     }
 
     public static function getServiceRating($serviceId){
-        $conn = new mysqli(static::$servername, static::$username, static::$password, static::$dbname);
-        
-        if ($conn->connect_error) {
-            error_log("Connection failed: " . $conn->connect_error);
-            return null;
-        }
 
-        $stmt = $conn->prepare("SELECT rating FROM reviews WHERE service_id=?");
-        $stmt->bind_param("s", $serviceId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $rating = $result->fetch_assoc();
+        $sql = "SELECT AVG(rating) FROM reviews WHERE service_id = $serviceId";
+        $result = DatabaseHandler::make_select_query($sql);
 
-        if(!isset($rating["rating"])){
+        if(!isset($result[0])){
             return "Not yet reviewed";
         }else{
+            $rating = $result[0];
             return "{$rating["rating"]}/5";
         }
     }
