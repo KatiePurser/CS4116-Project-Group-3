@@ -15,20 +15,27 @@ class ServiceDetails{
 
     public static function getServicePrice($serviceId){
         include_once("../utilities/DatabaseHandler.php");
-        // $sql = "SELECT min_price, max_price FROM services WHERE id=$serviceId";
 
-        $conn = new mysqli(static::$servername, static::$username, static::$password, static::$dbname);
+        //what ended up working
+
+        // $conn = new mysqli(static::$servername, static::$username, static::$password, static::$dbname);
         
-        if ($conn->connect_error) {
-            error_log("Connection failed: " . $conn->connect_error);
-            return null;
-        }
+        // if ($conn->connect_error) {
+        //     error_log("Connection failed: " . $conn->connect_error);
+        //     return null;
+        // }
 
-        $stmt = $conn->prepare("SELECT * FROM services WHERE id=?");
-        $stmt->bind_param("s", $serviceId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $prices = $result->fetch_assoc();
+        // $stmt = $conn->prepare("SELECT * FROM services WHERE id=?");
+        // $stmt->bind_param("s", $serviceId);
+        // $stmt->execute();
+        // $result = $stmt->get_result();
+        // $prices = $result->fetch_assoc();
+
+        //what I tried (not working)
+
+        $sql = "SELECT min_price, max_price FROM services WHERE id = $serviceId";
+        $prices = DatabaseHandler::make_select_query($sql);
+
 
         if(!isset($prices["min_price"]) && !isset($prices["max_price"])){
             echo"UH OH";
