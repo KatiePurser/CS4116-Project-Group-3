@@ -11,5 +11,5 @@ if (!isset($_GET['sender_id'])) {
 
 $sender_id = $_GET['sender_id'];
 $sender_name = $senders[$sender_id] ?? 'Sender Name';
-$conversation = require __DIR__ . '/fetch_message_content.php';
+$conversation = require __DIR__ . '/fetch_conversation.php';
 ?>

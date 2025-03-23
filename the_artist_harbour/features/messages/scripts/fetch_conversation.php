@@ -21,7 +21,8 @@ if (isset($_GET['sender_id'])) {
                 'sender_id' => $message['sender_id'],
                 'text' => $message['text'],
                 'created_at' => $message['created_at'],
-                'is_sender' => $is_sender
+                'is_sender' => $is_sender,
+                'accepted' => $message['accepted']
             ];
         }
     } else {

@@ -1,4 +1,4 @@
-<?php require 'scripts/load_conversation_data.php'; ?>
+<?php require 'scripts/load_current_conversation.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,6 +34,7 @@
     </div>
 
     <script src="js/handle_report.js"></script>
+    <script src="js/report_outcome.js"></script>
 </body>
 
 </html>

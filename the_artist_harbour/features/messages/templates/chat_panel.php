@@ -7,7 +7,9 @@
         <?php if (isset($conversation['error'])): ?>
             <p class="alert-select-conversation"><?php echo $conversation['error']; ?></p>
         <?php else: ?>
+
             <?php foreach ($conversation as $message): ?>
+                <?php $accepted = $message['accepted'] ?>
                 <div class="message <?php echo $message['is_sender'] ? 'sender-message' : 'receiver-message'; ?>">
                     <p><?php echo $message['text']; ?></p>
                     <small><?php echo date('d-m-Y H:i', strtotime($message['created_at'])); ?></small>
@@ -22,15 +24,18 @@
         <?php endif; ?>
     </div>
 
-    <div class="chat-input-container">
-        <form class="d-flex" id="sendMessageForm" method="post" action="scripts/send_message.php">
-            <input type="hidden" name="sender_id" value="<?php echo $receiver_id; ?>">
-            <input type="hidden" name="receiver_id" value="<?php echo $sender_id; ?>">
-            <input type="text" class="form-control me-2" name="message_text" placeholder="Type your message..."
-                required>
-            <button type="submit" class="btn">
-                <i class="bi bi-send"></i>
-            </button>
-        </form>
-    </div>
+    <!-- Render the chat box only if it is an accepted message -->
+    <?php if ($accepted === 1): ?>
+        <div class="chat-input-container">
+            <form class="d-flex" id="sendMessageForm" method="post" action="scripts/send_message.php">
+                <input type="hidden" name="sender_id" value="<?php echo $receiver_id; ?>">
+                <input type="hidden" name="receiver_id" value="<?php echo $sender_id; ?>">
+                <input type="text" class="form-control me-2" name="message_text" placeholder="Type your message..."
+                    required>
+                <button type="submit" class="btn">
+                    <i class="bi bi-send"></i>
+                </button>
+            </form>
+        </div>
+    <?php endif; ?>
 </div>
