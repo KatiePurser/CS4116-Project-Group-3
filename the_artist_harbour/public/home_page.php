@@ -31,8 +31,8 @@
         </div>
 
         <?php
-            include_once("../utilities/DatabaseHandler.php");
-            include_once("../utilities/ServiceDetails.php");
+            require_once("../utilities/DatabaseHandler.php");
+            require_once("../utilities/ServiceDetails.php");
             //connect to DB
             // $sql = "SELECT * FROM services ORDER BY rating";
             $sql = "SELECT * FROM services";    //will need to figure out how to order by rating, which is stored in reviews table
@@ -45,7 +45,7 @@
                 ?>
             <div class="row justify-content-center">
                 <div class="card-group justify-content-center">
-                    <form action="about_us.html">
+                    <form action="service.php" method="get">
                         <button type="submit">
                             <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                             <div class="card hovercard text-center">
@@ -61,7 +61,7 @@
                     </form>
                     <?php $service = next($result); 
                     $i++;?>
-                    <form action="about_us.html">
+                    <form action="service.php" method="get">
                         <button type="submit">
                             <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                             <div class="card hovercard text-center">
@@ -77,7 +77,7 @@
                     </form>
                     <?php $service = next($result); 
                     $i++;?>
-                    <form action="about_us.html">
+                    <form action="service.php" method="get">
                         <button type="submit">
                             <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                             <div class="card hovercard text-center">
@@ -93,7 +93,7 @@
                     </form>
                     <?php $service = next($result); 
                     $i++;?>
-                    <form action="about_us.html">
+                    <form action="service.php" method="get">
                         <button type="submit">
                             <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                             <div class="card hovercard text-center">
@@ -115,7 +115,7 @@
             <div class="row">
                 <div class="card-group justify-content-center">
                     <?php while($i<count($result)){ ?>
-                        <form action="about_us.html">
+                        <form action="service.php" method="get">
                             <button type="submit">
                                 <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                                 <div class="card hovercard text-center">
@@ -136,7 +136,7 @@
             </div>
 
             <div class="row">
-                <?php include __DIR__ . '/../templates/footer.php'; ?>
+                <?php //include __DIR__ . '/../templates/footer.php'; ?>
             </div>        
     </body>
 </html>
