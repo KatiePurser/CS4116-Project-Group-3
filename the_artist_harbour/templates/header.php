@@ -2,8 +2,8 @@
     <div class="container d-flex align-items-center justify-content-between">
 
         <div class="d-flex align-items-center flex-grow-1">
-            <img src="/CS4116-Project-Group-3/the_artist_harbour/public/images/boat_logo_small.png" alt="Boat"
-                class="img-fluid me-2" style="max-height: 40px;">
+            <img src="/repository/CS4116-Project-Group-3/the_artist_harbour/public/images/boat_logo_small.png"
+                alt="Boat" class="img-fluid me-2" style="max-height: 40px;">
             <a class="navbar-brand amarante-regular fs-4 fs-lg-2" href="index.php">The Artist Harbour</a>
         </div>
 
