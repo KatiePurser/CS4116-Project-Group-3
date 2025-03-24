@@ -21,7 +21,7 @@
 
             <div class="d-flex align-items-center flex-grow-1">
                 <!-- Search Bar  -->
-                <form class="d-flex search-bar" method="get" action="features/search/search_page.php">
+                <form class="d-flex search-bar" method="get" action="/CS4116-Project-Group-3/the_artist_harbour/features/search/search_page.php">
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-search"></i></span>
                         <input class="form-control form-control-sm" type="search" placeholder="Search" name="search">
