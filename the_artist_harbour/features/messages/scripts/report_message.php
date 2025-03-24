@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../utilities/databaseHandler.php';
+require_once __DIR__ . '/../../../utilities/databaseHandler.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $reporter_id = $_POST['reporter_id'];
@@ -15,9 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = DatabaseHandler::make_modify_query($sql);
 
     if ($result) {
-        header("Location: inbox.php?sender_id=$reported_id&report=success");
+        header("Location: ../inbox.php?sender_id=$reported_id&report=success");
     } else {
-        header("Location: inbox.php?sender_id=$reported_id&report=failure");
+        header("Location: ../inbox.php?sender_id=$reported_id&report=failure");
     }
     exit();
 }
