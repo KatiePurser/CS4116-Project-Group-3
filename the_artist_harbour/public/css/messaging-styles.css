@@ -146,6 +146,13 @@ body {
     background-color: #B5A9BF;
 }
 
+.btn-body {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
 @media (max-width: 768px) {
 
     .inbox-title,
