@@ -23,14 +23,22 @@ class ServiceDetails{
 
     public static function getServiceRating($serviceId){
 
-        $sql = "SELECT AVG(rating) FROM reviews WHERE service_id = $serviceId";
+        $sql = "SELECT rating FROM reviews WHERE service_id = $serviceId";
         $result = DatabaseHandler::make_select_query($sql);
 
         if(!isset($result[0])){
             return "Not yet reviewed";
         }else{
-            $rating = $result[0];
-            return "{$rating["rating"]}/5";
+            $row = $result[0];
+            $i=0;
+            $total=0;
+            while($i<count($result)){
+                $total+=$row["rating"];
+                $i++;
+                $row=next($result);
+            }
+            $final = $total/$i;
+            return "{$final}/5";
         }
     }
 }
