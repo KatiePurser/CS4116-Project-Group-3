@@ -29,10 +29,12 @@
             <div class="row">
                 <div class="col-12">
                     <form action="search_page.php" method="get">
-                        <input type="hidden" id="keyword" name="keyword" value=<?php echo $keyword?>>
+                        <input type="hidden" id="search" name="search" value=<?php echo $keyword?>>
                         <input type="number" name="max_price" id="max_price">
                         <input type="number" name="min_price" id="min_price">
                         <select name="rating" id="rating">
+                            <option value="-1">Filter By Reviews</option>
+                            <option value="0">0 Stars</option>
                             <option value="1">1 Star</option>
                             <option value="2">2 Stars</option>
                             <option value="3">3 Stars</option>
@@ -50,6 +52,13 @@
                             }
                             ?>
                         </select> -->
+                        <select name="filter" id="filter">
+                            <option value="-1" selected>Sort Services</option>
+                            <option value="1">By Reviews (High to Low)</option>
+                            <option value="2">By Reviews (Low to High)</option>
+                            <option value="4">By Price (High to Low)</option>
+                            <option value="3">By Price (Low to High)</option>
+                        </select>
                         <input type="submit" value="Add Filters">
                     </form>
                 </div>
@@ -57,7 +66,50 @@
 
             <?php
             //SEARCH SERVICES BY KEYWORD
+
             $sql = "SELECT * FROM services WHERE name LIKE '%{$keyword}%'";
+            
+            if(isset($_GET['rating'])){
+                if($_GET['rating']==0){
+                    //0 Stars
+                    $sql=$sql." AND (reviews>=0.0 AND reviews<1.0)";
+                }else if($_GET['rating']==1){
+                    //1 Star
+                    $sql=$sql." AND (reviews>=1.0 AND reviews<2.0)";
+                }else if($_GET['rating']==2){
+                    //2 Stars
+                    $sql=$sql." AND (reviews>=2.0 AND reviews<3.0)";
+                }else if($_GET['rating']==3){
+                    //3 Stars
+                    $sql=$sql." AND (reviews>=3.0 AND reviews<4.0)";
+                }else if($_GET['rating']==4){
+                    //4 Stars
+                    $sql=$sql." AND (reviews>=4.0 AND reviews<5.0)";
+                }else if($_GET['rating']==5){
+                    //5 Stars
+                    $sql=$sql." AND reviews=5.0";
+                }else if($_GET['rating']==-1){
+                    //Default - do nothing
+                }
+            }
+
+            if(isset($_GET['filter'])){
+                if($_GET['filter']==1){
+                    //By Reviews (High to Low)
+                    $sql=$sql." ORDER BY rating DESC";
+                }else if($_GET['filter']==2){
+                    //By Reviews (Low to High)
+                    $sql=$sql." ORDER BY rating ASC";
+                }else if($_GET['filter']==3){
+                    //By Price (High to Low)
+                }else if($_GET['filter']==4){
+                    //By Price (Low to High)
+                }else if($_GET['filter']==-1){
+                    //Default - do nothing
+                }
+            }
+
+
             $result = DatabaseHandler::make_select_query($sql);
             $i=0; ?>
             <div class="justify-content-center">
