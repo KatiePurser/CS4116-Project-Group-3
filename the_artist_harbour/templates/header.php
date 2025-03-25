@@ -1,6 +1,6 @@
 <?php
 session_start();
-$user_type = $_SESSION['user_type'] ?? '';
+$user_type = $_SESSION['user_type'] ?? 'customer';
 ?>
 
 <?php if ($user_type === 'customer'): ?>
@@ -43,7 +43,8 @@ $user_type = $_SESSION['user_type'] ?? '';
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="logout.php"><i
+                            <li><a class="dropdown-item"
+                                    href="/CS4116-Project-Group-3/the_artist_harbour/features/registration-login/logout.php"><i
                                         class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
                         </ul>
                     </div>
@@ -78,7 +79,9 @@ $user_type = $_SESSION['user_type'] ?? '';
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="logout.php"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
+                        <li><a class="dropdown-item"
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/registration-login/logout.php"><i
+                                    class="bi bi-box-arrow-right me-2"></i>Logout</a>
                         </li>
                     </ul>
                 </div>
@@ -111,7 +114,9 @@ $user_type = $_SESSION['user_type'] ?? '';
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="logout.php"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
+                        <li><a class="dropdown-item"
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/registration-login/logout.php"><i
+                                    class="bi bi-box-arrow-right me-2"></i>Logout</a>
                         </li>
                     </ul>
                 </div>
