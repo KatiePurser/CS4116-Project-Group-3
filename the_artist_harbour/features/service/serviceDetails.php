@@ -8,7 +8,7 @@
 
 class ServiceDetails{
     public static function getServicePrice($serviceId){
-        require_once __DIR__ . '/databaseHandler.php';
+        require_once(__DIR__.'/../../utilities/databaseHandler.php');
 
         $sql = "SELECT min_price, max_price FROM services WHERE id = $serviceId";
         $prices = DatabaseHandler::make_select_query($sql);
@@ -22,6 +22,7 @@ class ServiceDetails{
     }
 
     public static function getServiceRating($serviceId){
+        require_once(__DIR__.'/../../utilities/databaseHandler.php');
 
         $sql = "SELECT rating FROM reviews WHERE service_id = $serviceId";
         $result = DatabaseHandler::make_select_query($sql);
