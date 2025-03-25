@@ -34,7 +34,7 @@
             require_once("../utilities/DatabaseHandler.php");
             require_once("../features/service/ServiceDetails.php");
             //connect to DB
-            // $sql = "SELECT * FROM services ORDER BY rating";
+            // $sql = "SELECT * FROM services ORDER BY reviews";
             $sql = "SELECT * FROM services";    //will need to figure out how to order by rating, which is stored in reviews table
             $result = DatabaseHandler::make_select_query($sql);
             // $sql = "SELECT COUNT(*) FROM services";
