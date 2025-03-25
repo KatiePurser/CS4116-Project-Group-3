@@ -2,8 +2,16 @@
 // Include the necessary files (for database connection, etc.)
 include_once __DIR__ . '/../../utilities/databaseHandler.php';
 
-// Simulate fetching data from the database for the business (using a business_id of 1 for now)
-$business_id = 1;
+// Fetch the business ID from session
+
+if(!isset($_SESSION['user_id'])){
+    header ("Location: ../../features/registration-login/Login.php");
+    exit();
+} 
+if ($_SESSION[ 'user_type'] !== 'business'){
+
+exit();
+}
 
 // Fetch business data from the database
 $query = "SELECT * FROM businesses WHERE id = $business_id";
