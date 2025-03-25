@@ -18,3 +18,24 @@
         </div>
     </div>
 </div>
+
+<style>
+    #reportOutcomeModal .modal-content {
+        background-color: #82689A;
+        color: white;
+    }
+
+    #reportAlert.alert-success {
+        background-color: rgb(68, 192, 114);
+        color: white;
+    }
+
+    #reportOutcomeModal .btn-primary {
+        background-color: #49375a;
+        border-color: #49375a;
+    }
+
+    #reportOutcomeModal .btn-primary:hover {
+        background-color: rgb(59, 44, 73);
+    }
+</style>

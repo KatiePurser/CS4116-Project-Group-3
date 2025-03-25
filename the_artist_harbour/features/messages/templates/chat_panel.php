@@ -1,4 +1,4 @@
-<div class="col-7 col-md-8 d-flex flex-column" id="chat-panel">
+<div id="chat-panel">
     <div class="chat-title-container">
         <p class="chat-title"><?php echo $sender_name; ?></p>
     </div>
