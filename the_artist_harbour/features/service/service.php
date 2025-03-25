@@ -10,6 +10,12 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </head>
     <body style="padding-top: 73.6px;">
+        <div class="row g-0">
+            <div class="col-12">
+                <?php include __DIR__ . '/../../templates/header.php'; ?>
+            </div>
+        </div>
+
         <?php 
         require_once("../../utilities/databaseHandler.php");
         $service_id=$_GET["service_id"];
@@ -21,7 +27,11 @@
         //RETRIEVE REVIEWS FROM REVIEWS TABLE
         $sql = "SELECT * FROM reviews WHERE service_id=$service_id";
         $result = DatabaseHandler::make_select_query($sql);
-        $review = $result[0];
+        if($result == NULL){
+            echo "NO REVIEWS";
+        }else{
+            $review = $result[0];
+        }
         $i=0;
         //while($i<count($result)){ ?>
             <div></div>
