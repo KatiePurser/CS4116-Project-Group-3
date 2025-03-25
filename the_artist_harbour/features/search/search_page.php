@@ -217,7 +217,7 @@
 
 
             //SEARCH BUSINESSES BY KEYWORD
-            $sql = "SELECT * FROM businesses WHERE name LIKE '%{$keyword}%'";
+            $sql = "SELECT * FROM businesses WHERE display_name LIKE '%{$keyword}%'";
             $result = DatabaseHandler::make_select_query($sql);
             $i=0; ?>
             <div>
@@ -237,7 +237,7 @@
                                 <div class="card hovercard text-center">
                                     <img class="card-img-top" src="https://placecats.com/300/200">
                                     <div class="card-body">
-                                        <h3 class="card-title"><?php echo $business["name"]; ?></h3>
+                                        <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
                                     </div>
                                 </div>
                             </button>
@@ -250,7 +250,7 @@
                                 <div class="card hovercard text-center">
                                     <img class="card-img-top" src="https://placecats.com/300/200">
                                     <div class="card-body">
-                                        <h3 class="card-title"><?php echo $business["name"]; ?></h3>
+                                        <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
                                     </div>
                                 </div>
                             </button>
@@ -263,7 +263,7 @@
                                 <div class="card hovercard text-center">
                                     <img class="card-img-top" src="https://placecats.com/300/200">
                                     <div class="card-body">
-                                        <h3 class="card-title"><?php echo $business["name"]; ?></h3>
+                                        <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
                                     </div>
                                 </div>
                             </button>
@@ -276,7 +276,7 @@
                                 <div class="card hovercard text-center">
                                     <img class="card-img-top" src="https://placecats.com/300/200">
                                     <div class="card-body">
-                                        <h3 class="card-title"><?php echo $business["name"]; ?></h3>
+                                        <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
                                     </div>
                                 </div>
                             </button>
@@ -295,7 +295,7 @@
                                     <div class="card hovercard text-center">
                                         <img class="card-img-top" src="https://placecats.com/300/200">
                                         <div class="card-body">
-                                            <h3 class="card-title"><?php echo $business["name"]; ?></h3>
+                                            <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
                                         </div>
                                     </div>
                                 </button>
