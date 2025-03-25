@@ -15,7 +15,7 @@
 
                             <div>
                                 <!-- RENDERING ACCEPT OR DECLINE FOR INSIGHT REQUEST -->
-                                <?php if (isset($latest_messages[$id]) && $latest_messages[$id]['accepted'] == 0): ?>
+                                <?php if (isset($latest_messages[$id]) && $latest_messages[$id]['status'] === 'pending'): ?>
                                     <span>
                                         <form method="post" action="scripts/insight_request.php" class="d-inline insight-action">
                                             <input type="hidden" name="message_id"

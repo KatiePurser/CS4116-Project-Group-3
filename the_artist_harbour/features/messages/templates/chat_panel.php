@@ -9,7 +9,7 @@
         <?php else: ?>
 
             <?php foreach ($conversation as $message): ?>
-                <?php $accepted = $message['accepted'] ?>
+                <?php $status = $message['status'] ?>
                 <div class="message <?php echo $message['is_sender'] ? 'sender-message' : 'receiver-message'; ?>">
                     <p><?php echo $message['text']; ?></p>
                     <small><?php echo date('d-m-Y H:i', strtotime($message['created_at'])); ?></small>
@@ -25,7 +25,7 @@
     </div>
 
     <!-- Render the chat box only if it is an accepted message -->
-    <?php if ($accepted === 1): ?>
+    <?php if ($status === 'accepted'): ?>
         <div class="chat-input-container">
             <form class="d-flex" id="sendMessageForm" method="post" action="scripts/send_message.php">
                 <input type="hidden" name="sender_id" value="<?php echo $receiver_id; ?>">

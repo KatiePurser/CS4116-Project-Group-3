@@ -22,7 +22,7 @@ if (isset($_GET['sender_id'])) {
                 'text' => $message['text'],
                 'created_at' => $message['created_at'],
                 'is_sender' => $is_sender,
-                'accepted' => $message['accepted']
+                'status' => $message['status']
             ];
         }
     } else {
