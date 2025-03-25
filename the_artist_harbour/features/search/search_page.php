@@ -10,6 +10,8 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </head>
     <body style="padding-top: 73.6px;">
+
+<!-- NOTE: MAKE BUSINESS FORMS REDIRECT TO RIGHT PAGE -->
         <div class="container-fluid">
             <div class="row g-0">
                 <div class="col-12">
@@ -27,7 +29,7 @@
             <div class="row">
                 <div class="col-12">
                     <form action="search_page.php" method="get">
-                        <input type="hidden" id="keyword" name="keyword" value=<?php echo $keyword?>
+                        <input type="hidden" id="keyword" name="keyword" value=<?php echo $keyword?>>
                         <input type="number" name="max_price" id="max_price">
                         <input type="number" name="min_price" id="min_price">
                         <select name="rating" id="rating">
@@ -37,7 +39,7 @@
                             <option value="4">4 Stars</option>
                             <option value="5">5 Stars</option>
                         </select>
-                        <select name="tags" id="tags">
+                        <!-- <select name="tags" id="tags">
                             <?php 
                             $i=0;
                             $tag = $tags[0];
@@ -47,7 +49,7 @@
                                 $tag = next($tags);
                             }
                             ?>
-                        </select>
+                        </select> -->
                         <input type="submit" value="Add Filters">
                     </form>
                 </div>
@@ -62,8 +64,8 @@
                 <h1 style="text-align: center;"> SERVICES </h1>
             </div> 
             <?php
-            if(!isset($result)){
-                ?> <h3 style="text-align: center;">NO SERVICES MATCH THE KEYWORD</h3> <?php
+            if($result == NULL){
+                ?> <h3 style="text-align: center;">NO SERVICES MATCH THE KEYWORD</h3> <br><br><br> <?php
             }else{ 
                 $service=$result[0];
                 while($i<count($result)-4){ ?>
@@ -171,7 +173,7 @@
             </div>
             <?php
             if(!isset($result)){
-                ?> <h3 style="text-align: center;">NO SERVICES MATCH THE KEYWORD</h3> <?php
+                ?> <h3 style="text-align: center;">NO BUSINESSES MATCH THE KEYWORD</h3> <?php
             }else{ 
                 $business=$result[0];
                 while($i<count($result)-4){ ?>
