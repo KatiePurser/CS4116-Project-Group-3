@@ -12,15 +12,8 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
-            <!-- Navigation Links -->
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="profile.php">Business</a></li>
-            </ul>
-
             <div class="d-flex align-items-center flex-grow-1">
-                <!-- Search Bar  -->
+                <!-- Search Bar -->
                 <form class="d-flex search-bar">
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-search"></i></span>
@@ -28,17 +21,31 @@
                     </div>
                 </form>
 
-                <!-- User Icon -->
-                <a href="profile.php"
-                    class="btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center"
-                    style="width: 40px; height: 40px;">
-                    <i class="bi bi-person"></i>
-                </a>
-            </div>
+                <!-- User Profile Dropdown -->
+                <div class="dropdown">
+                    <button
+                        class="btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center dropdown-toggle"
+                        style="width: 40px; height: 40px;" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                        <i class="bi bi-person"></i>
+                    </button>
 
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="messages.php">Messages</a></li>
+                        <li><a class="dropdown-item" href="requests.php">Requests</a></li>
+                        <li><a class="dropdown-item" href="account.php">Account</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="logout.php"><i
+                                    class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
+
     </div>
 </nav>
+
 
 <style>
     .navbar {
@@ -49,16 +56,6 @@
         background-color: #82689A;
         height: 73.6px;
         border-bottom: #B3AABA 2px solid;
-    }
-
-    .nav-link {
-        font-size: 1rem;
-        font-weight: bold;
-        color: white;
-    }
-
-    .nav-link:hover {
-        color: #49375a;
     }
 
     .navbar-brand {
