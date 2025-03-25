@@ -16,6 +16,9 @@ session_start();
 <body class="d-flex justify-content-center align-items-center min-vh-100 poppins-regular">
 
 <div class="container d-flex flex-column align-items-center justify-content-center">
+
+    <?php include __DIR__ . '/../../templates/login_header.php'; ?>
+
     <?php if (!empty($_SESSION['error'])) {
         echo("<div class='row mb-2'><div class='alert alert-danger'><span><i class='bi bi-exclamation-triangle'></span></i> {$_SESSION['error']} </div><div class='col-12'></div></div>");
         unset($_SESSION['error']);
@@ -53,3 +56,9 @@ session_start();
 <script src="togglePasswordVisibility.js"></script>
 </body>
 </html>
+
+<style>
+    a {
+        color: #82689A;
+    }
+</style>

@@ -45,6 +45,8 @@ if ($new_user_data !== null) {
 
 if ($user_type === "business") {
     createNewBusiness($_SESSION["user_id"], $business_name);
+    header("Location: ../business/account.php");
+    exit();
 }
 
 header("Location: fakeHomePage.php");
