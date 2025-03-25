@@ -1,33 +1,35 @@
+<?php
+session_start();
+$user_type = $_SESSION['user_type'] ?? 'business';
+?>
+
 <nav class="sidebar">
     <div class="sidebar-menu">
         <ul class="sidebar-nav-list">
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="#">
-                    <i class="bi bi-person"></i>
-                    <span class="d-none d-xl-inline">Account</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="#">
-                    <i class="bi bi-briefcase"></i>
-                    <span class="d-none d-xl-inline">Requests</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="#">
-                    <i class="bi bi-building"></i>
-                    <span class="d-none d-xl-inline">Business</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="#">
-                    <i class="bi bi-envelope"></i>
-                    <span class="d-none d-xl-inline">Messages</span>
-                </a>
-            </li>
+            <?php if ($user_type === 'business' || $user_type === 'customer'): ?>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="account.php">
+                        <i class="bi bi-person"></i>
+                        <span class="d-none d-xl-inline">Account</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="requests.php">
+                        <i class="bi bi-briefcase"></i>
+                        <span class="d-none d-xl-inline">Requests</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="messages.php">
+                        <i class="bi bi-envelope"></i>
+                        <span class="d-none d-xl-inline">Messages</span>
+                    </a>
+                </li>
+            <?php endif; ?>
         </ul>
     </div>
 </nav>
+
 
 <style>
     body {
@@ -72,7 +74,7 @@
         font-weight: bold;
         display: flex;
         align-items: center;
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
 
     .sidebar-link i {

@@ -3,8 +3,8 @@
 
         <!-- Centered Logo and Brand -->
         <div class="position-absolute start-50 translate-middle-x d-flex align-items-center">
-            <img src="/repository/CS4116-Project-Group-3/the_artist_harbour/public/images/boat_logo_small.png"
-                alt="Boat" class="img-fluid me-2" style="max-height: 40px;">
+            <img src="/CS4116-Project-Group-3/the_artist_harbour/public/images/boat_logo_small.png" alt="Boat"
+                class="img-fluid me-2" style="max-height: 40px;">
             <a class="navbar-brand amarante-regular fs-4 fs-lg-2" href="index.php">The Artist Harbour</a>
         </div>
 
