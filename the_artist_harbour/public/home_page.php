@@ -1,10 +1,22 @@
+<?php
+// session_start();
+
+// if (!isset($_SESSION['user_id'])) {
+//     header("Location: ../../features/registration-login/Login.php");
+//     exit();
+// }
+
+// if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'user') {
+//     exit();
+// }
+?>
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>The Artist Harbour</title>
-        <link rel="stylesheet" href="public/css/styles.css">
+        <link rel="stylesheet" href="css/styles.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -31,8 +43,8 @@
         </div>
 
         <?php
-            require_once("../utilities/DatabaseHandler.php");
-            require_once("../features/service/ServiceDetails.php");
+            require_once("../utilities/databaseHandler.php");
+            require_once("../features/service/serviceDetails.php");
             //connect to DB
             // $sql = "SELECT * FROM services ORDER BY reviews";
             $sql = "SELECT * FROM services ORDER BY reviews DESC";    //will need to figure out how to order by rating, which is stored in reviews table

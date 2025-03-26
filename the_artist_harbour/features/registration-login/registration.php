@@ -1,5 +1,17 @@
 <?php
-session_start()
+session_start();
+
+if (isset($_SESSION["user_id"])) {
+
+    if ($_SESSION["user_type"] === "customer") {
+        header("Location: /CS4116-Project-Group-3/the_artist_harbour/public/home_page.php");
+    } elseif ($_SESSION["user_type"] === "business") {
+        header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/business/profile.php");
+    } elseif ($_SESSION["user_type"] === "admin") {
+        header("Location: #");
+    }
+    exit();
+}
 ?>
 
 <!doctype html>
@@ -17,6 +29,9 @@ session_start()
 <body class="d-flex justify-content-center align-items-center min-vh-100 poppins-regular">
 
 <div class="container d-flex flex-column align-items-center justify-content-center">
+
+    <?php include __DIR__ . '/../../templates/login_header.php'; ?>
+
     <?php if (!empty($_SESSION['error'])) {
         echo("<div class='row mb-2'><div class='alert alert-danger'><span><i class='bi bi-exclamation-triangle'></span></i> {$_SESSION['error']} </div><div class='col-12'></div></div>");
         unset($_SESSION['error']);
@@ -28,7 +43,7 @@ session_start()
     </div>
     <div class="row mb-3">
         <div class="col-12">
-            <ul class="nav nav-pills d-flex justify-content-center" role="tablist">
+            <ul class="nav nav-pills d-flex justify-content-center" role="tablist" >
                 <li class="nav-item">
                     <button class="nav-link active" id="register-customer-tab" data-bs-toggle="pill" data-bs-target="#customer-registration-form" type="button" role="tab">Customer</button>
                 </li>
@@ -152,3 +167,18 @@ session_start()
 <script src="togglePasswordVisibility.js"></script>
 </body>
 </html>
+
+<style>
+
+    a {
+        color: #82689A;
+    }
+    .nav-pills .nav-link.active {
+        background-color: #82689A;
+        /*border-color: purple !important;*/
+    }
+
+    .nav-pills .nav-link {
+        color: #82689A;
+    }
+</style>

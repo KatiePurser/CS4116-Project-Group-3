@@ -1,17 +1,22 @@
 <?php
+session_start();
 // Include the necessary files (for database connection, etc.)
 include_once __DIR__ . '/../../utilities/databaseHandler.php';
 
-// Fetch the business ID from session
-
-if(!isset($_SESSION['user_id'])){
-    header ("Location: ../../features/registration-login/Login.php");
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/registration-login/login.php");
     exit();
-} 
-if ($_SESSION[ 'user_type'] !== 'business'){
-
-exit();
 }
+
+// Check if the user is a business account
+if ($_SESSION['user_type'] !== 'business') {
+    exit();
+}
+
+// Assign the business ID from the session
+$business_id = $_SESSION["user_id"];
+
 
 // Fetch business data from the database
 $query = "SELECT * FROM businesses WHERE id = $business_id";
