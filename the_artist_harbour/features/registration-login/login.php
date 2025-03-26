@@ -1,5 +1,17 @@
 <?php
 session_start();
+
+if (isset($_SESSION["user_id"])) {
+
+    if ($_SESSION["user_type"] === "customer") {
+        header("Location: /CS4116-Project-Group-3/the_artist_harbour/public/home_page.php");
+    } elseif ($_SESSION["user_type"] === "business") {
+        header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/business/profile.php");
+    } elseif ($_SESSION["user_type"] === "admin") {
+        header("Location: #");
+    }
+    exit();
+}
 ?>
 
 <!doctype html>
@@ -16,6 +28,9 @@ session_start();
 <body class="d-flex justify-content-center align-items-center min-vh-100 poppins-regular">
 
 <div class="container d-flex flex-column align-items-center justify-content-center">
+
+    <?php include __DIR__ . '/../../templates/login_header.php'; ?>
+
     <?php if (!empty($_SESSION['error'])) {
         echo("<div class='row mb-2'><div class='alert alert-danger'><span><i class='bi bi-exclamation-triangle'></span></i> {$_SESSION['error']} </div><div class='col-12'></div></div>");
         unset($_SESSION['error']);
@@ -53,3 +68,9 @@ session_start();
 <script src="togglePasswordVisibility.js"></script>
 </body>
 </html>
+
+<style>
+    a {
+        color: #82689A;
+    }
+</style>

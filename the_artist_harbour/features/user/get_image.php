@@ -15,13 +15,13 @@ if ($userData && count($userData) > 0 && !empty($userData[0]['profile_picture'])
     $imageData = $userData[0]['profile_picture'];
 
     // Set the appropriate content type header
-    header("Content-Type: image/png"); // Change to "image/jpeg" if storing JPEG images
+    header("Content-Type: image/png"); // Change to "image/jpeg" if we are using JPEG images
     echo $imageData;
     exit;
 } else {
     // If no image is found, return a placeholder
     header("Content-Type: image/png");
-    readfile("../../public/images/default-profile.png"); // Make sure this file exists
+    readfile("/CS4116-Project-Group-3/the_artist_harbour/public/images/user_icon.svg"); // Make sure this file exists
     exit;
 }
 ?>
