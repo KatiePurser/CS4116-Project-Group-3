@@ -31,8 +31,8 @@
         </div>
 
         <?php
-            require_once("../utilities/DatabaseHandler.php");
-            require_once("../features/service/ServiceDetails.php");
+            require_once("../utilities/databaseHandler.php");
+            require_once("../features/service/serviceDetails.php");
             //connect to DB
             // $sql = "SELECT * FROM services ORDER BY reviews";
             $sql = "SELECT * FROM services ORDER BY reviews DESC";    //will need to figure out how to order by rating, which is stored in reviews table
