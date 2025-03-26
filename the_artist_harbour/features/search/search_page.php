@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -33,7 +34,7 @@
                         <input type="number" name="max_price" id="max_price">
                         <input type="number" name="min_price" id="min_price">
                         <select name="rating" id="rating">
-                            <option value="-1">Filter By Reviews</option>
+                            <option value="-1" selected>Filter By Reviews</option>
                             <option value="0">0 Stars</option>
                             <option value="1">1 Star</option>
                             <option value="2">2 Stars</option>
@@ -94,7 +95,9 @@
             }
 
             if(isset($_GET['filter'])){
-                if($_GET['filter']==1){
+                if($_GET['filter']==-1){
+                    //Default - do nothing
+                }else if($_GET['filter']==1){
                     //By Reviews (High to Low)
                     $sql.=" ORDER BY rating DESC";
                 }else if($_GET['filter']==2){
@@ -104,8 +107,6 @@
                     //By Price (High to Low)
                 }else if($_GET['filter']==4){
                     //By Price (Low to High)
-                }else if($_GET['filter']==-1){
-                    //Default - do nothing
                 }
             }
 
