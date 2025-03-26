@@ -5,10 +5,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sender_id = 2; // User ID
     $receiver_id = $_POST["receiver_id"];
     $message_text = trim($_POST["message_text"]);
-    $accepted = 1;
+    $status = 'accepted';
 
-    $sql = "INSERT INTO messages (sender_id, receiver_id, text, accepted, created_at)
-            VALUES ($sender_id, $receiver_id, '$message_text', $accepted, NOW())";
+    $sql = "INSERT INTO messages (sender_id, receiver_id, text, status, created_at)
+            VALUES ($sender_id, $receiver_id, '$message_text', $status, NOW())";
 
     $result = DatabaseHandler::make_modify_query($sql);
 

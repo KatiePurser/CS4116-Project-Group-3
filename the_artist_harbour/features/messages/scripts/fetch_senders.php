@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../../utilities/databaseHandler.php';
 
 $user_id = 2; // Replace with the actual ID
-$sql = "SELECT m.sender_id, u.first_name, u.last_name, m.id AS message_id, m.created_at AS latest_message_time, m.accepted
+$sql = "SELECT m.sender_id, u.first_name, u.last_name, m.id AS message_id, m.created_at AS latest_message_time, m.status
         FROM messages m
         JOIN users u ON m.sender_id = u.id
         JOIN (
@@ -29,7 +29,7 @@ if ($messages !== null) {
         $latest_messages[$message['sender_id']] = [
             'time' => $message['latest_message_time'],
             'message_id' => $message['message_id'],
-            'accepted' => $message['accepted']
+            'status' => $message['status']
         ];
 
         $time = strtotime($message['latest_message_time']);
