@@ -1,16 +1,16 @@
 <?php
-session_start();
 $user_type = $_SESSION['user_type'] ?? 'customer';
 ?>
 
 <?php if ($user_type === 'customer'): ?>
     <nav class="navbar navbar-expand-lg">
-        <div class="container d-flex align-items-center justify-content-between">
+        <div class="container">
 
             <div class="d-flex align-items-center flex-grow-1">
                 <img src="/CS4116-Project-Group-3/the_artist_harbour/public/images/boat_logo_small.png" alt="Boat"
                     class="img-fluid me-2" style="max-height: 40px;">
-                <a class="navbar-brand amarante-regular fs-4 fs-lg-2" href="../index.php">The Artist Harbour</a>
+                <a class="navbar-brand amarante-regular fs-4 fs-lg-2"
+                    href="/CS4116-Project-Group-3/the_artist_harbour/public/home_page.php">The Artist Harbour</a>
             </div>
 
             <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -21,12 +21,14 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                 <div class="d-flex align-items-center flex-grow-1">
 
                     <!-- Search Bar -->
-                    <form class="d-flex search-bar">
+                    <form class="d-flex search-bar" method="get"
+                        action="/CS4116-Project-Group-3/the_artist_harbour/features/search/search_page.php">
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-search"></i></span>
-                            <input class="form-control form-control-sm" type="search" placeholder="Search">
+                            <input class="form-control form-control-sm" type="search" placeholder="Search" name="search">
                         </div>
                     </form>
+
 
                     <!-- User Profile Dropdown -->
                     <div class="dropdown">
@@ -63,7 +65,8 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
             <div class="position-absolute start-50 translate-middle-x d-flex align-items-center">
                 <img src="/CS4116-Project-Group-3/the_artist_harbour/public/images/boat_logo_small.png" alt="Boat"
                     class="img-fluid me-2" style="max-height: 40px;">
-                <a class="navbar-brand amarante-regular fs-4 fs-lg-2" href="/index.php">The Artist Harbour</a>
+                <a class="navbar-brand amarante-regular fs-4 fs-lg-2"
+                    href="/CS4116-Project-Group-3/the_artist_harbour/public/home_page.php">The Artist Harbour</a>
             </div>
 
             <div class="d-flex align-items-center ms-auto">
@@ -103,7 +106,8 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
             <div class="position-absolute start-50 translate-middle-x d-flex align-items-center">
                 <img src="/CS4116-Project-Group-3/the_artist_harbour/public/images/boat_logo_small.png" alt="Boat"
                     class="img-fluid me-2" style="max-height: 40px;">
-                <a class="navbar-brand amarante-regular fs-4 fs-lg-2" href="/index.php">The Artist Harbour</a>
+                <a class="navbar-brand amarante-regular fs-4 fs-lg-2"
+                    href="/CS4116-Project-Group-3/the_artist_harbour/public/home_page.php">The Artist Harbour</a>
             </div>
 
             <div class="d-flex align-items-center ms-auto">
