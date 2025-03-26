@@ -1,26 +1,44 @@
-div {
-    padding: 0 !important;
-}
-
 .message-system-container {
     display: flex;
-    flex-direction: column;
-    height: 100vh;
+    flex-grow: 1;
+    height: calc(100vh - 73.6px);
 }
 
 .inbox-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 73.6px); /* Adjust height based on your header */
+    overflow: hidden; /* Prevents the whole page from scrolling */
     background-color: #DDD2E5;
     border-right: #B3AABA 2px solid;
 }
 
-.inbox-container, 
 .conversation-container {
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
-    height: 100%;
+    height: calc(100vh - 73.6px); /* Adjust height based on your header */
+    overflow: hidden; /* Prevents the whole page from scrolling */
 }
 
+.chat-messages-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+
+}
+
+.inbox-item-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+#inbox {
+    margin: 0;
+    padding: 0;
+}
 
 
 .inbox-title-container,
@@ -30,7 +48,6 @@ div {
     align-items: center;
     background-color: #DDD2E5;
     border-bottom: #B3AABA 2px solid;
-    height: 80px;
 }
 
 .inbox-title,
@@ -38,6 +55,7 @@ div {
     font-weight: bold;
     font-size: 1.5rem;
     color: #49375a;
+    padding: 10px;
 }
 
 .sender-item {
@@ -78,25 +96,22 @@ div {
     color: #6c757d;
 }
 
-#inbox {
-    flex: 1;
-    overflow-y: auto;
-    margin: 0;
-    padding: 0;
-}
 
-.chat-messages-container {
-    flex-grow: 1;
+#chat-panel {
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    height: 100%;
 }
 
+
 .chat-input-container {
-    margin: 1%;
     position: sticky;
     bottom: 0;
+    background-color: #f8f9fa;
+    padding: 10px;
+    width: 100%;
 }
+
 
 .chat-input-container .form-control {
     border-radius: 20px;
