@@ -1,5 +1,17 @@
 <?php
-session_start()
+session_start();
+
+if (isset($_SESSION["user_id"])) {
+
+    if ($_SESSION["user_type"] === "customer") {
+        header("Location: /CS4116-Project-Group-3/the_artist_harbour/public/home_page.php");
+    } elseif ($_SESSION["user_type"] === "business") {
+        header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/business/profile.php");
+    } elseif ($_SESSION["user_type"] === "admin") {
+        header("Location: #");
+    }
+    exit();
+}
 ?>
 
 <!doctype html>

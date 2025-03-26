@@ -43,13 +43,12 @@ if ($new_user_data !== null) {
     $_SESSION["user_type"] = $new_user_data["user_type"];
 }
 
-if ($user_type === "business") {
+if ($user_type === "customer") {
+    header("Location: /CS4116-Project-Group-3/the_artist_harbour/public/home_page.php");
+} elseif ($user_type === "business") {
     createNewBusiness($_SESSION["user_id"], $business_name);
-    header("Location: ../business/account.php");
-    exit();
+    header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/business/account.php");
 }
-
-header("Location: fakeHomePage.php");
 
 function getUserByEmail(string $email) {
     $query = "SELECT * FROM users WHERE email = '$email'";
