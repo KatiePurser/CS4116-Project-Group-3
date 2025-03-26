@@ -9,50 +9,56 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
 
             <div class="d-flex align-items-center flex-grow-1">
                 <!-- Search Bar  -->
-                <form class="d-flex search-bar" method="get" action="/CS4116-Project-Group-3/the_artist_harbour/features/search/search_page.php">
+                <form class="d-flex search-bar" method="get"
+                    action="/CS4116-Project-Group-3/the_artist_harbour/features/search/search_page.php">
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-search"></i></span>
                         <input class="form-control form-control-sm" type="search" placeholder="Search" name="search">
                     </div>
                 </form>
 
-            <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+                <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <div class="d-flex align-items-center flex-grow-1">
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <div class="d-flex align-items-center flex-grow-1">
 
-                    <!-- Search Bar -->
-                    <form class="d-flex search-bar">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-search"></i></span>
-                            <input class="form-control form-control-sm" type="search" placeholder="Search">
+                        <!-- Search Bar -->
+                        <form class="d-flex search-bar">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                <input class="form-control form-control-sm" type="search" placeholder="Search">
+                            </div>
+                        </form>
+
+                        <!-- User Profile Dropdown -->
+                        <div class="dropdown">
+                            <button
+                                class="btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center dropdown-toggle"
+                                style="width: 40px; height: 40px;" type="button" id="userDropdown"
+                                data-bs-toggle="dropdown">
+                                <i class="bi bi-person"></i>
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item"
+                                        href="/CS4116-Project-Group-3/the_artist_harbour/features/messages/inbox.php">Messages</a>
+                                </li>
+                                <li><a class="dropdown-item" href="requests.php">Requests</a></li>
+                                <li><a class="dropdown-item"
+                                        href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">Account</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item"
+                                        href="/CS4116-Project-Group-3/the_artist_harbour/features/registration-login/logout.php"><i
+                                            class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                            </ul>
                         </div>
-                    </form>
-
-                    <!-- User Profile Dropdown -->
-                    <div class="dropdown">
-                        <button
-                            class="btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center dropdown-toggle"
-                            style="width: 40px; height: 40px;" type="button" id="userDropdown" data-bs-toggle="dropdown">
-                            <i class="bi bi-person"></i>
-                        </button>
-
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="messages.php">Messages</a></li>
-                            <li><a class="dropdown-item" href="requests.php">Requests</a></li>
-                            <li><a class="dropdown-item" href="account.php">Account</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item"
-                                    href="/CS4116-Project-Group-3/the_artist_harbour/features/registration-login/logout.php"><i
-                                        class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
-                        </ul>
                     </div>
                 </div>
-            </div>
     </nav>
 <?php elseif ($user_type === 'business'): ?>
     <nav class="navbar navbar-expand-lg">
@@ -62,7 +68,7 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
             <div class="position-absolute start-50 translate-middle-x d-flex align-items-center">
                 <img src="/CS4116-Project-Group-3/the_artist_harbour/public/images/boat_logo_small.png" alt="Boat"
                     class="img-fluid me-2" style="max-height: 40px;">
-                <a class="navbar-brand amarante-regular fs-4 fs-lg-2" href="index.php">The Artist Harbour</a>
+                <a class="navbar-brand amarante-regular fs-4 fs-lg-2" href="/index.php">The Artist Harbour</a>
             </div>
 
             <div class="d-flex align-items-center ms-auto">
@@ -75,10 +81,12 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                     </button>
 
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="messages.php">Messages</a></li>
+                        <li><a class="dropdown-item"
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">Messages</a>
+                        </li>
                         <li><a class="dropdown-item" href="requests.php">Requests</a></li>
                         <li><a class="dropdown-item" href="account.php">Account</a></li>
-                        <li><a class="dropdown-item" href="business_profile.php">Business</a></li>
+                        <li><a class="dropdown-item" href="/business/account.php">Business</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -100,7 +108,7 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
             <div class="position-absolute start-50 translate-middle-x d-flex align-items-center">
                 <img src="/CS4116-Project-Group-3/the_artist_harbour/public/images/boat_logo_small.png" alt="Boat"
                     class="img-fluid me-2" style="max-height: 40px;">
-                <a class="navbar-brand amarante-regular fs-4 fs-lg-2" href="index.php">The Artist Harbour</a>
+                <a class="navbar-brand amarante-regular fs-4 fs-lg-2" href="/index.php">The Artist Harbour</a>
             </div>
 
             <div class="d-flex align-items-center ms-auto">
@@ -190,7 +198,20 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
         border-color: #49375a;
     }
 
-    @media (max-width: 992px) {
+    .dropdown-menu {
+        background-color: #E2D4F0 !important;
+        border: none;
+    }
+
+    .dropdown-item {
+        color: #49375a !important;
+    }
+
+    .dropdown-item:hover {
+        background-color: #c3b5d1 !important;
+    }
+
+    color: white @media (max-width: 992px) {
         .navbar-collapse {
             position: absolute;
             top: 73.6px;
