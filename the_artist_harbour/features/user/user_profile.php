@@ -3,10 +3,17 @@
 include_once __DIR__ . '/../../utilities/databaseHandler.php';
 include_once __DIR__ . '/../../utilities/ImageHandler.php';  // Include the ImageHandler class
 
-// Initialize error/success messages array
+// Initialise error/success messages array
 $messages = [];
 
-$user_id = 11;
+if(!isset($_SESSION['user_id'])){
+    header ("Location: ../../features/registration-login/Login.php");
+    exit();
+} 
+if ($_SESSION[ 'user_type'] !== 'user'){
+exit();
+}
+$user_id = $_SESSION["user_id"];
 
 // Fetch user data from the database
 $query = "SELECT * FROM users WHERE id = $user_id";
