@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -31,8 +30,10 @@
                 <div class="col-12">
                     <form action="search_page.php" method="get">
                         <input type="hidden" id="search" name="search" value=<?php echo $keyword?>>
-                        <input type="number" name="max_price" id="max_price">
+                        <label for="min_price">Minimum Price:</label>
                         <input type="number" name="min_price" id="min_price">
+                        <label for="max_price">Maximum Price:</label>
+                        <input type="number" name="max_price" id="max_price">
                         <select name="rating" id="rating">
                             <option value="-1" selected>Filter By Reviews</option>
                             <option value="0">0 Stars</option>
@@ -69,28 +70,45 @@
             //SEARCH SERVICES BY KEYWORD
 
             $sql = "SELECT * FROM services WHERE name LIKE '%{$keyword}%'";
+
+            if(isset($_GET['min_price']) && isset($_GET['max_price'])){
+                //Any services within the given range
+                $min_price = $_GET['min_price'];
+                $max_price = $_GET['max_price'];
+                // AND max_price>=$min_price
+                // OR min_price IS NULL
+                $sql.=" AND (min_price>=$min_price OR min_price IS NULL) AND max_price<=$max_price AND max_price>=$min_price";
+            }else if(isset($_GET['min_price'])){
+                //Any services more than given figure
+                $min_price = $_GET['min_price'];
+                $sql.=" AND min_price>=$min_price";
+            }else if(isset($_GET['max_price'])){
+                //Any services less than given figure
+                $max_price = $_GET['max_price'];
+                $sql.=" AND max_price<=$max_price";
+            }
             
             if(isset($_GET['rating'])){
                 if($_GET['rating']==-1){
                     //Default - do nothing
                 }else if($_GET['rating']==0){
                     //0 Stars
-                    $sql=$sql." AND (reviews>=0.0 AND reviews<1.0)";
+                    $sql.=" AND (reviews>=0.0 AND reviews<1.0)";
                 }else if($_GET['rating']==1){
                     //1 Star
-                    $sql=$sql." AND (reviews>=1.0 AND reviews<2.0)";
+                    $sql.=" AND (reviews>=1.0 AND reviews<2.0)";
                 }else if($_GET['rating']==2){
                     //2 Stars
-                    $sql=$sql." AND (reviews>=2.0 AND reviews<3.0)";
+                    $sql.=" AND (reviews>=2.0 AND reviews<3.0)";
                 }else if($_GET['rating']==3){
                     //3 Stars
-                    $sql=$sql." AND (reviews>=3.0 AND reviews<4.0)";
+                    $sql.=" AND (reviews>=3.0 AND reviews<4.0)";
                 }else if($_GET['rating']==4){
                     //4 Stars
-                    $sql=$sql." AND (reviews>=4.0 AND reviews<5.0)";
+                    $sql.=" AND (reviews>=4.0 AND reviews<5.0)";
                 }else if($_GET['rating']==5){
                     //5 Stars
-                    $sql=$sql." AND reviews=5.0";
+                    $sql.=" AND reviews=5.0";
                 }
             }
 
@@ -99,14 +117,18 @@
                     //Default - do nothing
                 }else if($_GET['filter']==1){
                     //By Reviews (High to Low)
-                    $sql.=" ORDER BY rating DESC";
+                    echo "Reviews (High to Low)";
+                    $sql.=" ORDER BY rating DESC;";
+                    echo $sql;
                 }else if($_GET['filter']==2){
                     //By Reviews (Low to High)
-                    $sql=$sql." ORDER BY rating ASC";
+                    $sql.=" ORDER BY rating ASC;";
                 }else if($_GET['filter']==3){
                     //By Price (High to Low)
+                    $sql.=" ORDER BY min_price, max_price DESC;";
                 }else if($_GET['filter']==4){
                     //By Price (Low to High)
+                    $sql.=" ORDER BY min_price, max_price ASC;";
                 }
             }
 
@@ -131,8 +153,8 @@
                                     <img class="card-img-top" src="https://placecats.com/300/200">
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                        <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"])."\n"; ?> </h4>
-                                        <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["id"]); 
+                                        <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?> </h4>
+                                        <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["reviews"]); 
                                         echo $rating;?></p>
                                     </div>
                                 </div>
@@ -147,8 +169,8 @@
                                     <img class="card-img-top" src="https://placecats.com/300/200">
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                        <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"])."\n"; ?></h4>
-                                        <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["id"]); 
+                                        <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
+                                        <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["reviews"]); 
                                         echo $rating;?></p>
                                     </div>
                                 </div>
@@ -163,8 +185,8 @@
                                     <img class="card-img-top" src="https://placecats.com/300/200">
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                        <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"])."\n"; ?></h4>
-                                        <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["id"]); 
+                                        <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
+                                        <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["reviews"]); 
                                         echo $rating;?></p>
                                     </div>
                                 </div>
@@ -179,8 +201,8 @@
                                     <img class="card-img-top" src="https://placecats.com/300/200">
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                        <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"])."\n"; ?></h4>
-                                        <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["id"]); 
+                                        <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
+                                        <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["reviews"]); 
                                         echo $rating;?></p>
                                     </div>
                                 </div>
@@ -201,8 +223,8 @@
                                         <img class="card-img-top" src="https://placecats.com/300/200">
                                         <div class="card-body">
                                             <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                            <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"])."\n"; ?> </h4>
-                                            <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["id"]); 
+                                            <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?> </h4>
+                                            <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["reviews"]); 
                                         echo $rating;?></p>
                                         </div>
                                     </div>
