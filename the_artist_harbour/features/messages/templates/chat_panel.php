@@ -27,12 +27,11 @@
     <!-- Render the chat box only if it is an accepted message -->
     <?php if ($status === 'accepted'): ?>
         <div class="chat-input-container">
-            <form class="d-flex" id="sendMessageForm" method="post" action="scripts/send_message.php">
-                <input type="hidden" name="sender_id" value="<?php echo $receiver_id; ?>">
+            <form class="d-flex text-box" id="sendMessageForm" method="post" action="scripts/send_message.php">
                 <input type="hidden" name="receiver_id" value="<?php echo $sender_id; ?>">
-                <input type="text" class="form-control me-2" name="message_text" placeholder="Type your message..."
+                <input type="text" class="form-control me-3" name="message_text" placeholder="Type your message..."
                     required>
-                <button type="submit" class="btn">
+                <button type="submit" class="btn me-4">
                     <i class="bi bi-send"></i>
                 </button>
             </form>

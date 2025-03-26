@@ -5,7 +5,7 @@ $response = [];
 
 if (isset($_GET['sender_id'])) {
     $sender_id = $_GET['sender_id'];
-    $receiver_id = 2; // Replace with real ID
+    $receiver_id = $_SESSION['user_id'];
 
     $sql = "SELECT * FROM messages 
             WHERE (sender_id = $sender_id AND receiver_id = $receiver_id) 
