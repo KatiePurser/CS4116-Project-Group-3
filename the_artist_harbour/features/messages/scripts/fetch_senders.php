@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../../utilities/databaseHandler.php';
 
-$user_id = 2; // Replace with the actual ID
+$user_id = $_SESSION['user_id']; // Replace with the actual ID
 $sql = "SELECT m.sender_id, u.first_name, u.last_name, m.id AS message_id, m.created_at AS latest_message_time, m.status
         FROM messages m
         JOIN users u ON m.sender_id = u.id

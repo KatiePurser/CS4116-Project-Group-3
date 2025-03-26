@@ -29,7 +29,6 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                         </div>
                     </form>
 
-
                     <!-- User Profile Dropdown -->
                     <div class="dropdown">
                         <button
@@ -42,9 +41,11 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                             <li><a class="dropdown-item"
                                     href="/CS4116-Project-Group-3/the_artist_harbour/features/messages/inbox.php">Messages</a>
                             </li>
-                            <li><a class="dropdown-item" href="requests.php">Requests</a></li>
                             <li><a class="dropdown-item"
-                                    href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">Account</a>
+                                    href="/CS4116-Project-Group-3/the_artist_harbour/features/service_request/service_request.php">Requests</a>
+                            </li>
+                            <li><a class="dropdown-item"
+                                    href="/CS4116-Project-Group-3/the_artist_harbour/features/user/user_profile.php">Account</a>
                             </li>
                             <li>
                                 <hr class="dropdown-divider">
@@ -66,7 +67,7 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                 <img src="/CS4116-Project-Group-3/the_artist_harbour/public/images/boat_logo_small.png" alt="Boat"
                     class="img-fluid me-2" style="max-height: 40px;">
                 <a class="navbar-brand amarante-regular fs-4 fs-lg-2"
-                    href="/CS4116-Project-Group-3/the_artist_harbour/public/home_page.php">The Artist Harbour</a>
+                    href="/CS4116-Project-Group-3/the_artist_harbour/features/business/profile.php">The Artist Harbour</a>
             </div>
 
             <div class="d-flex align-items-center ms-auto">
@@ -80,11 +81,17 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
 
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item"
-                                href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">Messages</a>
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/messages/inbox.php">Messages</a>
                         </li>
-                        <li><a class="dropdown-item" href="requests.php">Requests</a></li>
-                        <li><a class="dropdown-item" href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">Account</a></li>
-                        <li><a class="dropdown-item" href="/CS4116-Project-Group-3/the_artist_harbour/features/business/profile.php">Profile</a></li>
+                        <li><a class="dropdown-item"
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/service_request/service_request.php">Requests</a>
+                        </li>
+                        <li><a class="dropdown-item"
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">Account</a>
+                        </li>
+                        <li><a class="dropdown-item"
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/business/profile.php">Profile</a>
+                        </li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -107,7 +114,7 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                 <img src="/CS4116-Project-Group-3/the_artist_harbour/public/images/boat_logo_small.png" alt="Boat"
                     class="img-fluid me-2" style="max-height: 40px;">
                 <a class="navbar-brand amarante-regular fs-4 fs-lg-2"
-                    href="/CS4116-Project-Group-3/the_artist_harbour/public/home_page.php">The Artist Harbour</a>
+                    href="/CS4116-Project-Group-3/the_artist_harbour/public/admin_page.php">The Artist Harbour</a>
             </div>
 
             <div class="d-flex align-items-center ms-auto">
@@ -120,7 +127,7 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                     </button>
 
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="admin_panel.php">Dashboard</a></li>   
+                        <li><a class="dropdown-item" href="admin_panel.php">Dashboard</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -158,6 +165,12 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
         height: 73.6px;
         border-bottom: #B3AABA 2px solid;
     }
+
+    .navbar-brand:active,
+    .navbar-brand:focus {
+        color: #49375a;
+    }
+
 
     .navbar-brand {
         font-weight: bold;
@@ -229,5 +242,3 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
         }
     }
 </style>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
