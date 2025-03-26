@@ -2,7 +2,7 @@
 session_start();
 // Include the necessary files (for database connection, image handling, etc.)
 include_once __DIR__ . '/CS4116-Project-Group-3/the_artist_harbour/utilities/databaseHandler.php';
-include_once __DIR__ . '/CS4116-Project-Group-3/the_artist_harbour/utilities/ImageHandler.php';  // Include the ImageHandler class
+include_once __DIR__ . '/CS4116-Project-Group-3/the_artist_harbour/utilities/imageHandler.php';  // Include the ImageHandler class
 
 // Initialise error/success messages array
 $messages = [];
