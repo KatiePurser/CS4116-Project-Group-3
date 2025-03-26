@@ -24,3 +24,27 @@
         </div>
     </div>
 </div>
+<style>
+    #reportModal .modal-content {
+        background-color: #82689A;
+        color: white;
+    }
+
+    #reportModal .btn-primary {
+        background-color: #49375a;
+        border-color: #49375a;
+    }
+
+    #reportModal .btn-primary:hover {
+        background-color: rgb(59, 44, 73);
+    }
+
+    #reportModal .btn-secondary {
+        background-color: #b5a9bf;
+        border-color: #b5a9bf;
+    }
+
+    #reportModal .btn-secondary:hover {
+        background-color: #a395af;
+    }
+</style>
