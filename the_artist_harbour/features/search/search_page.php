@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -33,7 +34,7 @@
                         <input type="number" name="max_price" id="max_price">
                         <input type="number" name="min_price" id="min_price">
                         <select name="rating" id="rating">
-                            <option value="-1">Filter By Reviews</option>
+                            <option value="-1" selected>Filter By Reviews</option>
                             <option value="0">0 Stars</option>
                             <option value="1">1 Star</option>
                             <option value="2">2 Stars</option>
@@ -70,7 +71,9 @@
             $sql = "SELECT * FROM services WHERE name LIKE '%{$keyword}%'";
             
             if(isset($_GET['rating'])){
-                if($_GET['rating']==0){
+                if($_GET['rating']==-1){
+                    //Default - do nothing
+                }else if($_GET['rating']==0){
                     //0 Stars
                     $sql=$sql." AND (reviews>=0.0 AND reviews<1.0)";
                 }else if($_GET['rating']==1){
@@ -88,15 +91,15 @@
                 }else if($_GET['rating']==5){
                     //5 Stars
                     $sql=$sql." AND reviews=5.0";
-                }else if($_GET['rating']==-1){
-                    //Default - do nothing
                 }
             }
 
             if(isset($_GET['filter'])){
-                if($_GET['filter']==1){
+                if($_GET['filter']==-1){
+                    //Default - do nothing
+                }else if($_GET['filter']==1){
                     //By Reviews (High to Low)
-                    $sql=$sql." ORDER BY rating DESC";
+                    $sql.=" ORDER BY rating DESC";
                 }else if($_GET['filter']==2){
                     //By Reviews (Low to High)
                     $sql=$sql." ORDER BY rating ASC";
@@ -104,8 +107,6 @@
                     //By Price (High to Low)
                 }else if($_GET['filter']==4){
                     //By Price (Low to High)
-                }else if($_GET['filter']==-1){
-                    //Default - do nothing
                 }
             }
 
@@ -224,7 +225,7 @@
                 <h1 style="text-align: center;"> BUSINESSES </h1>
             </div>
             <?php
-            if(!isset($result)){
+            if($result==NULL){
                 ?> <h3 style="text-align: center;">NO BUSINESSES MATCH THE KEYWORD</h3> <?php
             }else{ 
                 $business=$result[0];

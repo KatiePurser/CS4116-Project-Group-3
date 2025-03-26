@@ -83,8 +83,8 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                                 href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">Messages</a>
                         </li>
                         <li><a class="dropdown-item" href="requests.php">Requests</a></li>
-                        <li><a class="dropdown-item" href="account.php">Account</a></li>
-                        <li><a class="dropdown-item" href="/business/account.php">Business</a></li>
+                        <li><a class="dropdown-item" href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">Account</a></li>
+                        <li><a class="dropdown-item" href="/CS4116-Project-Group-3/the_artist_harbour/features/business/profile.php">Profile</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -120,7 +120,7 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                     </button>
 
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="admin_panel.php">Dashboard</a></li>
+                        <li><a class="dropdown-item" href="admin_panel.php">Dashboard</a></li>   
                         <li>
                             <hr class="dropdown-divider">
                         </li>
