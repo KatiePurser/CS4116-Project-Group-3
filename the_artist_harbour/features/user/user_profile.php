@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Include the necessary files (for database connection, image handling, etc.)
 include_once __DIR__ . '/../../utilities/databaseHandler.php';
 include_once __DIR__ . '/../../utilities/ImageHandler.php';  // Include the ImageHandler class
@@ -10,15 +11,14 @@ if(!isset($_SESSION['user_id'])){
     header ("Location: ../../features/registration-login/Login.php");
     exit();
 } 
-if ($_SESSION[ 'user_type'] !== 'user'){
-exit();
-}
+
 $user_id = $_SESSION["user_id"];
 
 // Fetch user data from the database
 $query = "SELECT * FROM users WHERE id = $user_id";
 $userData = DatabaseHandler::make_select_query($query);
 
+// Check if user data exists before using it
 if ($userData && count($userData) > 0) {
     $first_name = $userData[0]['first_name'];
     $last_name = $userData[0]['last_name'];
@@ -33,6 +33,7 @@ if ($userData && count($userData) > 0) {
     $profile_picture = "#";
     $user_type = "customer";
 }
+
 
 // Handle form submission for updating user details
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
