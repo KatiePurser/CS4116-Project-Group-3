@@ -61,6 +61,17 @@
                             <option value="4">By Price (High to Low)</option>
                             <option value="3">By Price (Low to High)</option>
                         </select>
+                        <label for="tags">Filter by Tags (Hold Ctrl while clicking to select more than one)</label>
+                        <select name="tags" id="tags" multiple size="1">
+                            <option value="1">Crochet</option>
+                            <option value="2">Knitting</option>
+                            <option value="3">Woodworking</option>
+                            <option value="4">Woodworking</option>
+                            <option value="5">Woodworking</option>
+                            <option value="6">Woodworking</option>
+                            <option value="7">Woodworking</option>
+                            <option value="8">Woodworking</option>
+                        </select>
                         <input type="submit" value="Add Filters">
                     </form>
                 </div>
