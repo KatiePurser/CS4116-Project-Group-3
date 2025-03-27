@@ -70,22 +70,23 @@
             //SEARCH SERVICES BY KEYWORD
 
             $sql = "SELECT * FROM services WHERE name LIKE '%{$keyword}%'";
-
-            if(isset($_GET['min_price']) && isset($_GET['max_price'])){
-                //Any services within the given range
-                $min_price = $_GET['min_price'];
-                $max_price = $_GET['max_price'];
-                // AND max_price>=$min_price
-                // OR min_price IS NULL
-                $sql.=" AND (min_price>=$min_price OR min_price IS NULL) AND max_price<=$max_price AND max_price>=$min_price";
-            }else if(isset($_GET['min_price'])){
-                //Any services more than given figure
-                $min_price = $_GET['min_price'];
-                $sql.=" AND min_price>=$min_price";
-            }else if(isset($_GET['max_price'])){
-                //Any services less than given figure
-                $max_price = $_GET['max_price'];
-                $sql.=" AND max_price<=$max_price";
+            if(isset($_GET['min_price'])){               
+                if($_GET['min_price']!="" && $_GET['max_price']!=""){
+                    //Any services within the given range
+                    $min_price = $_GET['min_price'];
+                    $max_price = $_GET['max_price'];
+                    // AND max_price>=$min_price
+                    // OR min_price IS NULL
+                    $sql.=" AND (min_price>=$min_price OR min_price IS NULL) AND max_price<=$max_price AND max_price>=$min_price";
+                }else if($_GET['min_price']!=""){
+                    //Any services more than given figure
+                    $min_price = $_GET['min_price'];
+                    $sql.=" AND (min_price>=$min_price OR min_price IS NULL) AND max_price>= $min_price";
+                }else if($_GET['max_price']!=""){
+                    //Any services less than given figure
+                    $max_price = $_GET['max_price'];
+                    $sql.=" AND max_price<=$max_price";
+                }
             }
             
             if(isset($_GET['rating'])){
