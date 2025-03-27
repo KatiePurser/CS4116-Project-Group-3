@@ -1,3 +1,17 @@
+<?php
+session_start();
+
+// if (!isset($_SESSION['user_id'])) {
+//     header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/registration-login/login.php");
+//     exit();
+// }
+
+// if ($_SESSION['user_type'] !== 'user') {
+//     exit();
+// }
+
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -266,7 +280,7 @@
                 while($i<count($result)-4){ ?>
                 <div class="row justify-content-center">
                     <div class="card-group justify-content-center">
-                        <form action="business.php" method="get">
+                        <form action="../business/profile.php" method="get">
                             <button type="submit">
                                 <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
                                 <div class="card hovercard text-center">
@@ -279,7 +293,7 @@
                         </form>
                         <?php $business = next($result); 
                         $i++;?>
-                        <form action="service.php" method="get">
+                        <form action="../business/profile.php" method="get">
                             <button type="submit">
                                 <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
                                 <div class="card hovercard text-center">
@@ -292,7 +306,7 @@
                         </form>
                         <?php $business = next($result); 
                         $i++;?>
-                        <form action="service.php" method="get">
+                        <form action="../business/profile.php" method="get">
                             <button type="submit">
                                 <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
                                 <div class="card hovercard text-center">
@@ -305,7 +319,7 @@
                         </form>
                         <?php $business = next($result); 
                         $i++;?>
-                        <form action="service.php" method="get">
+                        <form action="../business/profile.php" method="get">
                             <button type="submit">
                                 <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
                                 <div class="card hovercard text-center">
@@ -324,7 +338,7 @@
                 <div class="row">
                     <div class="card-group justify-content-center">
                         <?php while($i<count($result)){ ?>
-                            <form action="service.php" method="get">
+                            <form action="../business/profile.php" method="get">
                                 <button type="submit">
                                     <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
                                     <div class="card hovercard text-center">
