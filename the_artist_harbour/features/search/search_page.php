@@ -36,9 +36,21 @@ session_start();
             require_once("../../utilities/databaseHandler.php");
             require_once("../service/serviceDetails.php"); 
             require_once("searchMethods.php");
+
+            function read($csv){
+                $file = fopen($csv, 'r');
+                while (!feof($file) ) {
+                    $line[] = fgetcsv($file, 1024);
+                }
+                fclose($file);
+                return $line;
+            }
             
             $keyword=$_GET["search"];
-            $tags = SearchMethods::readCSV("../../utilities/tags.csv")?>
+
+            $csv = "../../utilities/tags.csv";
+            $tags = read($csv);
+            ?>
 
             <div class="row">
                 <div class="col-12">
@@ -57,34 +69,23 @@ session_start();
                             <option value="4">4 Stars</option>
                             <option value="5">5 Stars</option>
                         </select>
-                        <!-- <select name="tags" id="tags">
-                            <?php 
-                            $i=0;
-                            $tag = $tags[0];
-                            while ($i < count($tags)) { ?>
-                                <option value="<?php echo $tag ?>"><?php echo $tag ?></option>
-                                <?php $i++;
-                                $tag = next($tags);
-                            }
-                            ?>
-                        </select> -->
                         <select name="filter" id="filter">
                             <option value="-1" selected>Sort Services</option>
                             <option value="1">By Reviews (High to Low)</option>
                             <option value="2">By Reviews (Low to High)</option>
-                            <option value="4">By Price (High to Low)</option>
-                            <option value="3">By Price (Low to High)</option>
+                            <option value="3">By Price (High to Low)</option>
+                            <option value="4">By Price (Low to High)</option>
                         </select>
                         <label for="tags">Filter by Tags (Hold Ctrl while clicking to select more than one)</label>
-                        <select name="tags" id="tags" multiple size="1">
-                            <option value="1">Crochet</option>
-                            <option value="2">Knitting</option>
-                            <option value="3">Woodworking</option>
-                            <option value="4">Woodworking</option>
-                            <option value="5">Woodworking</option>
-                            <option value="6">Woodworking</option>
-                            <option value="7">Woodworking</option>
-                            <option value="8">Woodworking</option>
+                        <select name="tags" id="tags" multiple size="3">
+                            <?php 
+                            $i=0;
+                            while ($i < count($tags)) { 
+                                $tag = $tags[$i][0];?>
+                                <option value="{$i}"><?php echo $tag ?></option>
+                                <?php $i++;
+                            }
+                            ?>
                         </select>
                         <input type="submit" value="Add Filters">
                     </form>
@@ -95,6 +96,7 @@ session_start();
             //SEARCH SERVICES BY KEYWORD
 
             $sql = "SELECT * FROM services WHERE name LIKE '%{$keyword}%'";
+            echo $sql."\n";
             if(isset($_GET['min_price'])){               
                 if($_GET['min_price']!="" && $_GET['max_price']!=""){
                     //Any services within the given range
@@ -138,23 +140,25 @@ session_start();
                 }
             }
 
+            if(isset($_GET['tags']))
+
             if(isset($_GET['filter'])){
                 if($_GET['filter']==-1){
                     //Default - do nothing
                 }else if($_GET['filter']==1){
                     //By Reviews (High to Low)
-                    echo "Reviews (High to Low)";
-                    $sql.=" ORDER BY rating DESC;";
+                    echo "Reviews (High to Low)\n";
+                    $sql.=" ORDER BY reviews DESC;";
                     echo $sql;
                 }else if($_GET['filter']==2){
                     //By Reviews (Low to High)
-                    $sql.=" ORDER BY rating ASC;";
+                    $sql.=" ORDER BY reviews ASC;";
                 }else if($_GET['filter']==3){
                     //By Price (High to Low)
-                    $sql.=" ORDER BY min_price, max_price DESC;";
+                    $sql.=" ORDER BY max_price DESC;";
                 }else if($_GET['filter']==4){
                     //By Price (Low to High)
-                    $sql.=" ORDER BY min_price, max_price ASC;";
+                    $sql.=" ORDER BY max_price ASC;";
                 }
             }
 
@@ -266,7 +270,7 @@ session_start();
 
 
             //SEARCH BUSINESSES BY KEYWORD
-            $sql = "SELECT * FROM businesses WHERE display_name LIKE '%{$keyword}%'";
+            $sql = "SELECT * FROM businesses WHERE display_name LIKE '%{$keyword}%' ORDER BY reviews DESC";
             $result = DatabaseHandler::make_select_query($sql);
             $i=0; ?>
             <div>
