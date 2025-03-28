@@ -15,8 +15,7 @@ $user_type = $_SESSION['user_type'] ?? '';
                 </li>
             <?php elseif ($user_type === 'business'): ?>
                 <li class="sidebar-item">
-                    <a class="sidebar-link"
-                        href="/CS4116-Project-Group-3/the_artist_harbour/features/businesss/account.php">
+                    <a class="sidebar-link" href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">
                         <i class="bi bi-person"></i>
                         <span class="d-none d-xl-inline">Account</span>
                     </a>
