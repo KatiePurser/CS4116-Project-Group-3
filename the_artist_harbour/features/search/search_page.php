@@ -6,7 +6,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// if ($_SESSION['user_type'] !== 'user') {
+// if ($_SESSION['user_type'] != "user") {
 //     exit();
 // }
 
@@ -194,7 +194,7 @@ if (!isset($_SESSION['user_id'])) {
                 $tags_array = array_keys($_GET['tags']);
                 while($i<count($tags_array)){
                     $tag = $_GET['tags'][$tags_array[$i]];
-                    $sql.=" AND (tags LIKE %,$tag,% OR tags LIKE $tag,% OR tags LIKE %,$tag OR tags LIKE $tag)";
+                    $sql.=" AND (tags LIKE '%,{$tag},%' OR tags LIKE '{$tag},%' OR tags LIKE '%,{$tag}' OR tags LIKE '{$tag}')";
                     $i++;
                 }
             }
@@ -239,7 +239,7 @@ if (!isset($_SESSION['user_id'])) {
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $service["name"]; ?></h3>
                                         <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?> </h4>
-                                        <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["reviews"]); 
+                                        <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                         echo $rating;?></p>
                                     </div>
                                 </div>
@@ -255,7 +255,7 @@ if (!isset($_SESSION['user_id'])) {
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $service["name"]; ?></h3>
                                         <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
-                                        <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["reviews"]); 
+                                        <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                         echo $rating;?></p>
                                     </div>
                                 </div>
@@ -271,7 +271,7 @@ if (!isset($_SESSION['user_id'])) {
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $service["name"]; ?></h3>
                                         <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
-                                        <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["reviews"]); 
+                                        <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                         echo $rating;?></p>
                                     </div>
                                 </div>
@@ -287,7 +287,7 @@ if (!isset($_SESSION['user_id'])) {
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $service["name"]; ?></h3>
                                         <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
-                                        <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["reviews"]); 
+                                        <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                         echo $rating;?></p>
                                     </div>
                                 </div>
@@ -309,7 +309,7 @@ if (!isset($_SESSION['user_id'])) {
                                         <div class="card-body">
                                             <h3 class="card-title"><?php echo $service["name"]; ?></h3>
                                             <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?> </h4>
-                                            <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["reviews"]); 
+                                            <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                         echo $rating;?></p>
                                         </div>
                                     </div>
@@ -346,6 +346,8 @@ if (!isset($_SESSION['user_id'])) {
                                     <img class="card-img-top" src="https://placecats.com/300/200">
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
+                                        <p class="card-text"><?php $rating = ServiceDetails::getRating($business["reviews"]); 
+                                        echo $rating;?></p>
                                     </div>
                                 </div>
                             </button>
@@ -359,6 +361,8 @@ if (!isset($_SESSION['user_id'])) {
                                     <img class="card-img-top" src="https://placecats.com/300/200">
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
+                                        <p class="card-text"><?php $rating = ServiceDetails::getRating($business["reviews"]); 
+                                        echo $rating;?></p>
                                     </div>
                                 </div>
                             </button>
@@ -372,6 +376,8 @@ if (!isset($_SESSION['user_id'])) {
                                     <img class="card-img-top" src="https://placecats.com/300/200">
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
+                                        <p class="card-text"><?php $rating = ServiceDetails::getRating($business["reviews"]); 
+                                        echo $rating;?></p>
                                     </div>
                                 </div>
                             </button>
@@ -385,6 +391,8 @@ if (!isset($_SESSION['user_id'])) {
                                     <img class="card-img-top" src="https://placecats.com/300/200">
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
+                                        <p class="card-text"><?php $rating = ServiceDetails::getRating($business["reviews"]); 
+                                        echo $rating;?></p>
                                     </div>
                                 </div>
                             </button>
@@ -404,6 +412,8 @@ if (!isset($_SESSION['user_id'])) {
                                         <img class="card-img-top" src="https://placecats.com/300/200">
                                         <div class="card-body">
                                             <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
+                                            <p class="card-text"><?php $rating = ServiceDetails::getRating($business["reviews"]); 
+                                            echo $rating;?></p>
                                         </div>
                                     </div>
                                 </button>
