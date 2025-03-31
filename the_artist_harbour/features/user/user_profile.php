@@ -1,8 +1,8 @@
 <?php
 session_start();
 // Include the necessary files (for database connection, image handling, etc.)
-include_once __DIR__ . '/CS4116-Project-Group-3/the_artist_harbour/utilities/databaseHandler.php';
-include_once __DIR__ . '/CS4116-Project-Group-3/the_artist_harbour/utilities/imageHandler.php';  // Include the ImageHandler class
+include_once __DIR__ . '/../../utilities/databaseHandler.php';
+include_once __DIR__ . '/../../utilities/imageHandler.php';  // Include the ImageHandler class
 
 // Initialise error/success messages array
 $messages = [];
@@ -166,7 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container-fluid">
         <div class="row g-0">
             <div class="col-12">
-                <?php include __DIR__ . '/CS4116-Project-Group-3/the_artist_harbour/templates/header.php'; ?>
+                <?php include __DIR__ . '/../../templates/header.php'; ?>
             </div>
             <div class="col-12 subheader">
                 <h>Profile</h>
@@ -174,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <div class="row g-0">
             <div class="col-1">
-                <?php include __DIR__ . '/CS4116-Project-Group-3/the_artist_harbour/templates/sidebar.php'; ?>
+                <?php include __DIR__ . '/../../templates/sidebar.php'; ?>
             </div>
             
             <!-- Sub-sidebar with user info -->
