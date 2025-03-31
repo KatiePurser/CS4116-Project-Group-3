@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-// if (!isset($_SESSION['user_id'])) {
-//     header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/registration-login/login.php");
-//     exit();
-// }
+if (!isset($_SESSION['user_id'])) {
+    header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/registration-login/login.php");
+    exit();
+}
 
 // if ($_SESSION['user_type'] !== 'user') {
 //     exit();
@@ -45,6 +45,10 @@ session_start();
 
             .dropdown:hover .tags {
             display: block;
+            }
+
+            .tag_label{
+                padding-right: 10px;;
             }
         </style>
     </head>
@@ -103,13 +107,13 @@ session_start();
                         </select>
                         <label for="tags">Filter by Tags (Hold Ctrl while clicking to select more than one)</label>
                         <div class="dropdown">
-                            <button>Select Tags</button>
-                            <div class="tags">
+                            <!-- <button onclick="myFunction()" class="dropbtn">Select Tags</button> -->
+                            <div id="tags" class="tags_div">
                                 <?php 
                                 $i=0;
                                 while ($i < count($tags)) { 
                                     $tag = $tags[$i][0];?>
-                                    <label><input type="checkbox" name="tags[<?php echo $i ?>]" value="<?php echo $tag ?>"><?php echo $tag ?></label>
+                                    <label class="tag_label"><input class="tag_checkbox" type="checkbox" name="tags[<?php echo $i ?>]" value="<?php echo $tag ?>"><?php echo $tag ?></label>
                                     <?php $i++;
                                 }
                                 ?>
@@ -119,6 +123,26 @@ session_start();
                     </form>
                 </div>
             </div>
+
+            <script>
+                function myFunction() {
+                    document.getElementById("tags").classList.toggle("show");
+                }
+
+                // Close the dropdown menu if the user clicks outside of it
+                window.onclick = function(event) {
+                if (!event.target.matches('.dropbtn')) {
+                    var dropdowns = document.getElementsByClassName("tags_div");
+                    var i;
+                    for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                    }
+                }
+                }
+            </script>
 
             <?php
             //SEARCH SERVICES BY KEYWORD
