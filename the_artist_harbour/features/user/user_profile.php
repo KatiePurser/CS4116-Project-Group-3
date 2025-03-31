@@ -1,8 +1,9 @@
 <?php
 session_start();
 // Include the necessary files (for database connection, image handling, etc.)
-require_once __DIR__ . '/../../utilities/databaseHandler.php';
-include_once __DIR__ . '/../../utilities/imageHandler.php';
+include_once __DIR__ . '/../../utilities/databaseHandler.php';
+include_once __DIR__ . '/../../utilities/imageHandler.php';  // Include the ImageHandler class
+
 // Initialise error/success messages array
 $messages = [];
 
