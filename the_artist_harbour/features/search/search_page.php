@@ -22,6 +22,31 @@ session_start();
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+        <style>
+            .dropdown {
+            position: relative;
+            display: inline-block;
+            }
+
+            .tags {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            }
+
+            .tags label {
+            display: block;
+            margin-top: 10px;
+            }
+
+            .dropdown:hover .tags {
+            display: block;
+            }
+        </style>
     </head>
     <body style="padding-top: 73.6px;">
 
@@ -77,16 +102,19 @@ session_start();
                             <option value="4">By Price (Low to High)</option>
                         </select>
                         <label for="tags">Filter by Tags (Hold Ctrl while clicking to select more than one)</label>
-                        <select name="tags" id="tags" multiple size="3">
-                            <?php 
-                            $i=0;
-                            while ($i < count($tags)) { 
-                                $tag = $tags[$i][0];?>
-                                <option value="{$i}"><?php echo $tag ?></option>
-                                <?php $i++;
-                            }
-                            ?>
-                        </select>
+                        <div class="dropdown">
+                            <button>Select Tags</button>
+                            <div class="tags">
+                                <?php 
+                                $i=0;
+                                while ($i < count($tags)) { 
+                                    $tag = $tags[$i][0];?>
+                                    <label><input type="checkbox" name="tags[<?php echo $i ?>]" value="<?php echo $tag ?>"><?php echo $tag ?></label>
+                                    <?php $i++;
+                                }
+                                ?>
+                            </div>
+                        </div>
                         <input type="submit" value="Add Filters">
                     </form>
                 </div>
@@ -96,14 +124,11 @@ session_start();
             //SEARCH SERVICES BY KEYWORD
 
             $sql = "SELECT * FROM services WHERE name LIKE '%{$keyword}%'";
-            echo $sql."\n";
             if(isset($_GET['min_price'])){               
                 if($_GET['min_price']!="" && $_GET['max_price']!=""){
                     //Any services within the given range
                     $min_price = $_GET['min_price'];
                     $max_price = $_GET['max_price'];
-                    // AND max_price>=$min_price
-                    // OR min_price IS NULL
                     $sql.=" AND (min_price>=$min_price OR min_price IS NULL) AND max_price<=$max_price AND max_price>=$min_price";
                 }else if($_GET['min_price']!=""){
                     //Any services more than given figure
@@ -140,16 +165,22 @@ session_start();
                 }
             }
 
-            if(isset($_GET['tags']))
+            $i=0;
+            if(isset($_GET['tags'])){
+                $tags_array = array_keys($_GET['tags']);
+                while($i<count($tags_array)){
+                    $tag = $_GET['tags'][$tags_array[$i]];
+                    $sql.=" AND (tags LIKE %,$tag,% OR tags LIKE $tag,% OR tags LIKE %,$tag OR tags LIKE $tag)";
+                    $i++;
+                }
+            }
 
             if(isset($_GET['filter'])){
                 if($_GET['filter']==-1){
                     //Default - do nothing
                 }else if($_GET['filter']==1){
                     //By Reviews (High to Low)
-                    echo "Reviews (High to Low)\n";
                     $sql.=" ORDER BY reviews DESC;";
-                    echo $sql;
                 }else if($_GET['filter']==2){
                     //By Reviews (Low to High)
                     $sql.=" ORDER BY reviews ASC;";
