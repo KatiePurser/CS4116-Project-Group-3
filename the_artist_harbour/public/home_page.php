@@ -67,7 +67,7 @@ session_start();
                                 <div class="card-body">
                                     <h3 class="card-title"><?php echo $service["name"]; ?></h3>
                                     <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?> </h4>
-                                    <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["reviews"]); 
+                                    <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                     echo $rating;?></p>
                                 </div>
                             </div>
@@ -83,7 +83,7 @@ session_start();
                                 <div class="card-body">
                                     <h3 class="card-title"><?php echo $service["name"]; ?></h3>
                                     <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
-                                    <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["reviews"]); 
+                                    <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                     echo $rating;?></p>
                                 </div>
                             </div>
@@ -99,7 +99,7 @@ session_start();
                                 <div class="card-body">
                                     <h3 class="card-title"><?php echo $service["name"]; ?></h3>
                                     <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
-                                    <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["reviews"]); 
+                                    <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                     echo $rating;?></p>
                                 </div>
                             </div>
@@ -115,7 +115,7 @@ session_start();
                                 <div class="card-body">
                                     <h3 class="card-title"><?php echo $service["name"]; ?></h3>
                                     <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
-                                    <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["reviews"]); 
+                                    <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                     echo $rating;?></p>
                                 </div>
                             </div>
@@ -137,7 +137,7 @@ session_start();
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $service["name"]; ?></h3>
                                         <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?> </h4>
-                                        <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["reviews"]); 
+                                        <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                     echo $rating;?></p>
                                     </div>
                                 </div>

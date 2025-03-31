@@ -15,7 +15,7 @@ class ServiceDetails{
         }
     }
 
-    public static function getServiceRating($rating){
+    public static function getRating($rating){
         if($rating===null){
             return "Not yet reviewed";
         }else{
