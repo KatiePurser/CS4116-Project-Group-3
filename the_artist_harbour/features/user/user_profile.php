@@ -148,11 +148,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 1.5rem;
             color: #49375a;
         }
-        .sub-sidebar {
-            background-color: #ddd2f1; 
-            min-height: calc(100vh - 56px - 53px);
-            padding: 10px;
-        }
+        .profile-picture-container {
+            width: 150px;          
+            height: 150px;        
+            border-radius: 50%;   
+            overflow: hidden;     
+            display: flex;
+            justify-content: center;
+            align-items: center;
+}
+
+        .profile-picture {
+           width: 100%;
+           height: 100%;
+           object-fit: cover;     
+}
+
+.sub-sidebar {
+    background-color: #ddd2f1; 
+    min-height: calc(100vh - 56px - 53px);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    
+}
+        
 
         div {
             padding: 0 !important;
@@ -181,12 +202,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="col-2 sub-sidebar">
                 <div class="text-center">
                 <?php if ($profile_picture): ?>
-                    <img src="get_image.php?id=<?= $user_id ?>" class="img-fluid rounded-circle" width="100" height="100">
-                <?php else: ?>
-                    <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto" style="width:80px; height:80px;">
-                        <i class="bi bi-person fs-1"></i>
-                    </div>
-                <?php endif; ?>
+    <div class="profile-picture-container">
+        <img src="get_image.php?id=<?= $user_id ?>" class="profile-picture">
+    </div>
+<?php else: ?>
+    <div class="profile-picture-container bg-secondary text-white d-flex align-items-center justify-content-center-right">
+        <i class="bi bi-person fs-1"></i>
+    </div>
+<?php endif; ?>
 
 <h4 class="mt-2"><?php echo htmlspecialchars($first_name . " " . $last_name); ?></h4>
                     <p class="text-muted"><?php echo htmlspecialchars($email); ?></p>
