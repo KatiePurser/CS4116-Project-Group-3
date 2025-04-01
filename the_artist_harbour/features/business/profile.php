@@ -1,6 +1,7 @@
 <?php
-
 session_start();
+// Include the necessary files (for database connection, etc.)
+include_once __DIR__ . '/../../utilities/databaseHandler.php';
 
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -13,146 +14,274 @@ if ($_SESSION['user_type'] !== 'business') {
     exit();
 }
 
+// Assign the user ID from the session
+$user_id = $_SESSION["user_id"];
+
+// Look up the business ID associated with this user
+$query = "SELECT id FROM businesses WHERE user_id = $user_id";
+$result = DatabaseHandler::make_select_query($query);
+
+// Assign the correct business ID
+
+if (!empty($result)) {
+    $business_id = $result[0]['id'];
+   
+} else {
+    die("No business found for this user. Please ensure your business profile is set up.");
+}
+
+if ($business_id) {
+    $query = "SELECT * FROM businesses WHERE id = $business_id";
+    $businessData = DatabaseHandler::make_select_query($query);
+}
+
+
+// If no data found, use defaults
+if ($businessData && count($businessData) > 0) {
+    $business_name = $businessData[0]['display_name'];
+    $business_description = $businessData[0]['description'];
+    $instagram = $businessData[0]['instagram'];
+    $facebook = $businessData[0]['facebook'];
+    $tiktok = $businessData[0]['tiktok'];
+    $pinterest = $businessData[0]['pinterest'];
+    $website = $businessData[0]['website'];
+} else {
+    // Default data in case the query fails or no business data is found
+    $business_name = "Sarah Crane Crochet";
+    $business_description = "Lorem ipsum dolor amet, consectetur adipiscing elit.";
+    $instagram = "#";
+    $facebook = "#";
+    $tiktok = "#";
+    $pinterest = "#";
+    $website = "#";
+}
+
+
+
+
+// Fetch services for the business
+$queryServices = "SELECT id, name, description, min_price, max_price FROM services WHERE business_id = $business_id";
+$services = DatabaseHandler::make_select_query($queryServices);
+
+// Fetch recent reviews (assuming a 'reviews' table with author_name, content)
+$queryReviews = "SELECT r.author_name, r.content
+                 FROM reviews r
+                 WHERE r.business_id = $business_id
+                 ORDER BY r.created_at DESC
+                 LIMIT 3"; // Adjust limit as needed
+$reviews = DatabaseHandler::make_select_query($queryReviews);
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Artist Harbour</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Business Profile - The Artist Harbour</title>
+    <link rel="stylesheet" href="../../public/css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
+        
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f3eef5;
-            color: #333;
+            font-family: sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #fff; /
         }
-        .container {
-            width: 90%;
-            margin: auto;
-            max-width: 1200px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+
+        .container-fluid {
+            padding: 0; 
         }
-        .profile {
-            display: flex;
-            align-items: center;
-            background-color: #c5a6d4;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-        .profile img {
-            width: 150px;
-            height: 150px;
-            border-radius: 10px;
-            margin-right: 20px;
-        }
-        .services, .reviews {
-            background-color: #e6dfe5;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        .services h3, .reviews h3 {
-            margin-bottom: 15px;
-        }
-        .service-card, .review {
-            display: flex;
-            align-items: center;
+
+      
+        .subheader {
             background-color: #ddd2f1;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            justify-content: space-between;
-        }
-        .service-card img {
-            width: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             height: 100px;
-            border-radius: 10px;
-            margin-right: 15px;
+            text-align: center;
+            border-bottom: 1px solid #49375a;
         }
-        .service-card div {
-            flex-grow: 1;
-        }
-        .service-card span {
+
+        .subheader h2 { 
+            padding: 10px;
             font-weight: bold;
-            color: #4a2c5d;
+            font-size: 1.5rem;
+            color: #49375a;
+            margin: 0; 
         }
-        .service-card button {
+
+        
+        .main-content {
+            padding: 20px;
+        }
+
+        .profile-section {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .profile-section h2 {
+            color: #49375a;
+            margin-top: 0;
+        }
+
+        .profile-section p {
+            color: #555;
+        }
+
+        .services-section {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .services-section h3 {
+            color: #49375a;
+            margin-top: 0;
+        }
+
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .service-item:last-child {
+            border-bottom: none;
+        }
+
+        .service-details h4 {
+            color: #666;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+
+        .service-details p {
+            color: #777;
+            margin-bottom: 0;
+        }
+
+        .service-price {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .button {
             background-color: #82689A;
             color: white;
             border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
+            padding: 8px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 4px;
             cursor: pointer;
+            font-size: 0.9em;
         }
-        .service-card button:hover {
-            background-color: #70578c;
+
+        .reviews-section {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
         }
-        .reviews .review {
-            flex-direction: column;
-            align-items: flex-start;
+
+        .reviews-section h3 {
+            color: #49375a;
+            margin-top: 0;
         }
-        .review h4 {
-            margin: 0;
-            font-size: 1.1em;
-            color: #4a2c5d;
+
+        .review-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
         }
-        .review p {
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .review-item strong {
+            color: #666;
+        }
+
+        .review-item p {
+            color: #777;
             margin-top: 5px;
+            margin-bottom: 0;
         }
     </style>
 </head>
 <body>
-<div class="container">
+    <div class="container-fluid">
+        <div class="row g-0">
+            <div class="col-12">
+                <?php include __DIR__ . '/../../templates/header.php'; ?>
+            </div>
+        
+        </div>
        
-        <section class="profile">
-            <img src="artist.jpg" alt="Sarah Crane">
-            <div>
-                <h2>SARAH CRANE CROCHET</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
-            </div>
-        </section>
-        <section class="services">
-            <h3>Services</h3>
-            <div class="service-card">
-                <img src="amigurumi.jpg" alt="Amigurumi Masterclass">
-                <div>
-                    <h4>Amigurumi Masterclass</h4>
-                    <p>Lorem ipsum dolor sit amet...</p>
-                    <span>€25-€40</span>
+
+            <div class="col-9 main-content">
+                <div class="profile-section">
+                    <h2>Business Information</h2>
+                    <p><?php echo htmlspecialchars($business_description); ?></p>
                 </div>
-                <button>Request</button>
-            </div>
-            <div class="service-card">
-                <img src="crochet.jpg" alt="Crochet Wearables Masterclass">
-                <div>
-                    <h4>Crochet Wearables Masterclass</h4>
-                    <p>Lorem ipsum dolor sit amet...</p>
-                    <span>€80</span>
+
+                <div class="services-section">
+                    <h3>Services</h3>
+                    <?php if ($services && count($services) > 0): ?>
+                        <?php foreach ($services as $service): ?>
+                            <div class="service-item">
+                                <div class="service-details">
+                                    <h4><?php echo htmlspecialchars($service['name']); ?></h4>
+                                    <p><?php echo htmlspecialchars($service['description']); ?></p>
+                                </div>
+                                <div class="service-price">
+                                    €<?php
+                                    if (isset($service['min_price']) && $service['min_price'] !== null && isset($service['max_price']) && $service['max_price'] !== null) {
+                                        echo htmlspecialchars($service['min_price']) . "-€" . htmlspecialchars($service['max_price']);
+                                    } elseif (isset($service['max_price']) && $service['max_price'] !== null) {
+                                        echo htmlspecialchars($service['max_price']);
+                                    } else {
+                                        echo "Contact for price";
+                                    }
+                                    ?>
+                                </div>
+                                <button class="button">Request</button>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No services offered yet.</p>
+                    <?php endif; ?>
                 </div>
-                <button>Request</button>
+
+                <div class="reviews-section">
+                    <h3>Recent Reviews</h3>
+                    <?php if ($reviews && count($reviews) > 0): ?>
+                        <?php foreach ($reviews as $review): ?>
+                            <div class="review-item">
+                                <strong><?php echo htmlspecialchars($review['author_name']); ?></strong>
+                                <p><?php echo htmlspecialchars($review['content']); ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No reviews yet.</p>
+                    <?php endif; ?>
+                </div>
             </div>
-        </section>
-        <section class="reviews">
-            <h3>Recent Reviews</h3>
-            <div class="review">
-                <h4>Jane Doe</h4>
-                <p>Lorem ipsum dolor sit amet...</p>
-            </div>
-            <div class="review">
-                <h4>Conor Ryan</h4>
-                <p>Odio phasellus eget penatibus...</p>
-            </div>
-            <div class="review">
-                <h4>Sohaila Awaga</h4>
-                <p>Cura turpis habitant ornare...</p>
-            </div>
-        </section>
-    </div>
+        </div>
     </div>
 </body>
 </html>
