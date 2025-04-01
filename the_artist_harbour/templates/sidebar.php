@@ -15,9 +15,16 @@ $user_type = $_SESSION['user_type'] ?? '';
                 </li>
             <?php elseif ($user_type === 'business'): ?>
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">
+                    <a class="sidebar-link"
+                        href="/CS4116-Project-Group-3/the_artist_harbour/features/user/user_profile.php">
                         <i class="bi bi-person"></i>
                         <span class="d-none d-xl-inline">Account</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">
+                        <i class="bi bi-house"></i>
+                        <span class="d-none d-xl-inline">Business</span>
                     </a>
                 </li>
             <?php endif; ?>
