@@ -6,9 +6,9 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// if ($_SESSION['user_type'] != "user") {
-//     exit();
-// }
+if ($_SESSION['user_type'] != 'customer') {
+    exit();
+}
 
 ?>
 
@@ -24,31 +24,8 @@ if (!isset($_SESSION['user_id'])) {
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
         <style>
-            .dropdown {
-            position: relative;
-            display: inline-block;
-            }
-
-            .tags {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            }
-
-            .tags label {
-            display: block;
-            margin-top: 10px;
-            }
-
-            .dropdown:hover .tags {
-            display: block;
-            }
-
-            .tag_label{
-                padding-right: 10px;;
+            div {
+                padding: 0 !important;
             }
         </style>
     </head>
@@ -62,9 +39,9 @@ if (!isset($_SESSION['user_id'])) {
                 </div>
             </div>
         <?php 
-            require_once("../../utilities/databaseHandler.php");
-            require_once("../service/serviceDetails.php"); 
-            require_once("searchMethods.php");
+            require_once(__DIR__ . "/../../utilities/databaseHandler.php");
+            require_once(__DIR__ . "/../service/serviceDetails.php"); 
+            require_once(__DIR__ . "/searchMethods.php");
 
             function read($csv){
                 $file = fopen($csv, 'r');
@@ -77,11 +54,11 @@ if (!isset($_SESSION['user_id'])) {
             
             $keyword=$_GET["search"];
 
-            $csv = "../../utilities/tags.csv";
+            $csv = __DIR__ . "/../../utilities/tags.csv";
             $tags = read($csv);
             ?>
 
-            <div class="row">
+            <div class="row g-0">
                 <div class="col-12">
                     <form action="search_page.php" method="get">
                         <input type="hidden" id="search" name="search" value=<?php echo $keyword?>>
@@ -104,8 +81,8 @@ if (!isset($_SESSION['user_id'])) {
                             <option value="2">By Reviews (Low to High)</option>
                             <option value="3">By Price (High to Low)</option>
                             <option value="4">By Price (Low to High)</option>
-                        </select>
-                        <label for="tags">Filter by Tags (Hold Ctrl while clicking to select more than one)</label>
+                        </select><br>
+                        <label for="tags">Filter by Tags:</label><br>
                         <div class="dropdown">
                             <!-- <button onclick="myFunction()" class="dropbtn">Select Tags</button> -->
                             <div id="tags" class="tags_div">
@@ -124,7 +101,7 @@ if (!isset($_SESSION['user_id'])) {
                 </div>
             </div>
 
-            <script>
+            <!-- <script>
                 function myFunction() {
                     document.getElementById("tags").classList.toggle("show");
                 }
@@ -142,26 +119,30 @@ if (!isset($_SESSION['user_id'])) {
                     }
                 }
                 }
-            </script>
+            </script> -->
 
             <?php
             //SEARCH SERVICES BY KEYWORD
 
             $sql = "SELECT * FROM services WHERE name LIKE '%{$keyword}%'";
+            $description = "Filtering By: Keyword=\"{$keyword}\"; ";
             if(isset($_GET['min_price'])){               
                 if($_GET['min_price']!="" && $_GET['max_price']!=""){
                     //Any services within the given range
                     $min_price = $_GET['min_price'];
                     $max_price = $_GET['max_price'];
                     $sql.=" AND (min_price>=$min_price OR min_price IS NULL) AND max_price<=$max_price AND max_price>=$min_price";
+                    $description.= "Minimum Price=€{$min_price}; Maximum Price=€{$max_price};  ";
                 }else if($_GET['min_price']!=""){
                     //Any services more than given figure
                     $min_price = $_GET['min_price'];
                     $sql.=" AND (min_price>=$min_price OR min_price IS NULL) AND max_price>= $min_price";
+                    $description.= "Minimum Price=€{$min_price}; ";
                 }else if($_GET['max_price']!=""){
                     //Any services less than given figure
                     $max_price = $_GET['max_price'];
                     $sql.=" AND max_price<=$max_price";
+                    $description.= "Maximum Price=€{$max_price}; ";
                 }
             }
             
@@ -171,32 +152,41 @@ if (!isset($_SESSION['user_id'])) {
                 }else if($_GET['rating']==0){
                     //0 Stars
                     $sql.=" AND (reviews>=0.0 AND reviews<1.0)";
+                    $description.= "Rating=0 Stars; ";
                 }else if($_GET['rating']==1){
                     //1 Star
                     $sql.=" AND (reviews>=1.0 AND reviews<2.0)";
+                    $description.= "Rating=1 Star; ";
                 }else if($_GET['rating']==2){
                     //2 Stars
                     $sql.=" AND (reviews>=2.0 AND reviews<3.0)";
+                    $description.= "Rating=2 Stars; ";
                 }else if($_GET['rating']==3){
                     //3 Stars
                     $sql.=" AND (reviews>=3.0 AND reviews<4.0)";
+                    $description.= "Rating=3 Stars; ";
                 }else if($_GET['rating']==4){
                     //4 Stars
                     $sql.=" AND (reviews>=4.0 AND reviews<5.0)";
+                    $description.= "Rating=4 Stars; ";
                 }else if($_GET['rating']==5){
                     //5 Stars
                     $sql.=" AND reviews=5.0";
+                    $description.= "Rating=5 Stars; ";
                 }
             }
 
             $i=0;
             if(isset($_GET['tags'])){
+                $description.="Tags=";
                 $tags_array = array_keys($_GET['tags']);
                 while($i<count($tags_array)){
                     $tag = $_GET['tags'][$tags_array[$i]];
                     $sql.=" AND (tags LIKE '%,{$tag},%' OR tags LIKE '{$tag},%' OR tags LIKE '%,{$tag}' OR tags LIKE '{$tag}')";
                     $i++;
+                    $description.="{$tag} ";
                 }
+                $description.="; ";
             }
 
             if(isset($_GET['filter'])){
@@ -205,21 +195,30 @@ if (!isset($_SESSION['user_id'])) {
                 }else if($_GET['filter']==1){
                     //By Reviews (High to Low)
                     $sql.=" ORDER BY reviews DESC;";
+                    $description.="Order By=Reviews(High to Low); ";
                 }else if($_GET['filter']==2){
                     //By Reviews (Low to High)
                     $sql.=" ORDER BY reviews ASC;";
+                    $description.="Order By=Reviews(Low to High); ";
                 }else if($_GET['filter']==3){
                     //By Price (High to Low)
                     $sql.=" ORDER BY max_price DESC;";
+                    $description.="Order By=Price(High to Low); ";
                 }else if($_GET['filter']==4){
                     //By Price (Low to High)
                     $sql.=" ORDER BY max_price ASC;";
+                    $description.="Order By=Price(Low to High); ";
                 }
             }
 
 
             $result = DatabaseHandler::make_select_query($sql);
             $i=0; ?>
+            <div>
+                <br>
+                <p><i><?php echo $description ?></i></p>
+                <br><br><br>
+            </div>
             <div class="justify-content-center">
                 <h1 style="text-align: center;"> SERVICES </h1>
             </div> 
@@ -298,7 +297,7 @@ if (!isset($_SESSION['user_id'])) {
                     </div>
                 </div>
                 <?php } ?>
-                <div class="row">
+                <div class="row g-0">
                     <div class="card-group justify-content-center">
                         <?php while($i<count($result)){ ?>
                             <form action="../service/service.php" method="get">
@@ -337,7 +336,7 @@ if (!isset($_SESSION['user_id'])) {
             }else{ 
                 $business=$result[0];
                 while($i<count($result)-4){ ?>
-                <div class="row justify-content-center">
+                <div class="row g-0 justify-content-center">
                     <div class="card-group justify-content-center">
                         <form action="../business/profile.php" method="get">
                             <button type="submit">
@@ -402,7 +401,7 @@ if (!isset($_SESSION['user_id'])) {
                     </div>
                 </div>
                 <?php } ?>
-                <div class="row">
+                <div class="row g-0">
                     <div class="card-group justify-content-center">
                         <?php while($i<count($result)){ ?>
                             <form action="../business/profile.php" method="get">
