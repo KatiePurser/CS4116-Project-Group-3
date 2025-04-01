@@ -7,6 +7,8 @@ const NAME_BASE_PATTERN = "[a-zA-Z-' ]"; // the regex base pattern for the name 
 const NAME_BASE_PATTERN_DESCRIPTION = "can only contain letters, hyphens, apostrophes, and spaces.";
 const PASSWORD_BASE_PATTERN = "(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#?!@$%^&*-])[a-zA-Z\d#?!@$%^&*-]"; // the regex base pattern for the password format, without the length constraints
 const PASSWORD_BASE_PATTERN_DESCRIPTION = "must include at least one uppercase letter, one lowercase letter, one number, and one special character (#?!@$%^&*-), and can only contain letters, numbers, and these special characters.";
+const SEARCH_BASE_PATTERN = "[a-zA-Z0-9-' ]";
+const SEARCH_BASE_PATTERN_DESCRIPTION = "can only include alphanumeric characters";
 class InputValidationHelper {
 
     private static function regexComposer($base_pattern, $min_length, $max_length): string {
