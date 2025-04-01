@@ -1,15 +1,17 @@
 <?php
-// session_start();
+session_start();
 
 // if (!isset($_SESSION['user_id'])) {
-//     header("Location: ../../features/registration-login/Login.php");
+//     header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/registration-login/login.php");
 //     exit();
 // }
 
-// if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'user') {
+// if ($_SESSION['user_type'] !== 'user') {
 //     exit();
 // }
+
 ?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -64,8 +66,8 @@
                                 <img class="card-img-top" src="https://placecats.com/300/200">
                                 <div class="card-body">
                                     <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                    <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"])."\n"; ?> </h4>
-                                    <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["id"]); 
+                                    <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?> </h4>
+                                    <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                     echo $rating;?></p>
                                 </div>
                             </div>
@@ -80,8 +82,8 @@
                                 <img class="card-img-top" src="https://placecats.com/300/200">
                                 <div class="card-body">
                                     <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                    <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"])."\n"; ?></h4>
-                                    <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["id"]); 
+                                    <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
+                                    <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                     echo $rating;?></p>
                                 </div>
                             </div>
@@ -96,8 +98,8 @@
                                 <img class="card-img-top" src="https://placecats.com/300/200">
                                 <div class="card-body">
                                     <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                    <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"])."\n"; ?></h4>
-                                    <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["id"]); 
+                                    <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
+                                    <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                     echo $rating;?></p>
                                 </div>
                             </div>
@@ -112,8 +114,8 @@
                                 <img class="card-img-top" src="https://placecats.com/300/200">
                                 <div class="card-body">
                                     <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                    <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"])."\n"; ?></h4>
-                                    <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["id"]); 
+                                    <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
+                                    <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                     echo $rating;?></p>
                                 </div>
                             </div>
@@ -134,8 +136,8 @@
                                     <img class="card-img-top" src="https://placecats.com/300/200">
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                        <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service["id"])."\n"; ?> </h4>
-                                        <p class="card-text"><?php $rating = ServiceDetails::getServiceRating($service["id"]); 
+                                        <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?> </h4>
+                                        <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                     echo $rating;?></p>
                                     </div>
                                 </div>
