@@ -52,4 +52,20 @@ class InputValidationHelper {
     public static function validatePassword(string $field_name, string|null $value): string {
         return self::validateString($field_name, $value, PASSWORD_BASE_PATTERN, PASSWORD_BASE_PATTERN_DESCRIPTION, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH);
     }
+
+    public static function validateSearch(string $field_name, string|null $value, int $min_length, int $max_length): string {
+        if (strlen($value) < $min_length || strlen($value) > $max_length) {
+            throw new InvalidArgumentException("$field_name must be between $min_length and $max_length characters.");
+        }
+
+        $base_pattern = SEARCH_BASE_PATTERN;
+        $base_pattern_description = SEARCH_BASE_PATTERN_DESCRIPTION;
+
+        $pattern = self::regexComposer($base_pattern, $min_length, $max_length);
+        if (!preg_match($pattern, $value)) {
+            throw new InvalidArgumentException("$field_name $base_pattern_description");
+        }
+
+        return $value;
+    }
 }
