@@ -27,6 +27,28 @@ if ($_SESSION['user_type'] != 'customer') {
             div {
                 padding: 0 !important;
             }
+            
+            .card_button {
+                width: 23vw;
+                padding-left: 1vw;
+                padding-right: 1vw;
+                padding-bottom: 1vw;
+                border: none;
+                background-color: Transparent;
+            }
+
+            .hovercard {
+                width:100%;
+                height:100%;
+                word-wrap: break-word;
+                border-color: #82689A;
+                border-radius: 1vw;
+                border-width: 0.2vw;
+            }
+
+            .card-title {
+                display: block;
+            }
         </style>
     </head>
     <body style="padding-top: 73.6px;">
@@ -64,6 +86,7 @@ if ($_SESSION['user_type'] != 'customer') {
         <?php 
             require_once(__DIR__ . "/../../utilities/databaseHandler.php");
             require_once(__DIR__ . "/../service/serviceDetails.php"); 
+            require_once(__DIR__ . "/../../utilities/imageHandler.php");
             require_once(__DIR__ . "/searchMethods.php");
 
             function read($csv){
@@ -143,26 +166,6 @@ if ($_SESSION['user_type'] != 'customer') {
                     </form>
                 </div>
             </div>
-
-            <!-- <script>
-                function myFunction() {
-                    document.getElementById("tags").classList.toggle("show");
-                }
-
-                // Close the dropdown menu if the user clicks outside of it
-                window.onclick = function(event) {
-                if (!event.target.matches('.dropbtn')) {
-                    var dropdowns = document.getElementsByClassName("tags_div");
-                    var i;
-                    for (i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
-                    }
-                }
-                }
-            </script> -->
 
             <?php
             //SEARCH SERVICES BY KEYWORD
@@ -268,11 +271,12 @@ if ($_SESSION['user_type'] != 'customer') {
                 while($i<count($result)-4){ ?>
                 <div>
                     <div class="card-group justify-content-center">
-                        <form action="service.php" method="get">
-                            <button type="submit">
+                        <form action="../service/service.php" method="get">
+                            <button class=card_button type="submit">
                                 <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                                 <div class="card hovercard text-center">
                                     <img class="card-img-top" src="https://placecats.com/300/200">
+                                    <!-- <?php echo $service["image"]; ?> -->
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $service["name"]; ?></h3>
                                         <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?> </h4>
@@ -284,8 +288,8 @@ if ($_SESSION['user_type'] != 'customer') {
                         </form>
                         <?php $service = next($result); 
                         $i++;?>
-                        <form action="service.php" method="get">
-                            <button type="submit">
+                        <form action="../service/service.php" method="get">
+                            <button class=card_button type="submit">
                                 <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                                 <div class="card hovercard text-center">
                                     <img class="card-img-top" src="https://placecats.com/300/200">
@@ -300,8 +304,8 @@ if ($_SESSION['user_type'] != 'customer') {
                         </form>
                         <?php $service = next($result); 
                         $i++;?>
-                        <form action="service.php" method="get">
-                            <button type="submit">
+                        <form action="../service/service.php" method="get">
+                            <button class=card_button type="submit">
                                 <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                                 <div class="card hovercard text-center">
                                     <img class="card-img-top" src="https://placecats.com/300/200">
@@ -316,8 +320,8 @@ if ($_SESSION['user_type'] != 'customer') {
                         </form>
                         <?php $service = next($result); 
                         $i++;?>
-                        <form action="service.php" method="get">
-                            <button type="submit">
+                        <form action="../service/service.php" method="get">
+                            <button class=card_button type="submit">
                                 <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                                 <div class="card hovercard text-center">
                                     <img class="card-img-top" src="https://placecats.com/300/200">
@@ -339,7 +343,7 @@ if ($_SESSION['user_type'] != 'customer') {
                     <div class="card-group justify-content-center">
                         <?php while($i<count($result)){ ?>
                             <form action="../service/service.php" method="get">
-                                <button type="submit">
+                                <button class=card_button type="submit">
                                     <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                                     <div class="card hovercard text-center">
                                         <img class="card-img-top" src="https://placecats.com/300/200">
