@@ -31,7 +31,30 @@ if ($_SESSION['user_type'] != 'customer') {
     </head>
     <body style="padding-top: 73.6px;">
 
-<!-- NOTE: MAKE BUSINESS FORMS REDIRECT TO RIGHT PAGE -->
+        <?php 
+        require_once __DIR__ . '/../../utilities/InputValidationHelper.php';
+        try{
+            if(!isset($_GET['search'])){
+                $keyword=$_POST['search'];
+            }else{
+                $keyword=$_GET["search"];
+            }
+            $search = InputValidationHelper::validateSearch("Search", $keyword, 0, 30);
+        }catch (InvalidArgumentException $exception) {
+            $_SESSION['error'] = $exception->getMessage();
+            header("Location: ../../public/home_page.php");
+            exit();
+        }
+        
+        if(isset($_POST['clear'])){
+            unset($_GET['min_price']);
+            unset($_GET['max_price']);
+            unset($_GET['rating']);
+            unset($_GET['filter']);
+            unset($_GET['tags']);
+        }
+        ?>
+
         <div class="container-fluid">
             <div class="row g-0">
                 <div class="col-12">
@@ -51,52 +74,72 @@ if ($_SESSION['user_type'] != 'customer') {
                 fclose($file);
                 return $line;
             }
-            
-            $keyword=$_GET["search"];
 
             $csv = __DIR__ . "/../../utilities/tags.csv";
             $tags = read($csv);
             ?>
 
             <div class="row g-0">
-                <div class="col-12">
+                <div class="col-12" style="background-color: #E2D4F0; text-align: center;">
+                    <h3>Filter Services</h3>
+                    <form action="search_page.php" method="post">
+                        <input type="hidden" id="search" name="search" value=<?php echo $keyword?>>
+                    </form>
                     <form action="search_page.php" method="get">
                         <input type="hidden" id="search" name="search" value=<?php echo $keyword?>>
                         <label for="min_price">Minimum Price:</label>
-                        <input type="number" name="min_price" id="min_price">
+                        <input type="number" name="min_price" id="min_price" value="<?php if (isset($_GET['min_price'])) echo "{$_GET['min_price']}";?>">
                         <label for="max_price">Maximum Price:</label>
-                        <input type="number" name="max_price" id="max_price">
+                        <input type="number" name="max_price" id="max_price" value="<?php if (isset($_GET['max_price'])) echo "{$_GET['max_price']}";?>">
                         <select name="rating" id="rating">
-                            <option value="-1" selected>Filter By Reviews</option>
-                            <option value="0">0 Stars</option>
-                            <option value="1">1 Star</option>
-                            <option value="2">2 Stars</option>
-                            <option value="3">3 Stars</option>
-                            <option value="4">4 Stars</option>
-                            <option value="5">5 Stars</option>
+                            <option value="" disabled <?php if (!isset($_GET['rating'])) echo "selected";?> hidden>Filter By Reviews</option>
+                            <option value="0" <?php if (isset($_GET['rating']) && $_GET['rating']=="0") echo "selected";?>>0 Stars</option>
+                            <option value="1" <?php if (isset($_GET['rating']) && $_GET['rating']=="1") echo "selected";?>>1 Star</option>
+                            <option value="2" <?php if (isset($_GET['rating']) && $_GET['rating']=="2") echo "selected";?>>2 Stars</option>
+                            <option value="3" <?php if (isset($_GET['rating']) && $_GET['rating']=="3") echo "selected";?>>3 Stars</option>
+                            <option value="4" <?php if (isset($_GET['rating']) && $_GET['rating']=="4") echo "selected";?>>4 Stars</option>
+                            <option value="5" <?php if (isset($_GET['rating']) && $_GET['rating']=="5") echo "selected";?>>5 Stars</option>
                         </select>
                         <select name="filter" id="filter">
-                            <option value="-1" selected>Sort Services</option>
-                            <option value="1">By Reviews (High to Low)</option>
-                            <option value="2">By Reviews (Low to High)</option>
-                            <option value="3">By Price (High to Low)</option>
-                            <option value="4">By Price (Low to High)</option>
+                            <option value="" disabled <?php if (!isset($_GET['filter'])) echo "selected";?> hidden>Sort Services</option>
+                            <option value="1" <?php if (isset($_GET['filter']) && $_GET['filter']=="1") echo "selected";?>>By Reviews (High to Low)</option>
+                            <option value="2" <?php if (isset($_GET['filter']) && $_GET['filter']=="2") echo "selected";?>>By Reviews (Low to High)</option>
+                            <option value="3" <?php if (isset($_GET['filter']) && $_GET['filter']=="3") echo "selected";?>>By Price (High to Low)</option>
+                            <option value="4" <?php if (isset($_GET['filter']) && $_GET['filter']=="4") echo "selected";?>>By Price (Low to High)</option>
                         </select><br>
                         <label for="tags">Filter by Tags:</label><br>
                         <div class="dropdown">
-                            <!-- <button onclick="myFunction()" class="dropbtn">Select Tags</button> -->
                             <div id="tags" class="tags_div">
                                 <?php 
                                 $i=0;
+                                $j=0;
+                                if(isset($_GET['tags'])){
+                                    $tags_array = array_keys($_GET['tags']);
+                                    $count=count($tags_array);
+                                }
                                 while ($i < count($tags)) { 
                                     $tag = $tags[$i][0];?>
-                                    <label class="tag_label"><input class="tag_checkbox" type="checkbox" name="tags[<?php echo $i ?>]" value="<?php echo $tag ?>"><?php echo $tag ?></label>
+                                    <label class="tag_label"><input class="tag_checkbox" type="checkbox" name="tags[<?php echo $i ?>]" value="<?php echo $tag ?>" 
+                                        <?php if(isset($_GET['tags'])){
+                                            if($j<$count){
+                                                if($tags_array[$j]==$i){ 
+                                                    echo " checked ";
+                                                    $j++;
+                                                }
+                                            }
+                                        }?>><?php echo $tag ?></label>
                                     <?php $i++;
                                 }
                                 ?>
                             </div>
                         </div>
-                        <input type="submit" value="Add Filters">
+                        <br>
+                        <input type="submit" value="Set Filters">
+                        <br><br>
+                    </form>
+                    <form action="search_page.php" method="post">
+                        <input type="hidden" id="search" name="search" value=<?php echo $keyword?>>
+                        <input type="submit" name="clear" value="Clear Filters">
                     </form>
                 </div>
             </div>
@@ -125,7 +168,7 @@ if ($_SESSION['user_type'] != 'customer') {
             //SEARCH SERVICES BY KEYWORD
 
             $sql = "SELECT * FROM services WHERE name LIKE '%{$keyword}%'";
-            $description = "Filtering By: Keyword=\"{$keyword}\"; ";
+            $description = "Keyword=\"{$keyword}\"; ";
             if(isset($_GET['min_price'])){               
                 if($_GET['min_price']!="" && $_GET['max_price']!=""){
                     //Any services within the given range
@@ -147,9 +190,7 @@ if ($_SESSION['user_type'] != 'customer') {
             }
             
             if(isset($_GET['rating'])){
-                if($_GET['rating']==-1){
-                    //Default - do nothing
-                }else if($_GET['rating']==0){
+                if($_GET['rating']==0){
                     //0 Stars
                     $sql.=" AND (reviews>=0.0 AND reviews<1.0)";
                     $description.= "Rating=0 Stars; ";
@@ -190,9 +231,7 @@ if ($_SESSION['user_type'] != 'customer') {
             }
 
             if(isset($_GET['filter'])){
-                if($_GET['filter']==-1){
-                    //Default - do nothing
-                }else if($_GET['filter']==1){
+                if($_GET['filter']==1){
                     //By Reviews (High to Low)
                     $sql.=" ORDER BY reviews DESC;";
                     $description.="Order By=Reviews(High to Low); ";
@@ -215,6 +254,7 @@ if ($_SESSION['user_type'] != 'customer') {
             $result = DatabaseHandler::make_select_query($sql);
             $i=0; ?>
             <div>
+                <p>Searching by: <i><?php echo $description ?></i></p>
                 <br>
                 <p><i><?php echo $description ?></i></p>
                 <br><br><br>
