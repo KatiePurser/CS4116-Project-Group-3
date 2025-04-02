@@ -1,14 +1,14 @@
 <?php
 session_start();
 
-// if (!isset($_SESSION['user_id'])) {
-//     header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/registration-login/login.php");
-//     exit();
-// }
+if (!isset($_SESSION['user_id'])) {
+    header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/registration-login/login.php");
+    exit();
+}
 
-// if ($_SESSION['user_type'] !== 'user') {
-//     exit();
-// }
+if ($_SESSION['user_type'] !== 'customer') {
+    exit();
+}
 
 ?>
 
@@ -32,11 +32,15 @@ session_start();
         <div class="container-fluid">
             <div class="row g-0">
                 <div class="col-12">
-                    <?php include __DIR__ . '/../templates/header.php'; ?>
+                    <?php include __DIR__ . '/../templates/header.php'; 
+                    if (!empty($_SESSION['error'])) {
+                        echo("<div class='row mb-2 g-0'><div class='alert alert-danger'><span><i class='bi bi-exclamation-triangle'></span></i> {$_SESSION['error']} </div><div class='col-12'></div></div>");
+                        unset($_SESSION['error']);
+                    }?>
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row g-0">
                 <div class="col-12 text-center">
                     <h1>WELCOME TO THE ARTIST HARBOUR</h1>
                     <h3>We are a collective working to make a safe and community-based space for artists to market their bespoke services</h3>
@@ -45,8 +49,8 @@ session_start();
         </div>
 
         <?php
-            require_once("../utilities/databaseHandler.php");
-            require_once("../features/service/serviceDetails.php");
+            require_once(__DIR__ . "/../utilities/databaseHandler.php");
+            require_once(__DIR__ . "/../features/service/serviceDetails.php");
             //connect to DB
             // $sql = "SELECT * FROM services ORDER BY reviews";
             $sql = "SELECT * FROM services ORDER BY reviews DESC";    //will need to figure out how to order by rating, which is stored in reviews table
