@@ -32,11 +32,15 @@ if ($_SESSION['user_type'] !== 'customer') {
         <div class="container-fluid">
             <div class="row g-0">
                 <div class="col-12">
-                    <?php include __DIR__ . '/../templates/header.php'; ?>
+                    <?php include __DIR__ . '/../templates/header.php'; 
+                    if (!empty($_SESSION['error'])) {
+                        echo("<div class='row mb-2 g-0'><div class='alert alert-danger'><span><i class='bi bi-exclamation-triangle'></span></i> {$_SESSION['error']} </div><div class='col-12'></div></div>");
+                        unset($_SESSION['error']);
+                    }?>
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row g-0">
                 <div class="col-12 text-center">
                     <h1>WELCOME TO THE ARTIST HARBOUR</h1>
                     <h3>We are a collective working to make a safe and community-based space for artists to market their bespoke services</h3>
