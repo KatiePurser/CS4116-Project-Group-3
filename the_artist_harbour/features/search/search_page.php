@@ -256,8 +256,6 @@ if ($_SESSION['user_type'] != 'customer') {
             <div>
                 <p>Searching by: <i><?php echo $description ?></i></p>
                 <br>
-                <p><i><?php echo $description ?></i></p>
-                <br><br><br>
             </div>
             <div class="justify-content-center">
                 <h1 style="text-align: center;"> SERVICES </h1>
@@ -362,88 +360,22 @@ if ($_SESSION['user_type'] != 'customer') {
                 <br><br><br>
             <?php } 
 
-
-            //SEARCH BUSINESSES BY KEYWORD
-            $sql = "SELECT * FROM businesses WHERE display_name LIKE '%{$keyword}%' ORDER BY reviews DESC";
-            $result = DatabaseHandler::make_select_query($sql);
-            $i=0; ?>
-            <div>
-                <h1 style="text-align: center;"> BUSINESSES </h1>
-            </div>
-            <?php
-            if($result==NULL){
-                ?> <h3 style="text-align: center;">NO BUSINESSES MATCH THE KEYWORD</h3> <?php
-            }else{ 
-                $business=$result[0];
-                while($i<count($result)-4){ ?>
-                <div class="row g-0 justify-content-center">
-                    <div class="card-group justify-content-center">
-                        <form action="../business/profile.php" method="get">
-                            <button type="submit">
-                                <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
-                                <div class="card hovercard text-center">
-                                    <img class="card-img-top" src="https://placecats.com/300/200">
-                                    <div class="card-body">
-                                        <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
-                                        <p class="card-text"><?php $rating = ServiceDetails::getRating($business["reviews"]); 
-                                        echo $rating;?></p>
-                                    </div>
-                                </div>
-                            </button>
-                        </form>
-                        <?php $business = next($result); 
-                        $i++;?>
-                        <form action="../business/profile.php" method="get">
-                            <button type="submit">
-                                <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
-                                <div class="card hovercard text-center">
-                                    <img class="card-img-top" src="https://placecats.com/300/200">
-                                    <div class="card-body">
-                                        <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
-                                        <p class="card-text"><?php $rating = ServiceDetails::getRating($business["reviews"]); 
-                                        echo $rating;?></p>
-                                    </div>
-                                </div>
-                            </button>
-                        </form>
-                        <?php $business = next($result); 
-                        $i++;?>
-                        <form action="../business/profile.php" method="get">
-                            <button type="submit">
-                                <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
-                                <div class="card hovercard text-center">
-                                    <img class="card-img-top" src="https://placecats.com/300/200">
-                                    <div class="card-body">
-                                        <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
-                                        <p class="card-text"><?php $rating = ServiceDetails::getRating($business["reviews"]); 
-                                        echo $rating;?></p>
-                                    </div>
-                                </div>
-                            </button>
-                        </form>
-                        <?php $business = next($result); 
-                        $i++;?>
-                        <form action="../business/profile.php" method="get">
-                            <button type="submit">
-                                <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
-                                <div class="card hovercard text-center">
-                                    <img class="card-img-top" src="https://placecats.com/300/200">
-                                    <div class="card-body">
-                                        <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
-                                        <p class="card-text"><?php $rating = ServiceDetails::getRating($business["reviews"]); 
-                                        echo $rating;?></p>
-                                    </div>
-                                </div>
-                            </button>
-                        </form>
-                        <?php $business = next($result); 
-                        $i++;?>
-                    </div>
+            if(!isset($_GET['min_price']) && !isset($_GET['max_price']) && !isset($_GET['rating']) && !isset($_GET['tags']) && !isset($_GET['filter'])){
+                //SEARCH BUSINESSES BY KEYWORD
+                $sql = "SELECT * FROM businesses WHERE display_name LIKE '%{$keyword}%' ORDER BY reviews DESC";
+                $result = DatabaseHandler::make_select_query($sql);
+                $i=0; ?>
+                <div>
+                    <h1 style="text-align: center;"> BUSINESSES </h1>
                 </div>
-                <?php } ?>
-                <div class="row g-0">
-                    <div class="card-group justify-content-center">
-                        <?php while($i<count($result)){ ?>
+                <?php
+                if($result==NULL){
+                    ?> <h3 style="text-align: center;">NO BUSINESSES MATCH THE KEYWORD</h3> <?php
+                }else{ 
+                    $business=$result[0];
+                    while($i<count($result)-4){ ?>
+                    <div class="row g-0 justify-content-center">
+                        <div class="card-group justify-content-center">
                             <form action="../business/profile.php" method="get">
                                 <button type="submit">
                                     <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
@@ -457,12 +389,79 @@ if ($_SESSION['user_type'] != 'customer') {
                                     </div>
                                 </button>
                             </form>
-                            <?php $business = next($result);  
+                            <?php $business = next($result); 
                             $i++;?>
-                        <?php } ?>
+                            <form action="../business/profile.php" method="get">
+                                <button type="submit">
+                                    <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
+                                    <div class="card hovercard text-center">
+                                        <img class="card-img-top" src="https://placecats.com/300/200">
+                                        <div class="card-body">
+                                            <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
+                                            <p class="card-text"><?php $rating = ServiceDetails::getRating($business["reviews"]); 
+                                            echo $rating;?></p>
+                                        </div>
+                                    </div>
+                                </button>
+                            </form>
+                            <?php $business = next($result); 
+                            $i++;?>
+                            <form action="../business/profile.php" method="get">
+                                <button type="submit">
+                                    <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
+                                    <div class="card hovercard text-center">
+                                        <img class="card-img-top" src="https://placecats.com/300/200">
+                                        <div class="card-body">
+                                            <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
+                                            <p class="card-text"><?php $rating = ServiceDetails::getRating($business["reviews"]); 
+                                            echo $rating;?></p>
+                                        </div>
+                                    </div>
+                                </button>
+                            </form>
+                            <?php $business = next($result); 
+                            $i++;?>
+                            <form action="../business/profile.php" method="get">
+                                <button type="submit">
+                                    <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
+                                    <div class="card hovercard text-center">
+                                        <img class="card-img-top" src="https://placecats.com/300/200">
+                                        <div class="card-body">
+                                            <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
+                                            <p class="card-text"><?php $rating = ServiceDetails::getRating($business["reviews"]); 
+                                            echo $rating;?></p>
+                                        </div>
+                                    </div>
+                                </button>
+                            </form>
+                            <?php $business = next($result); 
+                            $i++;?>
+                        </div>
                     </div>
-                </div>
-            <?php } ?>
+                    <?php } ?>
+                    <div class="row g-0">
+                        <div class="card-group justify-content-center">
+                            <?php while($i<count($result)){ ?>
+                                <form action="../business/profile.php" method="get">
+                                    <button type="submit">
+                                        <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
+                                        <div class="card hovercard text-center">
+                                            <img class="card-img-top" src="https://placecats.com/300/200">
+                                            <div class="card-body">
+                                                <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
+                                                <p class="card-text"><?php $rating = ServiceDetails::getRating($business["reviews"]); 
+                                                echo $rating;?></p>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </form>
+                                <?php $business = next($result);  
+                                $i++;?>
+                            <?php } ?>
+                        </div>
+                    </div>
+                <?php } 
+            }?>
             
     </body>
 </html>
