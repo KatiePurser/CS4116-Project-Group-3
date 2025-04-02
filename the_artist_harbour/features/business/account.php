@@ -1,7 +1,7 @@
 <?php
 session_start();
 include_once __DIR__ . '/../../utilities/databaseHandler.php';
-
+include_once __DIR__ . '/../../utilities/imageHandler.php';
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/registration-login/login.php");
@@ -110,14 +110,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_name'])) {
         exit();
     }
 
-    // Handle the image upload for the new service
-    $service_image = null; // Default if no image is uploaded
-    if (isset($_FILES['service_image']) && $_FILES['service_image']['error'] === UPLOAD_ERR_OK) {
-        $targetDir = __DIR__ . "/../../uploads/";
-        $targetFile = $targetDir . basename($_FILES['service_image']['name']);
-        if (move_uploaded_file($_FILES['service_image']['tmp_name'], $targetFile)) {
-            $service_image = $targetFile;
-        }
+   // Handle the image upload for the new service using imagehandler class
+   $service_image = null; 
+    if (isset($_FILES['service_image']) ) {
+        $service_image = ImageHandler::uploadAndStoreImage('service_image', 'services', 'image', 'id', $business_id);
+        $messages[] = $uploadMessage;
     }
 
     // Insert the new service into the database
@@ -138,7 +135,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_name'])) {
     $result = DatabaseHandler::make_modify_query($insert_query);
     if ($result) {
         echo "<script>alert('New service added successfully!');</script>";
-        // Optionally, redirect to the same page to refresh the services list
         header("Location: account.php");
         exit();
     } else {
@@ -194,13 +190,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_id'])) {
         exit();
     }
 
-    // Handle image upload
-    $service_image = $edit_service['image'];
-    if (isset($_FILES['service_image']) && $_FILES['service_image']['error'] === UPLOAD_ERR_OK) {
-        $targetDir = __DIR__ . "/../../uploads/";
-        $targetFile = $targetDir . basename($_FILES['service_image']['name']);
-        if (move_uploaded_file($_FILES['service_image']['tmp_name'], $targetFile)) {
-            $service_image = $targetFile;
+     // Handle image upload using ImageHandler
+     if (isset($_FILES['service_image']) && $_FILES['service_image']['error'] === UPLOAD_ERR_OK) {
+        $uploadResult = ImageHandler::uploadAndStoreImage('service_image', 'services', 'image', 'id', $service_id);
+        if ($uploadResult !== "service image uploaded successfully!") {
+            echo "<script>alert('Error uploading image.');</script>";
+            exit();
         }
     }
 
@@ -394,10 +389,11 @@ if ($userData && count($userData) > 0) {
                 <div class="card p-3 mb-4 shadow-sm">
                     <!-- Display Image if Exists -->
                     <?php if (!empty($service['image'])): ?>
-                        <img src="/../user/get_image.php?id=<?php echo $service['id']; ?>" class="card-img-top" alt="Service Image">
+                        <img src="/../../utilities/image_handler.php?service_id=<?= $service['id'] ?>" class="card-img-top" alt="Service Image">
+
 
                     <?php else: ?>
-                        <img src="../../public/images/default-service.jpg" class="card-img-top" alt="Default Image" style="max-height: 200px; object-fit: cover;">
+                        <img src="../../public/images/default-service.png" class="card-img-top" alt="Default Image" style="max-height: 200px; object-fit: cover;">
                     <?php endif; ?>
 
                     <div class="card-body">
@@ -503,15 +499,5 @@ if ($userData && count($userData) > 0) {
             </div>
         </div>
     </div>
-    <script>
-        function editField(fieldId) {
-            var field = document.getElementById(fieldId);
-            var currentText = field.innerText || field.textContent;
-            var newText = prompt("Edit this field", currentText);
-            if (newText !== null) {
-                field.innerText = newText;
-            }
-        }
-    </script>
 </body>
 </html>
