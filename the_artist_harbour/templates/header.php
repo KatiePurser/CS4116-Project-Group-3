@@ -42,7 +42,7 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                                     href="/CS4116-Project-Group-3/the_artist_harbour/features/messages/inbox.php">Messages</a>
                             </li>
                             <li><a class="dropdown-item"
-                                    href="/CS4116-Project-Group-3/the_artist_harbour/features/service_request/service_request.php">Requests</a>
+                                    href="/CS4116-Project-Group-3/the_artist_harbour/features/service_request/service_request_page.php">Requests</a>
                             </li>
                             <li><a class="dropdown-item"
                                     href="/CS4116-Project-Group-3/the_artist_harbour/features/user/user_profile.php">Account</a>
@@ -87,7 +87,7 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                                 href="/CS4116-Project-Group-3/the_artist_harbour/features/messages/inbox.php">Messages</a>
                         </li>
                         <li><a class="dropdown-item"
-                                href="/CS4116-Project-Group-3/the_artist_harbour/features/service_request/service_request.php">Requests</a>
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/service_request/service_request_page.php">Requests</a>
                         </li>
                         <li><a class="dropdown-item"
                                 href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">Account</a>
@@ -214,19 +214,19 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
     }
 
     .dropdown-menu {
-        background-color: #E2D4F0 !important;
+        background-color: #ac8ebf !important;
         border: none;
     }
 
     .dropdown-item {
-        color: #49375a !important;
+        color: white !important;
     }
 
     .dropdown-item:hover {
         background-color: #c3b5d1 !important;
     }
 
-    color: white @media (max-width: 992px) {
+    @media (max-width: 992px) {
         .navbar-collapse {
             position: absolute;
             top: 73.6px;

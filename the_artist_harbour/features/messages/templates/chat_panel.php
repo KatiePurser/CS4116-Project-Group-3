@@ -9,7 +9,7 @@
         <?php else: ?>
 
             <?php foreach ($conversation as $message): ?>
-                <?php $status = $message['status'] ?>
+                <?php $status = $message['status'] ?? 'No Status'; ?>
                 <div class="message <?php echo $message['is_sender'] ? 'sender-message' : 'receiver-message'; ?>">
                     <p><?php echo $message['text']; ?></p>
                     <small><?php echo date('d-m-Y H:i', strtotime($message['created_at'])); ?></small>
