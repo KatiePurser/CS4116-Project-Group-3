@@ -117,7 +117,7 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                 <img src="/CS4116-Project-Group-3/the_artist_harbour/public/images/boat_logo_small.png" alt="Boat"
                     class="img-fluid me-2" style="max-height: 40px;">
                 <a class="navbar-brand amarante-regular fs-4 fs-lg-2"
-                    href="/CS4116-Project-Group-3/the_artist_harbour/public/admin_page.php">The Artist Harbour</a>
+                    href="/CS4116-Project-Group-3/the_artist_harbour/features/administration/admin_panel.php">The Artist Harbour</a>
             </div>
 
             <div class="d-flex align-items-center ms-auto">
@@ -130,7 +130,7 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                     </button>
 
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="admin_panel.php">Dashboard</a></li>
+                        <li><a class="dropdown-item" href="/CS4116-Project-Group-3/the_artist_harbour/features/administration/admin_panel.php">Dashboard</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
