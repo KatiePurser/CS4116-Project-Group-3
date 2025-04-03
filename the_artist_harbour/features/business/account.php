@@ -17,7 +17,7 @@ if ($_SESSION['user_type'] !== 'business') {
 $user_id = $_SESSION["user_id"];
 
 
-// Fetch the business data in a single query
+// Fetch the business data
 $query = "SELECT * FROM businesses WHERE user_id = $user_id";
 $businessData = DatabaseHandler::make_select_query($query);
 
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         DatabaseHandler::make_modify_query($query);
         
     }
-    
+}
 
     // Collect form data for social media links
     if (isset($_POST['instagram']) || isset($_POST['facebook']) || isset($_POST['tiktok']) || isset($_POST['pinterest']) || isset($_POST['website'])) {
@@ -83,13 +83,12 @@ if (!is_array($services)) {
     $services = [];
 }
 
+
 // Handle adding a new service
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_name'])) {
     // Collect form data for the new service
     $service_name = filter_input(INPUT_POST, 'service_name', FILTER_SANITIZE_STRING);
     $service_description = filter_input(INPUT_POST, 'service_description', FILTER_SANITIZE_STRING);
-    $service_tags = filter_input(INPUT_POST, 'service_tags', FILTER_SANITIZE_STRING);
-    
     // Check if negotiable is true or false
     $negotiable = isset($_POST['service_negotiable']) ? 1 : 0;
     
@@ -110,12 +109,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_name'])) {
         exit();
     }
 
+    $service_tags = isset($_POST['tags']) ? $_POST['tags'] : [];
+    $service_tags = array_map('trim', $service_tags); 
+    $service_tags = array_unique($service_tags);
+    $service_tags_str = implode(',', $service_tags); // Convert array to string for storage
+    
    // Handle the image upload for the new service using imagehandler class
    $service_image = null; 
-    if (isset($_FILES['service_image']) ) {
-        $service_image = ImageHandler::uploadAndStoreImage('service_image', 'services', 'image', 'id', $business_id);
-        $messages[] = $uploadMessage;
-    }
+   if (isset($_FILES['service_image']) && $_FILES['service_image']['error'] === UPLOAD_ERR_OK) {
+    $service_image = imageHandler::uploadAndStoreImage('service_image', 'services', 'image', 'id', $business_id);
+   }
+
 
     // Insert the new service into the database
     $insert_query = "INSERT INTO services (business_id, name, description, tags, min_price, max_price, image, created_at) 
@@ -123,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_name'])) {
         $business_id, 
         '" . addslashes($service_name) . "', 
         '" . addslashes($service_description) . "', 
-        '" . addslashes($service_tags) . "', 
+        '" . addslashes($service_tags_str) . "',
         " . ($min_price !== null ? $min_price : "NULL") . ", 
         " . ($max_price !== null ? $max_price : "NULL") . ", 
         " . ($service_image ? "'".addslashes($service_image)."'" : "NULL") . ",  
@@ -141,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_name'])) {
         echo "<script>alert('Error adding service. Please try again.');</script>";
     }
 }
-}
+
 // Fetch all services related to this business
 $query = "SELECT * FROM services WHERE business_id = $business_id";
 $services = DatabaseHandler::make_select_query($query);
@@ -171,43 +175,40 @@ if (isset($_GET['service_id']) && is_numeric($_GET['service_id'])) {
     if (!$edit_service) {
         die("Service not found or access denied.");
     }
-}
+
 
 // Handle form submission for editing service
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_id'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_id']) && is_numeric($_POST['service_id'])) {
+    $service_id = intval($_POST['service_id']);  // This should match the service you're updating
+
+    // Sanitize and validate input
     $service_name = filter_input(INPUT_POST, 'service_name', FILTER_SANITIZE_STRING);
     $service_description = filter_input(INPUT_POST, 'service_description', FILTER_SANITIZE_STRING);
     $service_tags = filter_input(INPUT_POST, 'service_tags', FILTER_SANITIZE_STRING);
+    $tags_array = array_map('trim', explode(',', $service_tags));
+    $tags_array = array_unique($tags_array);
+    $service_tags = implode(',', $tags_array);
+
+    // Check if service is negotiable
     $negotiable = isset($_POST['service_negotiable']) ? 1 : 0;
-    $min_price = $negotiable && isset($_POST['service_min_price']) ? filter_input(INPUT_POST, 'service_min_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+    $min_price = $negotiable ? filter_input(INPUT_POST, 'service_min_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
     $max_price = filter_input(INPUT_POST, 'service_max_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
-    if ($negotiable && (!$min_price || !$max_price)) {
-        echo "<script>alert('Both min and max prices are required when negotiable is true.');</script>";
-        exit();
-    } elseif (!$negotiable && !$max_price) {
-        echo "<script>alert('Max price is required when negotiable is false.');</script>";
-        exit();
+    // Handle image upload
+    $service_image = null;
+    if (isset($_FILES['service_image']) && $_FILES['service_image']['error'] === UPLOAD_ERR_OK) {
+        $service_image = imageHandler::uploadAndStoreImage('service_image', 'services', 'image', 'id', $business_id);
     }
 
-     // Handle image upload using ImageHandler
-     if (isset($_FILES['service_image']) && $_FILES['service_image']['error'] === UPLOAD_ERR_OK) {
-        $uploadResult = ImageHandler::uploadAndStoreImage('service_image', 'services', 'image', 'id', $service_id);
-        if ($uploadResult !== "service image uploaded successfully!") {
-            echo "<script>alert('Error uploading image.');</script>";
-            exit();
-        }
-    }
-
-    // Update the service in the database
+    // Now, update the service in the database
     $query = "UPDATE services SET 
-                name = '$service_name', 
-                description = '$service_description',
-                tags = '$service_tags',
-                min_price = " . ($min_price ? $min_price : "NULL") . ",
-                max_price = " . ($max_price ? $max_price : "NULL") . ",
-                image = '" . ($service_image ? addslashes($service_image) : "NULL") . "'
-              WHERE id = {$_POST['service_id']} AND business_id = $business_id";
+                name = '" . addslashes($service_name) . "', 
+                description = '" . addslashes($service_description) . "',
+                tags = '" . addslashes($service_tags) . "',
+                min_price = " . ($min_price !== null ? $min_price : "NULL") . ",
+                max_price = " . ($max_price !== null ? $max_price : "NULL") . "
+                " . ($service_image ? ", image = '" . addslashes($service_image) . "'" : "") . "
+              WHERE id = {$service_id} AND business_id = {$business_id}";
 
     $result = DatabaseHandler::make_modify_query($query);
 
@@ -218,6 +219,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_id'])) {
         echo "<script>alert('Error updating service. Please try again.');</script>";
     }
 }
+
+}
+
 ?>
 
 
@@ -376,7 +380,20 @@ if ($userData && count($userData) > 0) {
                         <button class="btn btn-secondary" type="submit">Update Social Media Links</button>
                     </form>
                     </div>
-                    
+                    <?php
+                     function read($csv){
+                        $file = fopen($csv, 'r');
+                        while (!feof($file) ) {
+                            $line[] = fgetcsv($file, 1024);
+                        }
+                        fclose($file);
+                        return $line;
+                    }
+        
+                    $csv = __DIR__ . "/../../utilities/tags.csv";
+                    $tags = read($csv);
+                    ?>
+           
     <!-- Service Cards: Loop through services dynamically -->
   <h5>Services</h5>
               
@@ -389,12 +406,11 @@ if ($userData && count($userData) > 0) {
                 <div class="card p-3 mb-4 shadow-sm">
                     <!-- Display Image if Exists -->
                     <?php if (!empty($service['image'])): ?>
-                        <img src="/../../utilities/image_handler.php?service_id=<?= $service['id'] ?>" class="card-img-top" alt="Service Image">
+    <img src="./get_serviceImage.php?id=<?= $service['id'] ?>" class="card-img-top" alt="Service Image">
+<?php else: ?>
+    <img src="../../public/images/default-service.png" class="card-img-top" alt="Default Image" style="max-height: 200px; object-fit: cover;">
+<?php endif; ?>
 
-
-                    <?php else: ?>
-                        <img src="../../public/images/default-service.png" class="card-img-top" alt="Default Image" style="max-height: 200px; object-fit: cover;">
-                    <?php endif; ?>
 
                     <div class="card-body">
                         <h5 class="card-title"><?php echo htmlspecialchars($service['name']); ?></h5>
@@ -436,10 +452,33 @@ if ($userData && count($userData) > 0) {
                         <label for="service_description" class="form-label">Description</label>
                         <textarea class="form-control" id="service_description" name="service_description" required><?php echo htmlspecialchars($edit_service['description']); ?></textarea>
                     </div>
-                    <div class="mb-3">
-                        <label for="service_tags" class="form-label">Tags (comma separated)</label>
-                        <input type="text" class="form-control" id="service_tags" name="service_tags" value="<?php echo htmlspecialchars($edit_service['tags']); ?>" required>
-                    </div>
+                    
+                        <label for="service_tags" class="form-label">Tags</label>
+                        <div class="dropdown">
+                            <div id="tags" class="tags_div">
+                                <?php 
+                                $i=0;
+                                $j=0;
+                                if(isset($_GET['tags'])){
+                                    $tags_array = array_keys($_GET['tags']);
+                                    $count=count($tags_array);
+                                }
+                                while ($i < count($tags)) { 
+                                    $tag = $tags[$i][0];?>
+                                    <label class="tag_label"><input class="tag_checkbox" type="checkbox" name="tags[<?php echo $i ?>]" value="<?php echo $tag ?>" 
+                                        <?php if(isset($_GET['tags'])){
+                                            if($j<$count){
+                                                if($tags_array[$j]==$i){ 
+                                                    echo " checked ";
+                                                    $j++;
+                                                }
+                                            }
+                                        }?>><?php echo $tag ?></label>
+                                    <?php $i++;
+                                }
+                                ?>
+                            </div>
+                        </div>
                     <div class="mb-3">
                         <label for="service_min_price" class="form-label">Min Price</label>
                         <input type="number" class="form-control" id="service_min_price" name="service_min_price" value="<?php echo $edit_service['min_price']; ?>" <?php echo $edit_service['min_price'] ? "" : "disabled"; ?>>
@@ -468,7 +507,32 @@ if ($userData && count($userData) > 0) {
     <form method="POST" action="account.php" enctype="multipart/form-data">
         <input type="text" class="form-control mb-2" name="service_name" placeholder="Service Name" required>
         <textarea class="form-control mb-2" name="service_description" placeholder="Service Description" required></textarea>
-        <input type="text" class="form-control mb-2" name="service_tags" placeholder="Tags (Comma separated)" required>
+        <label for="service_tags" class="form-label">Tags</label>
+                        <div class="dropdown">
+                            <div id="tags" class="tags_div">
+                                <?php 
+                                $i=0;
+                                $j=0;
+                                if(isset($_GET['tags'])){
+                                    $tags_array = array_keys($_GET['tags']);
+                                    $count=count($tags_array);
+                                }
+                                while ($i < count($tags)) { 
+                                    $tag = $tags[$i][0];?>
+                                    <label class="tag_label"><input class="tag_checkbox" type="checkbox" name="tags[<?php echo $i ?>]" value="<?php echo $tag ?>" 
+                                        <?php if(isset($_GET['tags'])){
+                                            if($j<$count){
+                                                if($tags_array[$j]==$i){ 
+                                                    echo " checked ";
+                                                    $j++;
+                                                }
+                                            }
+                                        }?>><?php echo $tag ?></label>
+                                    <?php $i++;
+                                }
+                                ?>
+                            </div>
+                        </div>
         
         <div class="d-flex gap-2 mb-2">
             <input type="text" class="form-control" name="service_min_price" id="service_min_price" placeholder="Min Price" disabled>

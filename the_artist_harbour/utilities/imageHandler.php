@@ -43,27 +43,28 @@ class ImageHandler {
 
     /**
      * Retrieves a service image from the database and outputs it as a response.
-     */
-    public static function getServiceImage($service_id) {
-        if (!$service_id || !is_numeric($service_id)) {
-            http_response_code(400);
-            die("Invalid service ID.");
-        }
+     
+    * public static function getServiceImage($service_id) {
+    * if (!$service_id || !is_numeric($service_id)) {
+      *      http_response_code(400);
+      *      die("Invalid service ID.");
+      *  }
 
-        // Fetch service image from the database
-        $query = "SELECT image FROM services WHERE id = $service_id";
-        $serviceData = DatabaseHandler::make_select_query($query);
+      *  // Fetch service image from the database
+      *  $query = "SELECT image FROM services WHERE id = $service_id";
+      *  $serviceData = DatabaseHandler::make_select_query($query);
 
-        if ($serviceData && count($serviceData) > 0 && !empty($serviceData[0]['image'])) {
-            header("Content-Type: image/png"); // Adjust MIME type if needed
-            echo $serviceData[0]['image'];
-        } else {
-            // Return default service image if no image is found
-            header("Content-Type: image/png");
-            readfile(__DIR__ . "/../../public/images/default-service.png");
-        }
-        exit;
-    }
+      *  if ($serviceData && count($serviceData) > 0 && !empty($serviceData[0]['image'])) {
+      *      header("Content-Type: image/png"); // Adjust MIME type if needed
+      *      echo $serviceData[0]['image'];
+      *  } else {
+      *      // Return default service image if no image is found
+        *    header("Content-Type: image/png");
+       *     readfile(__DIR__ . "/../../public/images/default-service.png");
+      *  }
+     *   exit;
+    *}
+        */
 }
 
 ?>
