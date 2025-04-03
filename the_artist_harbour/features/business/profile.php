@@ -9,8 +9,8 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Check if the user is a business account
-if ($_SESSION['user_type'] !== 'business') {
+// Check if the user is not admin account
+if ($_SESSION['user_type'] !== 'admin') {
     exit();
 }
 
@@ -63,14 +63,14 @@ if ($businessData && count($businessData) > 0) {
 $queryServices = "SELECT id, name, description, min_price, max_price FROM services WHERE business_id = $business_id";
 $services = DatabaseHandler::make_select_query($queryServices);
 
-// Fetch recent reviews (assuming a 'reviews' table with author_name, content)
-$queryReviews = "SELECT r.author_name, r.content
+// Fetch recent reviews for the business with reviewer's name and rating
+$query = "SELECT r.text, r.rating, r.created_at, u.first_name, u.last_name 
                  FROM reviews r
+                 JOIN users u ON r.reviewer_id = u.id
                  WHERE r.business_id = $business_id
                  ORDER BY r.created_at DESC
-                 LIMIT 3"; // Adjust limit as needed
-$reviews = DatabaseHandler::make_select_query($queryReviews);
-
+                 LIMIT 3";  // Adjust limit as needed
+$reviews = DatabaseHandler::make_select_query($query);
 ?>
 
 <!DOCTYPE html>
@@ -268,18 +268,21 @@ $reviews = DatabaseHandler::make_select_query($queryReviews);
                 </div>
 
                 <div class="reviews-section">
-                    <h3>Recent Reviews</h3>
-                    <?php if ($reviews && count($reviews) > 0): ?>
-                        <?php foreach ($reviews as $review): ?>
-                            <div class="review-item">
-                                <strong><?php echo htmlspecialchars($review['author_name']); ?></strong>
-                                <p><?php echo htmlspecialchars($review['content']); ?></p>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p>No reviews yet.</p>
-                    <?php endif; ?>
-                </div>
+    <h3>Recent Reviews</h3>
+    <?php if ($reviews && count($reviews) > 0): ?>
+        <?php foreach ($reviews as $review): ?>
+            <div class="review-item">
+                <strong><?php echo htmlspecialchars($review['first_name'] . " " . $review['last_name']); ?>:</strong>
+                <p><?php echo htmlspecialchars($review['text']); ?></p>
+                <p><strong>Rating:</strong> <?php echo number_format($review['rating'], 1); ?> / 5</p>
+                <p><em>Reviewed on: <?php echo date("F j, Y", strtotime($review['created_at'])); ?></em></p>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>No reviews yet.</p>
+    <?php endif; ?>
+</div>
+
             </div>
         </div>
     </div>
