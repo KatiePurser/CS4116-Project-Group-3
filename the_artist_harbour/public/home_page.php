@@ -26,6 +26,24 @@ if ($_SESSION['user_type'] !== 'customer') {
             div {
                 padding: 0 !important;
             }
+
+            .card_button {
+                width: 23vw;
+                padding-left: 1vw;
+                padding-right: 1vw;
+                padding-bottom: 1vw;
+                border: none;
+                background-color: Transparent;
+            }
+
+            .hovercard {
+                width:100%;
+                height:100%;
+                word-wrap: break-word;
+                border-color: #82689A;
+                border-radius: 1vw;
+                border-width: 0.2vw;
+            }
         </style>
     </head>
     <body style="padding-top: 73.6px;">
@@ -64,7 +82,7 @@ if ($_SESSION['user_type'] !== 'customer') {
             <div class="row justify-content-center">
                 <div class="card-group justify-content-center">
                     <form action="../features/service/service.php" method="get">
-                        <button type="submit">
+                        <button class=card_button type="submit">
                             <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                             <div class="card hovercard text-center">
                                 <img class="card-img-top" src="https://placecats.com/300/200">
@@ -80,7 +98,7 @@ if ($_SESSION['user_type'] !== 'customer') {
                     <?php $service = next($result); 
                     $i++;?>
                     <form action="../features/service/service.php" method="get">
-                        <button type="submit">
+                        <button class=card_button type="submit">
                             <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                             <div class="card hovercard text-center">
                                 <img class="card-img-top" src="https://placecats.com/300/200">
@@ -96,7 +114,7 @@ if ($_SESSION['user_type'] !== 'customer') {
                     <?php $service = next($result); 
                     $i++;?>
                     <form action="../features/service/service.php" method="get">
-                        <button type="submit">
+                        <button class=card_button type="submit">
                             <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                             <div class="card hovercard text-center">
                                 <img class="card-img-top" src="https://placecats.com/300/200">
@@ -112,7 +130,7 @@ if ($_SESSION['user_type'] !== 'customer') {
                     <?php $service = next($result); 
                     $i++;?>
                     <form action="../features/service/service.php" method="get">
-                        <button type="submit">
+                        <button class=card_button type="submit">
                             <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                             <div class="card hovercard text-center">
                                 <img class="card-img-top" src="https://placecats.com/300/200">
@@ -132,9 +150,9 @@ if ($_SESSION['user_type'] !== 'customer') {
             <?php } ?>
             <div class="row">
                 <div class="card-group justify-content-center">
-                    <?php while($i<count($result)){ ?>
+                    <?php while($i<count($result) && $i<12){ ?>
                         <form action="../features/service/service.php" method="get">
-                            <button type="submit">
+                            <button class=card_button type="submit">
                                 <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                                 <div class="card hovercard text-center">
                                     <img class="card-img-top" src="https://placecats.com/300/200">

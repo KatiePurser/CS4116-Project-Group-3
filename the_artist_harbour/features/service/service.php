@@ -6,9 +6,9 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// if ($_SESSION['user_type'] != 'customer' || $_SESSION['user_type'] != 'business') {
-//     exit();
-// }
+if ($_SESSION['user_type'] == 'admin') {
+    exit();
+}
 
 
 require_once(__DIR__ . "/../../utilities/databaseHandler.php");
@@ -29,7 +29,7 @@ require_once(__DIR__ . "/serviceDetails.php");
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?php echo $service['name'] ?></title>
-        <link rel="stylesheet" href="public/css/styles.css">
+        <link rel="stylesheet" href="/../../public/css/styles.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -55,7 +55,7 @@ require_once(__DIR__ . "/serviceDetails.php");
                 <div class="tags">
                     <?php 
                     if($service['tags']!=NULL){
-                        $tags=explode(",", $services['tags'], 25);
+                        $tags=explode(",", $service['tags'], 25);
                         $i=0;
                         echo "Tags: ";
                         while($i<count($tags)){
@@ -63,6 +63,7 @@ require_once(__DIR__ . "/serviceDetails.php");
                             if($i!=count($tags)-1){
                                 echo ", ";
                             }
+                            $i++;
                         }
                     } ?>
                 </div>
@@ -81,7 +82,8 @@ require_once(__DIR__ . "/serviceDetails.php");
                     </div>
                 </div>
             </div>
-            <div class="col-6">
+            <div class="col-1"></div>
+            <div class="col-5">
                 <?php
                 if($service['image']!=NULL){
                     //image is set
@@ -98,14 +100,14 @@ require_once(__DIR__ . "/serviceDetails.php");
         <div class="reviews_containter">
         <?php
         //RETRIEVE REVIEWS FROM REVIEWS TABLE
-        $sql = "SELECT * FROM reviews WHERE service_id=$service_id";
+        $sql = "SELECT * FROM reviews WHERE service_id={$service_id}";
         $result = DatabaseHandler::make_select_query($sql);
         if($result == NULL){ ?>
             <h3 style="text-align: center;"> NO REVIEWS </h3>
         <?php } else{
             $review = $result[0];
             $i=0;
-            while($i<count($result)-3){ $i++;?>
+            while($i<count($result)-3){?>
             <div class=" row g-0 card-group justify-content-center">
                 <div class="card hovercard text-center">
                     <div class="card-body">
@@ -115,9 +117,14 @@ require_once(__DIR__ . "/serviceDetails.php");
                             <i class="bi bi-flag" title="Report this message" style="color:red;"></i>
                         </button>
                         <p class="card-text"><?php echo $review['text'] ?></p>
+                        <button type="button" class="btn p-0" data-bs-toggle="modal" data-bs-target="#reportModal"
+                            data-message-id="<?php echo $message['id']; ?>" data-reported-id="<?php echo $message['sender_id']; ?>" style="background-color: #82689A; border-width: 2%; border-color: #82689A;">
+                            Request Insight
+                        </button>
                     </div>
                 </div>
-                <?php $i++; $review=next($result)?>
+                <?php $i++; 
+                $review=next($result);?>
                 <div class="card hovercard text-center">
                     <div class="card-body">
                         <h3 class="card-title"><?php echo ServiceDetails::getReviewer($review['reviewer_id'])?></h3>
@@ -126,9 +133,14 @@ require_once(__DIR__ . "/serviceDetails.php");
                             <i class="bi bi-flag" title="Report this message" style="color:red;"></i>
                         </button>
                         <p class="card-text"><?php echo $review['text'] ?></p>
+                        <button type="button" class="btn p-0" data-bs-toggle="modal" data-bs-target="#reportModal"
+                            data-message-id="<?php echo $message['id']; ?>" data-reported-id="<?php echo $message['sender_id']; ?>" style="background-color: #82689A; border-width: 2%; border-color: #82689A;">
+                            Request Insight
+                        </button>
                     </div>
                 </div>
-                <?php $i++; $review=next($result)?>
+                <?php $i++; 
+                $review=next($result);?>
                 <div class="card hovercard text-center">
                     <div class="card-body">
                         <h3 class="card-title"><?php echo ServiceDetails::getReviewer($review['reviewer_id'])?></h3>
@@ -137,9 +149,14 @@ require_once(__DIR__ . "/serviceDetails.php");
                             <i class="bi bi-flag" title="Report this message" style="color:red;"></i>
                         </button>
                         <p class="card-text"><?php echo $review['text'] ?></p>
+                        <button type="button" class="btn p-0" data-bs-toggle="modal" data-bs-target="#reportModal"
+                            data-message-id="<?php echo $message['id']; ?>" data-reported-id="<?php echo $message['sender_id']; ?>" style="background-color: #82689A; border-width: 2%; border-color: #82689A;">
+                            Request Insight
+                        </button>
                     </div>
                 </div>
-                <?php $i++; $review=next($result)?>
+                <?php $i++; 
+                $review=next($result);?>
             </div>
             <?php } ?>
             <div class=" row g-0 card-group justify-content-center">
@@ -152,9 +169,14 @@ require_once(__DIR__ . "/serviceDetails.php");
                             <i class="bi bi-flag" title="Report this message" style="color:red;"></i>
                         </button>
                         <p class="card-text"><?php echo $review['text'] ?></p>
+                        <button type="button" class="btn p-0" data-bs-toggle="modal" data-bs-target="#reportModal"
+                            data-message-id="<?php echo $message['id']; ?>" data-reported-id="<?php echo $message['sender_id']; ?>" style="background-color: #82689A; border-width: 2%; border-color: #82689A;">
+                            Request Insight
+                        </button>
                     </div>
                 </div>
-                <?php $i++; $review=next($result); }?>
+                <?php $i++; 
+                $review=next($result);}?>
             </div>
             <?php } ?>
         </div>
