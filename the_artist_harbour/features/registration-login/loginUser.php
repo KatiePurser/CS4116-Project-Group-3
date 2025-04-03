@@ -34,10 +34,13 @@ $_SESSION["user_type"] = $user_data["user_type"];
 
 if ($_SESSION["user_type"] === "customer") {
     header("Location: /CS4116-Project-Group-3/the_artist_harbour/public/home_page.php");
+    exit();
 } elseif ($_SESSION["user_type"] === "business") {
     header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/business/profile.php");
+    exit();
 } elseif ($_SESSION["user_type"] === "admin") {
     header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/administration/admin_panel.php");
+    exit();
 }
 
 function getUserByEmail(string $email)
