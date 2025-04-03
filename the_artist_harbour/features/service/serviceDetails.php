@@ -22,4 +22,12 @@ class ServiceDetails{
             return "{$rating}/5";
         }
     }
+
+    public static function getReviewer($id){
+        require_once(__DIR__ . "/../../utilities/databaseHandler.php");
+
+        $sql="SELECT first_name, last_name FROM users WHERE id={$id}";
+        $reviewer = DatabaseHandler::make_select_query($sql);
+        return $reviewer[0]['first_name']." ".$reviewer[0]['last_name'];
+    }
 }

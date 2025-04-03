@@ -1,4 +1,4 @@
-<?php
+<p?php
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
@@ -26,6 +26,54 @@ if ($_SESSION['user_type'] != 'customer') {
         <style>
             div {
                 padding: 0 !important;
+            }
+            
+            /* .service_form {
+                max-width: 23%;
+                width: 23%;
+                padding-left: 1vw;
+                padding-right: 1vw;
+                padding-bottom: 1vw;
+            } */
+
+            .card_button {
+                width: 23vw;
+                padding-left: 1vw;
+                padding-right: 1vw;
+                padding-bottom: 1vw;
+                border: none;
+                background-color: Transparent;
+            }
+
+            .hovercard {
+                width:100%;
+                height:100%;
+                word-wrap: break-word;
+                border-color: #82689A;
+                border-radius: 1vw;
+                border-width: 0.2vw;
+            }
+
+            .card-title {
+                display: block;
+                word-wrap: break-word;
+                max-width:100%;
+            }
+
+            .service_price {
+                background-color: #82689A;
+                border-radius: 0.5vw;
+                max-width: fit-content;
+                margin: auto;
+                padding-left: 0.5vw;
+                padding-right: 0.5vw;
+            }
+
+            .filter_buttons{
+                background-color: #82689A;
+                border-radius: 0.5vw;
+                font-size: 1.5vw;
+
             }
         </style>
     </head>
@@ -64,6 +112,7 @@ if ($_SESSION['user_type'] != 'customer') {
         <?php 
             require_once(__DIR__ . "/../../utilities/databaseHandler.php");
             require_once(__DIR__ . "/../service/serviceDetails.php"); 
+            require_once(__DIR__ . "/../../utilities/imageHandler.php");
             require_once(__DIR__ . "/searchMethods.php");
 
             function read($csv){
@@ -134,35 +183,15 @@ if ($_SESSION['user_type'] != 'customer') {
                             </div>
                         </div>
                         <br>
-                        <input type="submit" value="Set Filters">
+                        <input class="filter_buttons" type="submit" value="Set Filters">
                         <br><br>
                     </form>
                     <form action="search_page.php" method="post">
                         <input type="hidden" id="search" name="search" value=<?php echo $keyword?>>
-                        <input type="submit" name="clear" value="Clear Filters">
+                        <input class="filter_buttons" type="submit" name="clear" value="Clear Filters">
                     </form>
                 </div>
             </div>
-
-            <!-- <script>
-                function myFunction() {
-                    document.getElementById("tags").classList.toggle("show");
-                }
-
-                // Close the dropdown menu if the user clicks outside of it
-                window.onclick = function(event) {
-                if (!event.target.matches('.dropbtn')) {
-                    var dropdowns = document.getElementsByClassName("tags_div");
-                    var i;
-                    for (i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
-                    }
-                }
-                }
-            </script> -->
 
             <?php
             //SEARCH SERVICES BY KEYWORD
@@ -268,14 +297,18 @@ if ($_SESSION['user_type'] != 'customer') {
                 while($i<count($result)-4){ ?>
                 <div>
                     <div class="card-group justify-content-center">
-                        <form action="service.php" method="get">
-                            <button type="submit">
+                        <form class="card_form" action="../service/service.php" method="get">
+                            <button class="card_button" type="submit">
                                 <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                                 <div class="card hovercard text-center">
                                     <img class="card-img-top" src="https://placecats.com/300/200">
+                                    <!-- <?php echo $service["image"]; ?> -->
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                        <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?> </h4>
+                                        <p class="business-name"><?php $sql="SELECT display_name FROM businesses WHERE id={$service['business_id']}";
+                                            $business_name = DatabaseHandler::make_select_query($sql); 
+                                            echo $business_name[0]['display_name']; ?></p>
+                                        <h4 class="card-subtitle service_price"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
                                         <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                         echo $rating;?></p>
                                     </div>
@@ -284,14 +317,17 @@ if ($_SESSION['user_type'] != 'customer') {
                         </form>
                         <?php $service = next($result); 
                         $i++;?>
-                        <form action="service.php" method="get">
-                            <button type="submit">
+                        <form class="card_form" action="../service/service.php" method="get">
+                            <button class="card_button" type="submit">
                                 <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                                 <div class="card hovercard text-center">
                                     <img class="card-img-top" src="https://placecats.com/300/200">
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                        <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
+                                        <p class="business-name"><?php $sql="SELECT display_name FROM businesses WHERE id={$service['business_id']}";
+                                            $business_name = DatabaseHandler::make_select_query($sql); 
+                                            echo $business_name[0]['display_name']; ?></p>
+                                        <h4 class="card-subtitle service_price"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
                                         <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                         echo $rating;?></p>
                                     </div>
@@ -300,14 +336,17 @@ if ($_SESSION['user_type'] != 'customer') {
                         </form>
                         <?php $service = next($result); 
                         $i++;?>
-                        <form action="service.php" method="get">
-                            <button type="submit">
+                        <form class="card_form" action="../service/service.php" method="get">
+                            <button class="card_button" type="submit">
                                 <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                                 <div class="card hovercard text-center">
                                     <img class="card-img-top" src="https://placecats.com/300/200">
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                        <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
+                                        <p class="business-name"><?php $sql="SELECT display_name FROM businesses WHERE id={$service['business_id']}";
+                                            $business_name = DatabaseHandler::make_select_query($sql); 
+                                            echo $business_name[0]['display_name']; ?></p>
+                                        <h4 class="card-subtitle service_price"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
                                         <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                         echo $rating;?></p>
                                     </div>
@@ -316,14 +355,17 @@ if ($_SESSION['user_type'] != 'customer') {
                         </form>
                         <?php $service = next($result); 
                         $i++;?>
-                        <form action="service.php" method="get">
-                            <button type="submit">
+                        <form class="card_form" action="../service/service.php" method="get">
+                            <button class="card_button" type="submit">
                                 <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                                 <div class="card hovercard text-center">
                                     <img class="card-img-top" src="https://placecats.com/300/200">
                                     <div class="card-body">
                                         <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                        <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
+                                        <p class="business-name"><?php $sql="SELECT display_name FROM businesses WHERE id={$service['business_id']}";
+                                            $business_name = DatabaseHandler::make_select_query($sql); 
+                                            echo $business_name[0]['display_name']; ?></p>
+                                        <h4 class="card-subtitle service_price"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
                                         <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                         echo $rating;?></p>
                                     </div>
@@ -338,16 +380,20 @@ if ($_SESSION['user_type'] != 'customer') {
                 <div class="row g-0">
                     <div class="card-group justify-content-center">
                         <?php while($i<count($result)){ ?>
-                            <form action="../service/service.php" method="get">
-                                <button type="submit">
+                            <form class="card_form" action="../service/service.php" method="get">
+                                <button class="card_button" type="submit">
                                     <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                                     <div class="card hovercard text-center">
                                         <img class="card-img-top" src="https://placecats.com/300/200">
                                         <div class="card-body">
                                             <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                            <h4 class="card-subtitle"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?> </h4>
+                                            <p class="business-name"><?php $sql="SELECT display_name FROM businesses WHERE id={$service['business_id']}";
+                                                $business_name = DatabaseHandler::make_select_query($sql); 
+                                                echo $business_name[0]['display_name']; ?></p>
+                                            <h4 class="card-subtitle service_price"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?> </h4>
                                             <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
-                                        echo $rating;?></p>
+                                            echo $rating;?></p>
+                                            
                                         </div>
                                     </div>
                                 </button>
@@ -376,8 +422,8 @@ if ($_SESSION['user_type'] != 'customer') {
                     while($i<count($result)-4){ ?>
                     <div class="row g-0 justify-content-center">
                         <div class="card-group justify-content-center">
-                            <form action="../business/profile.php" method="get">
-                                <button type="submit">
+                            <form class="card_form" action="../business/profile.php" method="get">
+                                <button class="card_button" type="submit">
                                     <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
                                     <div class="card hovercard text-center">
                                         <img class="card-img-top" src="https://placecats.com/300/200">
@@ -391,8 +437,8 @@ if ($_SESSION['user_type'] != 'customer') {
                             </form>
                             <?php $business = next($result); 
                             $i++;?>
-                            <form action="../business/profile.php" method="get">
-                                <button type="submit">
+                            <form class="card_form" action="../business/profile.php" method="get">
+                                <button class="card_button" type="submit">
                                     <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
                                     <div class="card hovercard text-center">
                                         <img class="card-img-top" src="https://placecats.com/300/200">
@@ -406,8 +452,8 @@ if ($_SESSION['user_type'] != 'customer') {
                             </form>
                             <?php $business = next($result); 
                             $i++;?>
-                            <form action="../business/profile.php" method="get">
-                                <button type="submit">
+                            <form class="card_form" action="../business/profile.php" method="get">
+                                <button class="card_button" type="submit">
                                     <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
                                     <div class="card hovercard text-center">
                                         <img class="card-img-top" src="https://placecats.com/300/200">
@@ -421,8 +467,8 @@ if ($_SESSION['user_type'] != 'customer') {
                             </form>
                             <?php $business = next($result); 
                             $i++;?>
-                            <form action="../business/profile.php" method="get">
-                                <button type="submit">
+                            <form class="card_form" action="../business/profile.php" method="get">
+                                <button class="card_button" type="submit">
                                     <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
                                     <div class="card hovercard text-center">
                                         <img class="card-img-top" src="https://placecats.com/300/200">
@@ -442,8 +488,8 @@ if ($_SESSION['user_type'] != 'customer') {
                     <div class="row g-0">
                         <div class="card-group justify-content-center">
                             <?php while($i<count($result)){ ?>
-                                <form action="../business/profile.php" method="get">
-                                    <button type="submit">
+                                <form class="card_form" action="../business/profile.php" method="get">
+                                    <button class="card_button" type="submit">
                                         <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
                                         <div class="card hovercard text-center">
                                             <img class="card-img-top" src="https://placecats.com/300/200">
