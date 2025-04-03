@@ -9,8 +9,8 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Check if the user is not admin account
-if ($_SESSION['user_type'] !== 'admin') {
+// Check if the user is not business account
+if ($_SESSION['user_type'] !== 'business') {
     exit();
 }
 
