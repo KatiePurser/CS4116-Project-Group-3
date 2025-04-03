@@ -30,7 +30,7 @@ $user_type = $_SESSION['user_type'] ?? '';
             <?php endif; ?>
             <li class="sidebar-item">
                 <a class="sidebar-link"
-                    href="/CS4116-Project-Group-3/the_artist_harbour/features/service_request/service_request.php">
+                    href="/CS4116-Project-Group-3/the_artist_harbour/features/service_request/service_request_page.php">
                     <i class="bi bi-briefcase"></i>
                     <span class="d-none d-xl-inline">Requests</span>
                 </a>
