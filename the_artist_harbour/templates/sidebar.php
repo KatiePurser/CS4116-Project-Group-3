@@ -7,36 +7,33 @@ $user_type = $_SESSION['user_type'] ?? '';
         <ul class="sidebar-nav-list">
             <?php if ($user_type === 'customer'): ?>
                 <li class="sidebar-item">
-                    <a class="sidebar-link"
-                        href="/CS4116-Project-Group-3/the_artist_harbour/features/user/user_profile.php">
+                    <a class="sidebar-link" href="/the_artist_harbour/features/user/user_profile.php">
                         <i class="bi bi-person"></i>
                         <span class="d-none d-xl-inline">Account</span>
                     </a>
                 </li>
             <?php elseif ($user_type === 'business'): ?>
                 <li class="sidebar-item">
-                    <a class="sidebar-link"
-                        href="/CS4116-Project-Group-3/the_artist_harbour/features/user/user_profile.php">
+                    <a class="sidebar-link" href="/the_artist_harbour/features/user/user_profile.php">
                         <i class="bi bi-person"></i>
                         <span class="d-none d-xl-inline">Account</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">
+                    <a class="sidebar-link" href="/the_artist_harbour/features/business/account.php">
                         <i class="bi bi-house"></i>
                         <span class="d-none d-xl-inline">Business</span>
                     </a>
                 </li>
             <?php endif; ?>
             <li class="sidebar-item">
-                <a class="sidebar-link"
-                    href="/CS4116-Project-Group-3/the_artist_harbour/features/service_request/service_request_page.php">
+                <a class="sidebar-link" href="/the_artist_harbour/features/service_request/service_request_page.php">
                     <i class="bi bi-briefcase"></i>
                     <span class="d-none d-xl-inline">Requests</span>
                 </a>
             </li>
             <li class="sidebar-item">
-                <a class="sidebar-link" href="/CS4116-Project-Group-3/the_artist_harbour/features/messages/inbox.php">
+                <a class="sidebar-link" href="/the_artist_harbour/features/messages/inbox.php">
                     <i class="bi bi-envelope"></i>
                     <span class="d-none d-xl-inline">Messages</span>
                 </a>
