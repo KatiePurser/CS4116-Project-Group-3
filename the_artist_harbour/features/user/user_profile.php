@@ -8,7 +8,7 @@ include_once __DIR__ . '/../../utilities/imageHandler.php';  // Include the Imag
 $messages = [];
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/registration-login/login.php");
+    header("Location: /the_artist_harbour/features/registration-login/login.php");
     exit();
 }
 
@@ -101,6 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -113,26 +114,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         body {
             background-color: #fff;
         }
+
         .profile-container {
             background-color: #e6dfe5;
             padding: 20px;
         }
+
         .card {
             background-color: #ddd2f1;
             border-radius: 10px;
         }
+
         .btn-primary {
             background-color: #82689A;
             border-color: #9074a8;
         }
+
         .btn-secondary {
             background-color: #ac8ebf;
             border-color: #ac8ebf;
         }
+
         .sidebar-container {
             background-color: #9074a8;
             min-height: 100vh;
         }
+
         .subheader {
             background-color: #ddd2f1;
             display: flex;
@@ -142,14 +149,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             text-align: center;
             border-bottom: 1px solid #49375a;
         }
+
         .subheader-title {
             padding: 10px;
             font-weight: bold;
             font-size: 1.5rem;
             color: #49375a;
         }
+
         .sub-sidebar {
-            background-color: #ddd2f1; 
+            background-color: #ddd2f1;
             min-height: calc(100vh - 56px - 53px);
             padding: 10px;
         }
@@ -157,11 +166,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         div {
             padding: 0 !important;
         }
+
         .alert {
             margin-bottom: 10px;
         }
     </style>
 </head>
+
 <body>
     <div class="container-fluid">
         <div class="row g-0">
@@ -176,28 +187,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="col-1">
                 <?php include __DIR__ . '/../../templates/sidebar.php'; ?>
             </div>
-            
+
             <!-- Sub-sidebar with user info -->
             <div class="col-2 sub-sidebar">
                 <div class="text-center">
-                <?php if ($profile_picture): ?>
-                    <img src="get_image.php?id=<?= $user_id ?>" class="img-fluid rounded-circle" width="100" height="100">
-                <?php else: ?>
-                    <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto" style="width:80px; height:80px;">
-                        <i class="bi bi-person fs-1"></i>
-                    </div>
-                <?php endif; ?>
+                    <?php if ($profile_picture): ?>
+                        <img src="get_image.php?id=<?= $user_id ?>" class="img-fluid rounded-circle" width="100"
+                            height="100">
+                    <?php else: ?>
+                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto"
+                            style="width:80px; height:80px;">
+                            <i class="bi bi-person fs-1"></i>
+                        </div>
+                    <?php endif; ?>
 
-<h4 class="mt-2"><?php echo htmlspecialchars($first_name . " " . $last_name); ?></h4>
+                    <h4 class="mt-2"><?php echo htmlspecialchars($first_name . " " . $last_name); ?></h4>
                     <p class="text-muted"><?php echo htmlspecialchars($email); ?></p>
                 </div>
             </div>
-        
+
             <!-- Main content area -->
             <div class="col-9 p-4">
                 <!-- Display error/success messages -->
                 <?php if (!empty($messages)): ?>
-                    <div class="alert <?= (strpos($messages[0], 'success') !== false) ? 'alert-success' : 'alert-danger' ?>">
+                    <div
+                        class="alert <?= (strpos($messages[0], 'success') !== false) ? 'alert-success' : 'alert-danger' ?>">
                         <ul>
                             <?php foreach ($messages as $message): ?>
                                 <li><?php echo htmlspecialchars($message); ?></li>
@@ -210,9 +224,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="card p-3 mb-3">
                     <h5>User Details</h5>
                     <form method="POST" action="user_profile.php">
-                        <input type="text" class="form-control mb-2" name="first_name" value="<?php echo htmlspecialchars($first_name); ?>" placeholder="First Name">
-                        <input type="text" class="form-control mb-2" name="last_name" value="<?php echo htmlspecialchars($last_name); ?>" placeholder="Last Name">
-                        <input type="email" class="form-control mb-2" name="email" value="<?php echo htmlspecialchars($email); ?>" placeholder="Email">
+                        <input type="text" class="form-control mb-2" name="first_name"
+                            value="<?php echo htmlspecialchars($first_name); ?>" placeholder="First Name">
+                        <input type="text" class="form-control mb-2" name="last_name"
+                            value="<?php echo htmlspecialchars($last_name); ?>" placeholder="Last Name">
+                        <input type="email" class="form-control mb-2" name="email"
+                            value="<?php echo htmlspecialchars($email); ?>" placeholder="Email">
                         <button class="btn btn-secondary" type="submit">Update User Details</button>
                     </form>
                 </div>
@@ -221,8 +238,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="card p-3 mb-3">
                     <h5>Change Password</h5>
                     <form method="POST" action="user_profile.php">
-                        <input type="password" class="form-control mb-2" name="new_password" placeholder="New Password" required>
-                        <input type="password" class="form-control mb-2" name="confirm_password" placeholder="Confirm Password" required>
+                        <input type="password" class="form-control mb-2" name="new_password" placeholder="New Password"
+                            required>
+                        <input type="password" class="form-control mb-2" name="confirm_password"
+                            placeholder="Confirm Password" required>
                         <button class="btn btn-secondary" type="submit">Update Password</button>
                     </form>
                 </div>
@@ -238,4 +257,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </body>
+
 </html>
