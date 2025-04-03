@@ -36,6 +36,8 @@ if ($_SESSION["user_type"] === "customer") {
     header("Location: /CS4116-Project-Group-3/the_artist_harbour/public/home_page.php");
 } elseif ($_SESSION["user_type"] === "business") {
     header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/business/profile.php");
+} elseif ($_SESSION["user_type"] === "admin") {
+    header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/administration/admin_panel.php");
 }
 
 function getUserByEmail(string $email) {
