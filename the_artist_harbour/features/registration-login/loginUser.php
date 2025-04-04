@@ -2,7 +2,7 @@
 
 session_start();
 
-require_once __DIR__ . '/../../utilities/databaseHandler.php';
+require_once __DIR__ . '/../../utilities/DatabaseHandler.php';
 require_once __DIR__ . '/../../utilities/InputValidationHelper.php';
 
 try {
@@ -40,14 +40,12 @@ if ($_SESSION["user_type"] === "customer") {
     header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/administration/admin_panel.php");
 }
 
-function getUserByEmail(string $email)
-{
+function getUserByEmail(string $email) {
     $query = "SELECT * FROM users WHERE email = '$email'";
     $result = DatabaseHandler::make_select_query($query);
     return empty($result) ? null : $result[0];
 }
 
-function verifyPassword(string $password, string $hashedPassword): bool
-{
+function verifyPassword(string $password, string $hashedPassword): bool {
     return password_verify($password, $hashedPassword);
 }
