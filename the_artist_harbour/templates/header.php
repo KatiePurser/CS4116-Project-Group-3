@@ -86,9 +86,9 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                         <li><a class="dropdown-item"
                                 href="/the_artist_harbour/features/service_request/service_request_page.php">Requests</a>
                         </li>
-                        <li><a class="dropdown-item" href="/the_artist_harbour/features/business/account.php">Account</a>
+                        <li><a class="dropdown-item" href="/the_artist_harbour/features/user/user_profile.php">Account</a>
                         </li>
-                        <li><a class="dropdown-item" href="/the_artist_harbour/features/user/user_">Business</a>
+                        <li><a class="dropdown-item" href="/the_artist_harbour/features/business/account.php">Business</a>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
