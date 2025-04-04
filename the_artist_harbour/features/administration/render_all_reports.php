@@ -1,7 +1,7 @@
 <?php
 // Retrieve service requests for the logged-in user
 
-require_once __DIR__ . '/../../utilities/DatabaseHandler.php';
+require_once __DIR__ . '/../../utilities/databaseHandler.php';
 
 $reports = getAllReports();
 
