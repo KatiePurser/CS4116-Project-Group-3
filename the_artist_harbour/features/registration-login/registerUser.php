@@ -2,7 +2,7 @@
 
 session_start();
 
-require_once __DIR__ . '/../../utilities/DatabaseHandler.php';
+require_once __DIR__ . '/../../utilities/databaseHandler.php';
 require_once __DIR__ . '/../../utilities/InputValidationHelper.php';
 
 try {
