@@ -9,7 +9,7 @@
                 <form method="post" action="scripts/report_message.php">
                     <input type="hidden" name="message_id" id="reportMessageId">
                     <input type="hidden" name="reported_id" id="reportedId">
-                    <input type="hidden" name="reporter_id" value="5">
+                    <input type="hidden" name="reporter_id" value="5"> <!-- NEED TO CHANGE HARD CODED VALUE -->
                     <input type="hidden" name="target_type" value="message">
                     <div class="mb-3">
                         <label for="reason" class="form-label">Reason for Reporting</label>

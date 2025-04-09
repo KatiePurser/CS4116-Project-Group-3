@@ -25,8 +25,8 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
                     </button>
 
                     <!-- Display request creation date and service name -->
-                    <span class="request-info time"> <?= $formattedDate ?> </span>
-                    <span class="request-info"> <?= htmlspecialchars($request['service_name']) ?> </span>
+                    <span class="request-info time-stamp"> <?= $formattedDate ?> </span>
+                    <span class="service-name request-info"> <?= htmlspecialchars($request['service_name']) ?> </span>
                 </div>
 
                 <div class="d-flex flex-wrap">
@@ -44,12 +44,23 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
                     <?php elseif ($request['user_type'] === 'business'): ?>
                         <!-- Display status badges and action buttons for businesses -->
                         <?php if ($request['status'] === 'pending'): ?>
-                            <button class="btn btn-success btn-sm me-2">ACCEPT</button>
-                            <button class="btn btn-danger btn-sm me-2">DECLINE</button>
+                            <button class="accept-btn btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#acceptRequestModal"
+                                data-request-id="<?= htmlspecialchars($request['request_id']) ?>"
+                                data-service-id="<?= htmlspecialchars($request['service_id']) ?>"
+                                data-created-at="<?= htmlspecialchars($request['created_at']) ?>"
+                                data-service-name="<?= htmlspecialchars($request['service_name']) ?>"
+                                data-price="<?= htmlspecialchars($request['price']) ?>">
+                                ACCEPT
+                            </button>
+
+
+
+
+                            <button class="decline-btn btn-sm me-2">DECLINE</button>
                         <?php elseif ($request['status'] === 'completed'): ?>
-                            <span class="badge bg-success me-2">COMPLETED</span>
+                            <span class="completed-badge badge me-2">COMPLETED</span>
                         <?php elseif ($request['status'] === 'declined'): ?>
-                            <span class="badge bg-danger me-2">DECLINED</span>
+                            <span class="declined-badge badge me-2">DECLINED</span>
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>
@@ -58,8 +69,7 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
     </div>
 <?php endif; ?>
 
-<!-- Include modal for displaying request details -->
-<?php include 'display_request_modal.php'; ?>
+<?php include_once 'accept_request_modal.php'; ?>
 
 <style>
     .request-card {
@@ -68,7 +78,7 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
         padding: 15px;
     }
 
-    .time {
+    .time-stamp {
         min-width: 450px;
     }
 
@@ -82,7 +92,7 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
     }
 
     .info-btn:hover {
-        color: #49375a;
+        color: rgb(194, 149, 236);
     }
 
     .pending-badge {
@@ -97,6 +107,40 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
         background-color: #DF8282;
     }
 
+    .accept-btn {
+        color: white;
+        background-color: #7c9978;
+    }
+
+    .accept-btn:hover {
+        color: white;
+        background-color: #5f745c;
+    }
+
+    .decline-btn {
+        color: white;
+        background-color: #DF8282;
+        border: none;
+    }
+
+    .decline-btn:hover {
+        background-color: #975959;
+    }
+
+    .accept-btn,
+    .decline-btn {
+        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 6px 12px;
+        font-weight: bold;
+        border-radius: 15px;
+        width: 100px;
+        height: 30px;
+    }
+
     .request-info {
         font-size: 18px;
         font-weight: bold;
@@ -105,6 +149,7 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
         align-items: center;
         text-align: center;
     }
+
 
     .badge {
         font-size: 12px;
@@ -141,6 +186,14 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
     @media (max-width: 768px) {
         .request-info {
             font-size: 16px;
+        }
+
+        .service-name {
+            margin: 25px;
+        }
+
+        .accept-btn {
+            margin-bottom: 10px;
         }
 
         .pending-badge,
