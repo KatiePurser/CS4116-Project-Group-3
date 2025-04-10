@@ -37,7 +37,6 @@ class ImageHandler {
             return "Database update failed.";
         }
 
-        return "image uploaded successfully!";
     }
     
 
