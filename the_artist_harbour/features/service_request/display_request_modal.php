@@ -7,13 +7,11 @@
             <div class="modal-dialog">
                 <div class="modal-content">
 
-                    <!-- Modal Header -->
                     <div class="modal-header">
                         <h5 class="modal-title">Request Details</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
-                    <!-- Modal Body -->
                     <div class="modal-body">
                         <p><strong>Request ID:</strong> <?= htmlspecialchars($request['request_id']) ?></p>
                         <p><strong>Service:</strong> <?= htmlspecialchars($request['service_name']) ?></p>
@@ -25,7 +23,6 @@
                         <?php endif; ?>
                     </div>
 
-                    <!-- Modal Footer -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
