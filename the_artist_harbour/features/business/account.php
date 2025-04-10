@@ -1,7 +1,7 @@
 <?php
 session_start();
-include_once __DIR__ . '/../../utilities/databaseHandler.php';
-include_once __DIR__ . '/../../utilities/imageHandler.php';
+include_once __DIR__ . '/../../utilities/DatabaseHandler.php';
+include_once __DIR__ . '/../../utilities/ImageHandler.php';
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/registration-login/login.php");
@@ -49,10 +49,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             addslashes($business_description),
             $business_id
         );
-        DatabaseHandler::make_modify_query($query);
+        $result = DatabaseHandler::make_modify_query($query);
         
+        if ($result !== null) {
+            $_SESSION['message'] = 'Business details updated successfully!';
+            $_SESSION['message_type'] = 'success';
+        } else {
+            $_SESSION['message'] = 'Error updating business details.';
+            $_SESSION['message_type'] = 'danger';
+        }
     }
-}
 
     // Collect form data for social media links
     if (isset($_POST['instagram']) || isset($_POST['facebook']) || isset($_POST['tiktok']) || isset($_POST['pinterest']) || isset($_POST['website'])) {
@@ -72,9 +78,140 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $website,
             $business_id
         );
-        DatabaseHandler::make_modify_query($query);
+        $result = DatabaseHandler::make_modify_query($query);
+        
+        if ($result !== null) {
+            $_SESSION['message'] = 'Social media links updated successfully!';
+            $_SESSION['message_type'] = 'success';
+        } else {
+            $_SESSION['message'] = 'Error updating social media links.';
+            $_SESSION['message_type'] = 'danger';
+        }
     }
 
+    // Check if we're editing an existing service
+    if (isset($_POST['service_id']) && is_numeric($_POST['service_id'])) {
+        $service_id = intval($_POST['service_id']);  // This should match the service you're updating
+
+        // Sanitize and validate input
+        $service_name = filter_input(INPUT_POST, 'service_name', FILTER_SANITIZE_STRING);
+        $service_description = filter_input(INPUT_POST, 'service_description', FILTER_SANITIZE_STRING);
+        
+        // Process tags
+        $service_tags = [];
+        if (isset($_POST['tags']) && is_array($_POST['tags'])) {
+            $service_tags = $_POST['tags'];
+        }
+        $service_tags = array_map('trim', $service_tags);
+        $service_tags = array_unique($service_tags);
+        $service_tags_str = implode(',', $service_tags);
+
+        // Check if service is negotiable
+        $negotiable = isset($_POST['service_negotiable']) ? 1 : 0;
+        $min_price = $negotiable ? filter_input(INPUT_POST, 'service_min_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+        $max_price = filter_input(INPUT_POST, 'service_max_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+
+        // Update the service in the database
+        $query = "UPDATE services SET 
+                    name = '" . addslashes($service_name) . "', 
+                    description = '" . addslashes($service_description) . "',
+                    tags = '" . addslashes($service_tags_str) . "',
+                    min_price = " . ($min_price !== null ? $min_price : "NULL") . ",
+                    max_price = " . ($max_price !== null ? $max_price : "NULL") . "
+                  WHERE id = {$service_id} AND business_id = {$business_id}";
+
+        $result = DatabaseHandler::make_modify_query($query);
+
+        // Handle image upload separately
+        if (isset($_FILES['service_image']) && $_FILES['service_image']['error'] === UPLOAD_ERR_OK) {
+            $image_uploaded = ImageHandler::uploadAndStoreImage('service_image', 'services', 'image', 'id', $service_id);
+        }
+
+        if ($result !== null) {
+            $_SESSION['message'] = 'Service updated successfully!';
+            $_SESSION['message_type'] = 'success';
+            header("Location: account.php");
+            exit();
+        } else {
+            $_SESSION['message'] = 'Error updating service. Please try again.';
+            $_SESSION['message_type'] = 'danger';
+            header("Location: account.php");
+            exit();
+        }
+    }
+    // Otherwise, check if we're adding a new service
+    else if (isset($_POST['service_name'])) {
+        // Collect form data for the new service
+        $service_name = filter_input(INPUT_POST, 'service_name', FILTER_SANITIZE_STRING);
+        $service_description = filter_input(INPUT_POST, 'service_description', FILTER_SANITIZE_STRING);
+        // Check if negotiable is true or false
+        $negotiable = isset($_POST['service_negotiable']) ? 1 : 0;
+        
+        // Get min_price and max_price based on negotiable
+        $min_price = null;
+        if ($negotiable && isset($_POST['service_min_price']) && !empty($_POST['service_min_price'])) {
+            $min_price = filter_input(INPUT_POST, 'service_min_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        }
+        
+        $max_price = filter_input(INPUT_POST, 'service_max_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        
+        // Validate prices based on negotiable flag
+        if ($negotiable && (!$min_price || !$max_price)) {
+            $_SESSION['message'] = 'Both min and max prices are required when negotiable is true.';
+            $_SESSION['message_type'] = 'warning';
+            header("Location: account.php");
+            exit();
+        } elseif (!$negotiable && !$max_price) {
+            $_SESSION['message'] = 'Max price is required when negotiable is false.';
+            $_SESSION['message_type'] = 'warning';
+            header("Location: account.php");
+            exit();
+        }
+
+        $service_tags = isset($_POST['tags']) ? $_POST['tags'] : [];
+        $service_tags = array_map('trim', $service_tags); 
+        $service_tags = array_unique($service_tags);
+        $service_tags_str = implode(',', $service_tags); // Convert array to string for storage
+        
+        // First insert the service without the image to get an ID
+        $insert_query = "INSERT INTO services (business_id, name, description, tags, min_price, max_price, created_at) 
+        VALUES (
+            $business_id, 
+            '" . addslashes($service_name) . "', 
+            '" . addslashes($service_description) . "', 
+            '" . addslashes($service_tags_str) . "',
+            " . ($min_price !== null ? $min_price : "NULL") . ", 
+            " . ($max_price !== null ? $max_price : "NULL") . ", 
+            NOW()
+        )";
+
+        $result = DatabaseHandler::make_modify_query($insert_query);
+        
+        if ($result !== null) {
+            // Get the last inserted ID
+            $query = "SELECT MAX(id) as last_id FROM services WHERE business_id = $business_id";
+            $last_id_result = DatabaseHandler::make_select_query($query);
+            $service_id = $last_id_result[0]['last_id'];
+            
+            // Now handle the image upload with the correct service ID
+            if (isset($_FILES['service_image']) && $_FILES['service_image']['error'] === UPLOAD_ERR_OK) {
+                $image_uploaded = ImageHandler::uploadAndStoreImage('service_image', 'services', 'image', 'id', $service_id);
+            }
+            
+            $_SESSION['message'] = 'New service added successfully!';
+            $_SESSION['message_type'] = 'success';
+            header("Location: account.php");
+            exit();
+        } else {
+            $_SESSION['message'] = 'Error adding service. Please try again.';
+            $_SESSION['message_type'] = 'danger';
+            header("Location: account.php");
+            exit();
+        }
+    }
+}
+
+// Fetch all services related to this business
 $query = "SELECT * FROM services WHERE business_id = $business_id";
 $services = DatabaseHandler::make_select_query($query);
 
@@ -83,85 +220,25 @@ if (!is_array($services)) {
     $services = [];
 }
 
-
-// Handle adding a new service
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_name'])) {
-    // Collect form data for the new service
-    $service_name = filter_input(INPUT_POST, 'service_name', FILTER_SANITIZE_STRING);
-    $service_description = filter_input(INPUT_POST, 'service_description', FILTER_SANITIZE_STRING);
-    // Check if negotiable is true or false
-    $negotiable = isset($_POST['service_negotiable']) ? 1 : 0;
-    
-    // Get min_price and max_price based on negotiable
-    $min_price = null;
-    if ($negotiable && isset($_POST['service_min_price']) && !empty($_POST['service_min_price'])) {
-        $min_price = filter_input(INPUT_POST, 'service_min_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-    }
-    
-    $max_price = filter_input(INPUT_POST, 'service_max_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-    
-    // Validate prices based on negotiable flag
-    if ($negotiable && (!$min_price || !$max_price)) {
-        echo "<script>alert('Both min and max prices are required when negotiable is true.');</script>";
-        exit();
-    } elseif (!$negotiable && !$max_price) {
-        echo "<script>alert('Max price is required when negotiable is false.');</script>";
-        exit();
-    }
-
-    $service_tags = isset($_POST['tags']) ? $_POST['tags'] : [];
-    $service_tags = array_map('trim', $service_tags); 
-    $service_tags = array_unique($service_tags);
-    $service_tags_str = implode(',', $service_tags); // Convert array to string for storage
-    
-   // Handle the image upload for the new service using imagehandler class
-   $service_image = null; 
-   if (isset($_FILES['service_image']) && $_FILES['service_image']['error'] === UPLOAD_ERR_OK) {
-    $service_image = imageHandler::uploadAndStoreImage('service_image', 'services', 'image', 'id', $business_id);
-   }
-
-
-    // Insert the new service into the database
-    $insert_query = "INSERT INTO services (business_id, name, description, tags, min_price, max_price, image, created_at) 
-    VALUES (
-        $business_id, 
-        '" . addslashes($service_name) . "', 
-        '" . addslashes($service_description) . "', 
-        '" . addslashes($service_tags_str) . "',
-        " . ($min_price !== null ? $min_price : "NULL") . ", 
-        " . ($max_price !== null ? $max_price : "NULL") . ", 
-        " . ($service_image ? "'".addslashes($service_image)."'" : "NULL") . ",  
-        NOW()
-    )";
-
-
-
-    $result = DatabaseHandler::make_modify_query($insert_query);
-    if ($result) {
-        echo "<script>alert('New service added successfully!');</script>";
-        header("Location: account.php");
-        exit();
-    } else {
-        echo "<script>alert('Error adding service. Please try again.');</script>";
-    }
-}
-
-// Fetch all services related to this business
-$query = "SELECT * FROM services WHERE business_id = $business_id";
-$services = DatabaseHandler::make_select_query($query);
-
 // Handle service deletion
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_service'])) {
     $service_id = intval($_GET['delete_service']);
     
     // Ensure the service belongs to the logged-in business
     $query = "DELETE FROM services WHERE id = $service_id AND business_id = $business_id";
-    DatabaseHandler::make_modify_query($query);
+    $result = DatabaseHandler::make_modify_query($query);
     
-    echo "<script>alert('Service deleted successfully!'); window.location='account.php';</script>";
+    if ($result !== null) {
+        $_SESSION['message'] = 'Service deleted successfully!';
+        $_SESSION['message_type'] = 'success';
+    } else {
+        $_SESSION['message'] = 'Error deleting service.';
+        $_SESSION['message_type'] = 'danger';
+    }
+    
+    header("Location: account.php");
     exit();
 }
-
 
 // If we are in edit mode, load the service to edit
 $edit_service = null;
@@ -173,55 +250,12 @@ if (isset($_GET['service_id']) && is_numeric($_GET['service_id'])) {
     $edit_service = $edit_service ? $edit_service[0] : null;
 
     if (!$edit_service) {
-        die("Service not found or access denied.");
-    }
-
-
-// Handle form submission for editing service
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_id']) && is_numeric($_POST['service_id'])) {
-    $service_id = intval($_POST['service_id']);  // This should match the service you're updating
-
-    // Sanitize and validate input
-    $service_name = filter_input(INPUT_POST, 'service_name', FILTER_SANITIZE_STRING);
-    $service_description = filter_input(INPUT_POST, 'service_description', FILTER_SANITIZE_STRING);
-    $service_tags = filter_input(INPUT_POST, 'service_tags', FILTER_SANITIZE_STRING);
-    $tags_array = array_map('trim', explode(',', $service_tags));
-    $tags_array = array_unique($tags_array);
-    $service_tags = implode(',', $tags_array);
-
-    // Check if service is negotiable
-    $negotiable = isset($_POST['service_negotiable']) ? 1 : 0;
-    $min_price = $negotiable ? filter_input(INPUT_POST, 'service_min_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
-    $max_price = filter_input(INPUT_POST, 'service_max_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-
-    // Handle image upload
-    $service_image = null;
-    if (isset($_FILES['service_image']) && $_FILES['service_image']['error'] === UPLOAD_ERR_OK) {
-        $service_image = imageHandler::uploadAndStoreImage('service_image', 'services', 'image', 'id', $business_id);
-    }
-
-    // Now, update the service in the database
-    $query = "UPDATE services SET 
-                name = '" . addslashes($service_name) . "', 
-                description = '" . addslashes($service_description) . "',
-                tags = '" . addslashes($service_tags) . "',
-                min_price = " . ($min_price !== null ? $min_price : "NULL") . ",
-                max_price = " . ($max_price !== null ? $max_price : "NULL") . "
-                " . ($service_image ? ", image = '" . addslashes($service_image) . "'" : "") . "
-              WHERE id = {$service_id} AND business_id = {$business_id}";
-
-    $result = DatabaseHandler::make_modify_query($query);
-
-    if ($result) {
-        echo "<script>alert('Service updated successfully!'); window.location='account.php';</script>";
+        $_SESSION['message'] = 'Service not found or access denied.';
+        $_SESSION['message_type'] = 'danger';
+        header("Location: account.php");
         exit();
-    } else {
-        echo "<script>alert('Error updating service. Please try again.');</script>";
     }
 }
-
-}
-
 ?>
 
 
@@ -283,25 +317,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_id']) && is_n
             justify-content: center;
             align-items: center;
             margin: 0 auto; 
-}
-
+        }
 
         .profile-picture {
            width: 100%;
            height: 100%;
            object-fit: cover;     
-}
+        }
 
-.sub-sidebar {
-    background-color: #ddd2f1; 
-    min-height: calc(100vh - 56px - 53px);
-   
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
-    justify-content: flex-start; 
-    text-align: center; 
-}
+        .sub-sidebar {
+            background-color: #ddd2f1; 
+            min-height: calc(100vh - 56px - 53px);
+           
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            justify-content: flex-start; 
+            text-align: center; 
+        }
 
         div {
             padding: 0 !important;
@@ -348,8 +381,7 @@ if ($userData && count($userData) > 0) {
 <i class="bi bi-person fs-1"></i>
 </div>
 <?php endif; ?>
-
-                    <h4 id="businessName" class="mt-2"><?php echo htmlspecialchars($business_name); ?></h4>
+<h4 id="businessName" class="mt-2"><?php echo htmlspecialchars($business_name); ?></h4>
                     <button class="btn btn-light btn-sm" onclick="editField('businessName')">Edit</button>
                     <p class="text-muted" id="businessDescription"><?php echo htmlspecialchars($business_description); ?></p>
                     <button class="btn btn-light btn-sm" onclick="editField('businessDescription')">Edit</button>
@@ -453,32 +485,29 @@ if ($userData && count($userData) > 0) {
                         <textarea class="form-control" id="service_description" name="service_description" required><?php echo htmlspecialchars($edit_service['description']); ?></textarea>
                     </div>
                     
-                        <label for="service_tags" class="form-label">Tags</label>
-                        <div class="dropdown">
-                            <div id="tags" class="tags_div">
-                                <?php 
-                                $i=0;
-                                $j=0;
-                                if(isset($_GET['tags'])){
-                                    $tags_array = array_keys($_GET['tags']);
-                                    $count=count($tags_array);
-                                }
-                                while ($i < count($tags)) { 
-                                    $tag = $tags[$i][0];?>
-                                    <label class="tag_label"><input class="tag_checkbox" type="checkbox" name="tags[<?php echo $i ?>]" value="<?php echo $tag ?>" 
-                                        <?php if(isset($_GET['tags'])){
-                                            if($j<$count){
-                                                if($tags_array[$j]==$i){ 
-                                                    echo " checked ";
-                                                    $j++;
-                                                }
-                                            }
-                                        }?>><?php echo $tag ?></label>
-                                    <?php $i++;
-                                }
-                                ?>
-                            </div>
+                    <label for="service_tags" class="form-label">Tags</label>
+                    <div class="dropdown">
+                        <div id="tags" class="tags_div">
+                            <?php 
+                            $i=0;
+                            // Parse existing tags from the service
+                            $existing_tags = explode(',', $edit_service['tags']);
+                            $existing_tags = array_map('trim', $existing_tags);
+                            
+                            while ($i < count($tags)) { 
+                                $tag = $tags[$i][0];
+                                $is_checked = in_array($tag, $existing_tags) ? 'checked' : '';
+                            ?>
+                                <label class="tag_label">
+                                    <input class="tag_checkbox" type="checkbox" name="tags[<?php echo $i ?>]" value="<?php echo $tag ?>" <?php echo $is_checked; ?>>
+                                    <?php echo $tag ?>
+                                </label>
+                            <?php 
+                                $i++;
+                            }
+                            ?>
                         </div>
+                    </div>
                     <div class="mb-3">
                         <label for="service_min_price" class="form-label">Min Price</label>
                         <input type="number" class="form-control" id="service_min_price" name="service_min_price" value="<?php echo $edit_service['min_price']; ?>" <?php echo $edit_service['min_price'] ? "" : "disabled"; ?>>
@@ -559,6 +588,24 @@ if ($userData && count($userData) > 0) {
             minPriceField.disabled = true;
         }
     });
+
+    // Function to handle editing fields in the sidebar
+    function editField(fieldId) {
+        var element = document.getElementById(fieldId);
+        var currentValue = element.innerText;
+        var newValue = prompt("Enter new value:", currentValue);
+        
+        if (newValue !== null && newValue !== "") {
+            element.innerText = newValue;
+            
+            // Update the corresponding form field
+            if (fieldId === "businessName") {
+                document.querySelector('input[name="business_name"]').value = newValue;
+            } else if (fieldId === "businessDescription") {
+                document.querySelector('textarea[name="business_description"]').value = newValue;
+            }
+        }
+    }
 </script>
             </div>
         </div>
