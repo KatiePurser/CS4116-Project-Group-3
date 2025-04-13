@@ -53,10 +53,15 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
                                 ACCEPT
                             </button>
 
+                            <button class="decline-btn btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#declineRequestModal"
+                                data-request-id="<?= htmlspecialchars($request['request_id']) ?>"
+                                data-service-id="<?= htmlspecialchars($request['service_id']) ?>"
+                                data-created-at="<?= htmlspecialchars($request['created_at']) ?>"
+                                data-service-name="<?= htmlspecialchars($request['service_name']) ?>"
+                                data-price="<?= htmlspecialchars($request['price']) ?>">
+                                DECLINE
+                            </button>
 
-
-
-                            <button class="decline-btn btn-sm me-2">DECLINE</button>
                         <?php elseif ($request['status'] === 'completed'): ?>
                             <span class="completed-badge badge me-2">COMPLETED</span>
                         <?php elseif ($request['status'] === 'declined'): ?>
@@ -70,6 +75,7 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
 <?php endif; ?>
 
 <?php include_once 'accept_request_modal.php'; ?>
+<?php include_once 'decline_request_modal.php'; ?>
 
 <style>
     .request-card {
