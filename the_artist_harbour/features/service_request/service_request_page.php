@@ -78,7 +78,7 @@ require_once __DIR__ . '\serviceRequestHandler.php';
     </div>
 </body>
 
-<script src="handle_accept_request.js"></script>
 <script src="handle_decline_request.js"></script>
+<script src="handle_accept_request.js"></script>
 
 </html>

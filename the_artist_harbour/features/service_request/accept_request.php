@@ -8,7 +8,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $service_name = $_POST['service_name'];
     $price = $_POST['price'];
 
-    $sql = "UPDATE service_requests SET status = 'completed' WHERE id = $request_id";
+    if (isset($_POST['custom_price']) && $_POST['custom_price'] > 0) {
+        $price = $_POST['custom_price'];
+    }
+
+    $sql = "UPDATE service_requests SET status = 'completed', price = $price WHERE id = $request_id";
 
     $result = DatabaseHandler::make_modify_query($sql);
 

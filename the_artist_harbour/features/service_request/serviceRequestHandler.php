@@ -64,7 +64,7 @@ class ServiceRequestHandler
      * @param string $price The price if the service is non-negotiable, otherwise leave empty and will set to NULL
      * @return bool True on success, false on failure.
      */
-    public static function insertRequest($user_id, $service_id, $message_text, $price = null): bool
+    public static function insertRequest($user_id, $service_id, $message_text, $price = 0): bool
     {
         // Get business_user_id from the service_id
         $business_id_query = DatabaseHandler::make_select_query("SELECT business_id FROM services WHERE id = $service_id");
