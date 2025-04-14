@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const modal = document.getElementById('acceptRequestModal');
+    const modal = document.getElementById('declineRequestModal');
 
     modal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;

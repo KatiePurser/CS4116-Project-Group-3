@@ -70,6 +70,8 @@ require_once __DIR__ . '\serviceRequestHandler.php';
                 <div class="requests">
                     <?php include 'fetch_requests.php'; ?>
                     <?php include 'display_request_modal.php'; ?>
+                    <?php include 'review_modal.php'; ?>
+
                 </div>
             </div>
 
@@ -77,6 +79,7 @@ require_once __DIR__ . '\serviceRequestHandler.php';
     </div>
 </body>
 
+<script src="handle_decline_request.js"></script>
 <script src="handle_accept_request.js"></script>
 
 </html>

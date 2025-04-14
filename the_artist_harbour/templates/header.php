@@ -90,10 +90,10 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                                 href="/CS4116-Project-Group-3/the_artist_harbour/features/service_request/service_request_page.php">Requests</a>
                         </li>
                         <li><a class="dropdown-item"
-                                href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">Account</a>
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/user/user_profile.php">Account</a>
                         </li>
                         <li><a class="dropdown-item"
-                                href="/CS4116-Project-Group-3/the_artist_harbour/features/user/user_">Business</a>
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">Business</a>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
@@ -117,7 +117,8 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                 <img src="/CS4116-Project-Group-3/the_artist_harbour/public/images/boat_logo_small.png" alt="Boat"
                     class="img-fluid me-2" style="max-height: 40px;">
                 <a class="navbar-brand amarante-regular fs-4 fs-lg-2"
-                    href="/CS4116-Project-Group-3/the_artist_harbour/features/administration/admin_panel.php">The Artist Harbour</a>
+                    href="/CS4116-Project-Group-3/the_artist_harbour/features/administration/admin_panel.php">The Artist
+                    Harbour</a>
             </div>
 
             <div class="d-flex align-items-center ms-auto">
@@ -130,7 +131,9 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                     </button>
 
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="/CS4116-Project-Group-3/the_artist_harbour/features/administration/admin_panel.php">Dashboard</a></li>
+                        <li><a class="dropdown-item"
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/administration/admin_panel.php">Dashboard</a>
+                        </li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
