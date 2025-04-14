@@ -25,14 +25,17 @@ class ServiceRequestHandler
                 $business_user_id = $result['business_user_id'];
                 $business = DatabaseHandler::make_select_query("SELECT display_name FROM businesses WHERE user_id = $business_user_id");
 
-                // Retreiving Service Name
+                // Retreiving Service Name with the service ID retrieved from the last query
                 $service_id = $result['service_id'];
                 $service_name = DatabaseHandler::make_select_query("SELECT name FROM services WHERE id = $service_id");
+
 
                 // Retreiving User Type
                 $user_type = DatabaseHandler::make_select_query("SELECT user_type FROM users WHERE id = $user_id");
 
-
+                $customer_user_id = $result['customer_user_id'];
+                $customer_details = DatabaseHandler::make_select_query("SELECT first_name, last_name FROM users WHERE id = $customer_user_id");
+                $customer_name = $customer_details[0]['first_name'] . " " . $customer_details[0]['last_name'];
 
                 $requests[] = [
                     'request_id' => $result['id'],
@@ -43,7 +46,8 @@ class ServiceRequestHandler
                     'service_name' => $service_name[0]['name'],
                     'user_type' => $user_type[0]['user_type'],
                     'price' => $result['price'],
-                    'reviewed' => $result['reviewed']
+                    'reviewed' => $result['reviewed'],
+                    'customer' => $customer_name
                 ];
             }
         } else {
