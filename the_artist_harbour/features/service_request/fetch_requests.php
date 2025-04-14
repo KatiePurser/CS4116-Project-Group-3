@@ -112,11 +112,11 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
     }
 
     .info-btn:hover {
-        color: rgb(194, 149, 236);
+        color: #c295ec;
     }
 
     .pending-badge {
-        background-color: rgb(212, 202, 60);
+        background-color: #fecb32;
     }
 
     .completed-badge {
