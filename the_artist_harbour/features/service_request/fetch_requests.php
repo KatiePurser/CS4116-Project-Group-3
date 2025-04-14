@@ -8,7 +8,7 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
 <?php else: ?>
     <div class="container">
         <?php foreach ($requests as $request): ?>
-            <div class="request-card d-flex flex-wrap justify-content-between align-items-center p-3 rounded mb-4"
+            <div class="request-card d-flex flex-wrap justify-content-between align-items-center p-3  mb-4"
                 style="background-color: #E2D4F0">
 
                 <?php
@@ -35,8 +35,17 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
                         <?php if ($request['status'] === 'pending'): ?>
                             <span class="pending-badge badge me-2">PENDING</span>
                         <?php elseif ($request['status'] === 'completed'): ?>
-                            <button class="review-btn btn btn-primary btn-sm me-2">LEAVE A REVIEW</button>
-                            <span class="completed-badge badge me-2">COMPLETED</span>
+
+                            <?php if ($request['reviewed'] === 0): ?>
+                                <button class="review-btn btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#reviewModal"
+                                    data-service-id="<?= htmlspecialchars($request['service_id']) ?>"
+                                    data-request-id="<?= htmlspecialchars($request['request_id']) ?>">LEAVE A REVIEW</button>
+
+                                <span class="completed-badge badge me-2">COMPLETED</span>
+                            <?php else: ?>
+                                <span class="completed-badge badge me-2">COMPLETED</span>
+                            <?php endif; ?>
+
                         <?php elseif ($request['status'] === 'declined'): ?>
                             <span class="declined-badge badge me-2">DECLINED</span>
                         <?php endif; ?>
@@ -80,7 +89,7 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
 <style>
     .request-card {
         background-color: #E2D4F0;
-        border-radius: 20px;
+        border-radius: 50px;
         padding: 15px;
     }
 
@@ -130,6 +139,7 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
     }
 
     .decline-btn:hover {
+        color: white;
         background-color: #975959;
     }
 
@@ -170,7 +180,8 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
         height: 30px;
     }
 
-    .review-btn {
+    .review-btn,
+    .reviewed-btn {
         font-size: 12px;
         background-color: #82689A;
         border: none;
@@ -185,35 +196,55 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
         height: 30px;
     }
 
-    .review-btn:hover {
-        background-color: #49375a;
-    }
-
-    @media (max-width: 768px) {
-        .request-info {
-            font-size: 16px;
-        }
-
-        .service-name {
-            margin: 25px;
-        }
-
-        .accept-btn {
-            margin-bottom: 10px;
-        }
-
-        .pending-badge,
-        .completed-badge,
-        .declined-badge {
-            padding: 6px;
-        }
-
-        .info-btn {
-            padding: 2px;
-        }
-
-        .review-btn {
-            margin-bottom: 2px;
-        }
+    .review-btn:hover,
+    .reviewed-btn:hover {
+        background-color: rgb(88, 66, 109);
     }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('acceptRequestModal');
+
+        modal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            const requestId = button.getAttribute('data-request-id');
+            const serviceId = button.getAttribute('data-service-id');
+            const createdAt = button.getAttribute('data-created-at');
+            const serviceName = button.getAttribute('data-service-name');
+            const price = button.getAttribute('data-price');
+
+            document.getElementById('request-id-display').textContent = requestId;
+            document.getElementById('service-id-display').textContent = serviceId;
+            document.getElementById('created-at-display').textContent = new Date(createdAt).toLocaleString();
+            document.getElementById('service-name-display').textContent = serviceName;
+            document.getElementById('price-display').textContent = price;
+
+            document.getElementById('request-id').value = requestId;
+            document.getElementById('service-id').value = serviceId;
+            document.getElementById('created-at').value = new Date(createdAt).toLocaleString();
+            document.getElementById('service-name').value = serviceName;
+            document.getElementById('price').value = price;
+
+            // Show or hide price input field
+            const priceDisplayContainer = document.getElementById('price-display-container');
+            const priceInputContainer = document.getElementById('price-input-container');
+            const customPriceInput = document.getElementById('custom-price');
+
+            if (parseInt(price) === 0) {
+                priceInputContainer.style.display = 'block';
+                customPriceInput.required = true;
+
+                // Hide price display
+                priceDisplayContainer.style.display = 'none';
+            } else {
+                priceInputContainer.style.display = 'none';
+                customPriceInput.required = false;
+
+                // Show price display
+                priceDisplayContainer.style.display = 'block';
+            }
+        });
+    });
+</script>

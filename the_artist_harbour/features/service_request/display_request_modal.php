@@ -1,10 +1,9 @@
 <?php if (!empty($requests)): ?>
     <?php foreach ($requests as $request): ?>
 
-        <!-- Modal for each request -->
         <div class="modal fade" id="requestModal<?= $request['request_id'] ?>" tabindex="-1">
 
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
 
                     <div class="modal-header">
@@ -18,7 +17,7 @@
                         <p><strong>Date:</strong> <?= htmlspecialchars($request['created_at']) ?></p>
 
                         <!-- Display price only if it's not null -->
-                        <?php if ($request['price'] !== null): ?>
+                        <?php if ($request['price'] !== 0): ?>
                             <p><strong>Price:</strong> €<?= htmlspecialchars($request['price']) ?></p>
                         <?php endif; ?>
                     </div>
@@ -29,7 +28,6 @@
 
                 </div>
             </div>
-
         </div>
 
     <?php endforeach; ?>
