@@ -1,0 +1,95 @@
+div {
+    padding: 0 !important;
+}
+
+/* .service_form {
+    max-width: 23%;
+    width: 23%;
+    padding-left: 1vw;
+    padding-right: 1vw;
+    padding-bottom: 1vw;
+} */
+
+@media (max-width: 576px) {
+    .row {
+        width: 100%;
+        display: flex;
+        align-content: center;
+    }
+    
+    .card_button {
+        width: 98vw;
+        padding-left: 1vw;
+        padding-right: 1vw;
+        padding-bottom: 1vw;
+        border: none;
+        background-color: Transparent;
+        align-content: center;
+    }
+
+    .hovercard {
+        width:100%;
+        height:100%;
+        word-wrap: break-word;
+        border-color: #82689A;
+        border-radius: 1vw;
+        border-width: 0.2vw;
+    }
+
+    .card-title {
+        display: block;
+        word-wrap: break-word;
+        max-width:100%;
+    }
+
+    .service_price {
+        background-color: #82689A;
+        border-radius: 0.5vw;
+        max-width: fit-content;
+        margin: auto;
+        padding-left: 0.5vw;
+        padding-right: 0.5vw;
+    }
+}
+
+@media (min-width: 576px){
+    .card_button {
+        width: 23vw;
+        padding-left: 1vw;
+        padding-right: 1vw;
+        padding-bottom: 1vw;
+        border: none;
+        background-color: Transparent;
+    }
+
+    .hovercard {
+        width:100%;
+        height:100%;
+        word-wrap: break-word;
+        border-color: #82689A;
+        border-radius: 1vw;
+        border-width: 0.2vw;
+    }
+
+    .card-title {
+        display: block;
+        word-wrap: break-word;
+        max-width:100%;
+    }
+
+    .service_price {
+        background-color: #82689A;
+        border-radius: 0.5vw;
+        max-width: fit-content;
+        margin: auto;
+        padding-left: 0.5vw;
+        padding-right: 0.5vw;
+    }
+
+    .filter_buttons{
+        background-color: #82689A;
+        border-radius: 0.5vw;
+        font-size: 1.5vw;
+
+    }
+}
