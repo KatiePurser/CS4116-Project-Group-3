@@ -316,9 +316,10 @@ if ($_SESSION['user_type'] != 'customer') {
 
 
             $result = DatabaseHandler::make_select_query($sql);
-            $i=0; ?>
+            $i=0; 
+            $businesses = DatabaseHandler::make_select_query("SELECT id, display_name FROM businesses ");?>
             <div>
-                <p>Searching by: <i><?php echo $description ?></i></p>
+                <p>Searching by keyword: <i><?php echo "\"".$keyword."\""?></i></p>
                 <br>
             </div>
             <div class="justify-content-center">
@@ -337,13 +338,24 @@ if ($_SESSION['user_type'] != 'customer') {
                                 <button class="card_button" type="submit">
                                     <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                                     <div class="card hovercard text-center">
-                                        <img class="card-img-top" src="https://placecats.com/300/200">
-                                        <!-- <?php echo $service["image"]; ?> -->
+                                        <?php if (!empty($service['image'])){ ?>
+                                            <img src="../business/get_serviceImage.php?id=<?= $service['id'] ?>" class="card-img-top" alt="Service Image" style="height: 200px; object-fit: cover;">
+                                        <?php }else{ ?>
+                                            <img src="../../public/images/default-service.png" class="card-img-top" alt="Default Image" style="height: 200px; object-fit: cover;">
+                                        <?php } ?>
                                         <div class="card-body">
                                             <h3   class="card-title"><?php echo $service["name"]; ?></h3>
-                                            <p class="business-name"><?php $sql="SELECT display_name FROM businesses WHERE id={$service['business_id']}";
-                                                $business_name = DatabaseHandler::make_select_query($sql); 
-                                                echo $business_name[0]['display_name']; ?></p>
+                                            </form>
+                                            <form action="../business/profile.php" method="get">
+                                                <input type="hidden" id="business_id" name="business_id" value="<?php echo $service['business_id']?>">
+                                                <input type="submit" value="<?php echo searchMethods::getBusinessName($businesses, $service['business_id'])?>">
+                                            </form>
+                                            <form class="card_form" action="../service/service.php" method="get">
+                                            <p><?php if(isset($service['tags'])){
+                                                    echo "Tags: ".searchMethods::formatTags($service['tags']);
+                                                }else{
+                                                    echo "No tags";
+                                                }?></p>
                                             <h4 class="card-subtitle service_price"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
                                             <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                             echo $rating;?></p>
@@ -359,12 +371,24 @@ if ($_SESSION['user_type'] != 'customer') {
                                 <button class="card_button" type="submit">
                                     <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                                     <div class="card hovercard text-center">
-                                        <img class="card-img-top" src="https://placecats.com/300/200">
+                                        <?php if (!empty($service['image'])){ ?>
+                                            <img src="../business/get_serviceImage.php?id=<?= $service['id'] ?>" class="card-img-top" alt="Service Image" style="height: 200px; object-fit: cover;">
+                                        <?php }else{ ?>
+                                            <img src="../../public/images/default-service.png" class="card-img-top" alt="Default Image" style="height: 200px; object-fit: cover;">
+                                        <?php } ?>
                                         <div class="card-body">
                                             <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                            <p class="business-name"><?php $sql="SELECT display_name FROM businesses WHERE id={$service['business_id']}";
-                                                $business_name = DatabaseHandler::make_select_query($sql); 
-                                                echo $business_name[0]['display_name']; ?></p>
+                                            </form>
+                                            <form action="../business/profile.php" method="get">
+                                                <input type="hidden" id="business_id" name="business_id" value="<?php echo $service['business_id']?>">
+                                                <input type="submit" value="<?php echo searchMethods::getBusinessName($businesses, $service['business_id'])?>">
+                                            </form>
+                                            <form class="card_form" action="../service/service.php" method="get">
+                                            <p><?php if(isset($service['tags'])){
+                                                    echo "Tags: ".searchMethods::formatTags($service['tags']);
+                                                }else{
+                                                    echo "No tags";
+                                                }?></p>
                                             <h4 class="card-subtitle service_price"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
                                             <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                             echo $rating;?></p>
@@ -380,12 +404,24 @@ if ($_SESSION['user_type'] != 'customer') {
                                 <button class="card_button" type="submit">
                                     <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                                     <div class="card hovercard text-center">
-                                        <img class="card-img-top" src="https://placecats.com/300/200">
+                                        <?php if (!empty($service['image'])){ ?>
+                                            <img src="../business/get_serviceImage.php?id=<?= $service['id'] ?>" class="card-img-top" alt="Service Image" style="height: 200px; object-fit: cover;">
+                                        <?php }else{ ?>
+                                            <img src="../../public/images/default-service.png" class="card-img-top" alt="Default Image" style="height: 200px; object-fit: cover;">
+                                        <?php } ?>
                                         <div class="card-body">
                                             <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                            <p class="business-name"><?php $sql="SELECT display_name FROM businesses WHERE id={$service['business_id']}";
-                                                $business_name = DatabaseHandler::make_select_query($sql); 
-                                                echo $business_name[0]['display_name']; ?></p>
+                                            </form>
+                                            <form action="../business/profile.php" method="get">
+                                                <input type="hidden" id="business_id" name="business_id" value="<?php echo $service['business_id']?>">
+                                                <input type="submit" value="<?php echo searchMethods::getBusinessName($businesses, $service['business_id'])?>">
+                                            </form>
+                                            <form class="card_form" action="../service/service.php" method="get">
+                                            <p><?php if(isset($service['tags'])){
+                                                    echo "Tags: ".searchMethods::formatTags($service['tags']);
+                                                }else{
+                                                    echo "No tags";
+                                                }?></p>
                                             <h4 class="card-subtitle service_price"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
                                             <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                             echo $rating;?></p>
@@ -401,12 +437,24 @@ if ($_SESSION['user_type'] != 'customer') {
                                 <button class="card_button" type="submit">
                                     <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                                     <div class="card hovercard text-center">
-                                        <img class="card-img-top" src="https://placecats.com/300/200">
+                                        <?php if (!empty($service['image'])){ ?>
+                                            <img src="../business/get_serviceImage.php?id=<?= $service['id'] ?>" class="card-img-top" alt="Service Image" style="height: 200px; object-fit: cover;">
+                                        <?php }else{ ?>
+                                            <img src="../../public/images/default-service.png" class="card-img-top" alt="Default Image" style="height: 200px; object-fit: cover;">
+                                        <?php } ?>
                                         <div class="card-body">
                                             <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                            <p class="business-name"><?php $sql="SELECT display_name FROM businesses WHERE id={$service['business_id']}";
-                                                $business_name = DatabaseHandler::make_select_query($sql); 
-                                                echo $business_name[0]['display_name']; ?></p>
+                                            </form>
+                                            <form action="../business/profile.php" method="get">
+                                                <input type="hidden" id="business_id" name="business_id" value="<?php echo $service['business_id']?>">
+                                                <input type="submit" value="<?php echo searchMethods::getBusinessName($businesses, $service['business_id'])?>">
+                                            </form>
+                                            <form class="card_form" action="../service/service.php" method="get">
+                                            <p><?php if(isset($service['tags'])){
+                                                    echo "Tags: ".searchMethods::formatTags($service['tags']);
+                                                }else{
+                                                    echo "No tags";
+                                                }?></p>
                                             <h4 class="card-subtitle service_price"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
                                             <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                             echo $rating;?></p>
@@ -427,12 +475,24 @@ if ($_SESSION['user_type'] != 'customer') {
                                 <button class="card_button" type="submit">
                                     <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
                                     <div class="card hovercard text-center">
-                                        <img class="card-img-top" src="https://placecats.com/300/200">
+                                    <?php if (!empty($service['image'])){ ?>
+                                        <img src="../business/get_serviceImage.php?id=<?= $service['id'] ?>" class="card-img-top" alt="Service Image" style="height: 200px; object-fit: cover;">
+                                    <?php }else{ ?>
+                                        <img src="../../public/images/default-service.png" class="card-img-top" alt="Default Image" style="max-height: 200px; object-fit: cover;">
+                                    <?php } ?>
                                         <div class="card-body">
                                             <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                            <p class="business-name"><?php $sql="SELECT display_name FROM businesses WHERE id={$service['business_id']}";
-                                                $business_name = DatabaseHandler::make_select_query($sql); 
-                                                echo $business_name[0]['display_name']; ?></p>
+                                            </form>
+                                            <form action="../business/profile.php" method="get">
+                                                <input type="hidden" id="business_id" name="business_id" value="<?php echo $service['business_id']?>">
+                                                <input type="submit" value="<?php echo searchMethods::getBusinessName($businesses, $service['business_id'])?>">
+                                            </form>
+                                            <form class="card_form" action="../service/service.php" method="get">
+                                            <p><?php if(isset($service['tags'])){
+                                                    echo "Tags: ".searchMethods::formatTags($service['tags']);
+                                                }else{
+                                                    echo "No tags";
+                                                }?></p>
                                             <h4 class="card-subtitle service_price"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?> </h4>
                                             <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
                                             echo $rating;?></p>
@@ -453,6 +513,7 @@ if ($_SESSION['user_type'] != 'customer') {
                 //SEARCH BUSINESSES BY KEYWORD
                 $sql = "SELECT * FROM businesses WHERE display_name LIKE '%{$keyword}%' ORDER BY reviews DESC";
                 $result = DatabaseHandler::make_select_query($sql);
+                $users = DatabaseHandler::make_select_query("SELECT id, profile_picture FROM users");
                 $i=0; ?>
                 <div>
                     <h1 style="text-align: center;"> BUSINESSES </h1>
@@ -469,7 +530,11 @@ if ($_SESSION['user_type'] != 'customer') {
                                 <button class="card_button" type="submit">
                                     <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
                                     <div class="card hovercard text-center">
-                                        <img class="card-img-top" src="https://placecats.com/300/200">
+                                        <?php if(searchMethods::getProfileImage($users, $business['id'])==true){?>
+                                            <img src="../user/get_image.php?id=<?= $business['id'] ?>" class="profile-picture" style="height: 200px; object-fit: cover;">
+                                        <?php }else{ ?>
+                                            <img src="../../public/images/default-service.png" class="card-img-top" alt="Default Image" style="max-height: 200px; object-fit: cover;">
+                                        <?php } ?>
                                         <div class="card-body">
                                             <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
                                             <p class="card-text"><?php $rating = ServiceDetails::getRating($business["reviews"]); 
