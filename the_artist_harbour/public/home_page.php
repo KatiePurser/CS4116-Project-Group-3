@@ -44,6 +44,14 @@ if ($_SESSION['user_type'] !== 'customer') {
                 border-radius: 1vw;
                 border-width: 0.2vw;
             }
+
+            .background {
+                background-color: #82689A;
+                padding: 0.5vw;
+                border-radius: 1vw;
+                max-width: fit-content;
+                margin: auto;
+            }
         </style>
     </head>
     <body style="padding-top: 73.6px;">
@@ -64,6 +72,13 @@ if ($_SESSION['user_type'] !== 'customer') {
                     <h3>We are a collective working to make a safe and community-based space for artists to market their bespoke services</h3>
                 </div>
             </div>
+            <br><br>
+            <div class="row g-0">
+                <div class="col-12 text-center">
+                    <h2 class="background">OUR TOP-RATED SERVICES</h2>
+                </div>
+            </div>
+            <br>
         </div>
 
         <?php
