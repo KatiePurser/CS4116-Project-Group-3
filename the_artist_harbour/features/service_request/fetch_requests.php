@@ -6,100 +6,115 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
 <?php if (!$requests || count($requests) === 0): ?>
     <p>No service requests found.</p>
 <?php else: ?>
-    <div class="container">
-        <?php foreach ($requests as $request): ?>
-            <div class="request-card d-flex flex-wrap justify-content-between align-items-center p-3  mb-4"
-                style="background-color: #E2D4F0">
+    <div class="requests-container">
+        <div class="request-container">
+            <?php foreach ($requests as $request): ?>
+                <div class="request-card d-flex flex-wrap justify-content-between align-items-center p-3  mb-4">
 
-                <?php
-                // Format the request creation date
-                $date = new DateTime($request['created_at']);
-                $formattedDate = $date->format('d/m/Y g:i');
-                ?>
+                    <?php
+                    // Format the request creation date
+                    $date = new DateTime($request['created_at']);
+                    $formattedDate = $date->format('d/m/Y g:i');
+                    ?>
 
-                <div class="d-flex flex-wrap">
-                    <!-- Info button to open request details modal -->
-                    <button class="info-btn btn me-4" data-bs-toggle="modal"
-                        data-bs-target="#requestModal<?= $request['request_id'] ?>">
-                        <i class="bi bi-info-circle"></i>
-                    </button>
+                    <div class="d-flex flex-wrap">
+                        <!-- Info button to open request details modal -->
+                        <button class="info-btn btn me-4" data-bs-toggle="modal"
+                            data-bs-target="#requestModal<?= $request['request_id'] ?>">
+                            <i class="bi bi-info-circle"></i>
+                        </button>
 
-                    <!-- Display request creation date and service name -->
-                    <span class="request-info time-stamp"> <?= $formattedDate ?> </span>
-                    <?php if ($request['user_type'] === 'business'): ?>
-                        <span class="service-name request-info"> <?= htmlspecialchars($request['customer']) ?> </span>
-                    <?php else: ?>
-                        <span class="service-name request-info"> <?= htmlspecialchars($request['service_name']) ?> </span>
-                    <?php endif; ?>
+                        <!-- Display request creation date and service name -->
+                        <span class="request-info time-stamp"> <?= $formattedDate ?> </span>
+                        <?php if ($request['user_type'] === 'business'): ?>
+                            <span class="request-info"> <?= htmlspecialchars($request['customer']) ?> </span>
+                        <?php else: ?>
+                            <span class="request-info"> <?= htmlspecialchars($request['service_name']) ?> </span>
+                        <?php endif; ?>
 
-                </div>
+                    </div>
 
-                <div class="d-flex flex-wrap">
-                    <?php if ($request['user_type'] === 'customer'): ?>
-                        <!-- Display status badges and action buttons for customers -->
-                        <?php if ($request['status'] === 'pending'): ?>
-                            <span class="pending-badge badge me-2">PENDING</span>
-                        <?php elseif ($request['status'] === 'completed'): ?>
+                    <div class="d-flex flex-wrap">
+                        <?php if ($request['user_type'] === 'customer'): ?>
+                            <!-- Display status badges and action buttons for customers -->
+                            <?php if ($request['status'] === 'pending'): ?>
+                                <span class="pending-badge badge me-2">PENDING</span>
+                            <?php elseif ($request['status'] === 'completed'): ?>
 
-                            <?php if ($request['reviewed'] === 0): ?>
-                                <button class="review-btn btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#reviewModal"
-                                    data-service-id="<?= htmlspecialchars($request['service_id']) ?>"
-                                    data-request-id="<?= htmlspecialchars($request['request_id']) ?>">LEAVE A REVIEW</button>
+                                <?php if ($request['reviewed'] === 0): ?>
+                                    <button class="review-btn btn btn-primary btn-sm me-2" data-bs-toggle="modal"
+                                        data-bs-target="#reviewModal" data-service-id="<?= htmlspecialchars($request['service_id']) ?>"
+                                        data-request-id="<?= htmlspecialchars($request['request_id']) ?>">LEAVE A REVIEW</button>
 
-                                <span class="completed-badge badge me-2">COMPLETED</span>
-                            <?php else: ?>
-                                <span class="completed-badge badge me-2">COMPLETED</span>
+                                    <span class="completed-badge badge me-2">COMPLETED</span>
+                                <?php else: ?>
+                                    <span class="completed-badge badge me-2">COMPLETED</span>
+                                <?php endif; ?>
+
+                            <?php elseif ($request['status'] === 'declined'): ?>
+                                <span class="declined-badge badge me-2">DECLINED</span>
                             <?php endif; ?>
 
-                        <?php elseif ($request['status'] === 'declined'): ?>
-                            <span class="declined-badge badge me-2">DECLINED</span>
+                        <?php elseif ($request['user_type'] === 'business'): ?>
+                            <!-- Display status badges and action buttons for businesses -->
+                            <?php if ($request['status'] === 'pending'): ?>
+                                <button class="accept-btn btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#acceptRequestModal"
+                                    data-request-id="<?= htmlspecialchars($request['request_id']) ?>"
+                                    data-service-id="<?= htmlspecialchars($request['service_id']) ?>"
+                                    data-created-at="<?= htmlspecialchars($request['created_at']) ?>"
+                                    data-service-name="<?= htmlspecialchars($request['service_name']) ?>"
+                                    data-price="<?= htmlspecialchars($request['price']) ?>">
+                                    ACCEPT
+                                </button>
+
+                                <button class="decline-btn btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#declineRequestModal"
+                                    data-request-id="<?= htmlspecialchars($request['request_id']) ?>"
+                                    data-service-id="<?= htmlspecialchars($request['service_id']) ?>"
+                                    data-created-at="<?= htmlspecialchars($request['created_at']) ?>"
+                                    data-service-name="<?= htmlspecialchars($request['service_name']) ?>"
+                                    data-price="<?= htmlspecialchars($request['price']) ?>">
+                                    DECLINE
+                                </button>
+
+                            <?php elseif ($request['status'] === 'completed'): ?>
+                                <span class="completed-badge badge me-2">COMPLETED</span>
+                            <?php elseif ($request['status'] === 'declined'): ?>
+                                <span class="declined-badge badge me-2">DECLINED</span>
+                            <?php endif; ?>
                         <?php endif; ?>
-
-                    <?php elseif ($request['user_type'] === 'business'): ?>
-                        <!-- Display status badges and action buttons for businesses -->
-                        <?php if ($request['status'] === 'pending'): ?>
-                            <button class="accept-btn btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#acceptRequestModal"
-                                data-request-id="<?= htmlspecialchars($request['request_id']) ?>"
-                                data-service-id="<?= htmlspecialchars($request['service_id']) ?>"
-                                data-created-at="<?= htmlspecialchars($request['created_at']) ?>"
-                                data-service-name="<?= htmlspecialchars($request['service_name']) ?>"
-                                data-price="<?= htmlspecialchars($request['price']) ?>">
-                                ACCEPT
-                            </button>
-
-                            <button class="decline-btn btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#declineRequestModal"
-                                data-request-id="<?= htmlspecialchars($request['request_id']) ?>"
-                                data-service-id="<?= htmlspecialchars($request['service_id']) ?>"
-                                data-created-at="<?= htmlspecialchars($request['created_at']) ?>"
-                                data-service-name="<?= htmlspecialchars($request['service_name']) ?>"
-                                data-price="<?= htmlspecialchars($request['price']) ?>">
-                                DECLINE
-                            </button>
-
-                        <?php elseif ($request['status'] === 'completed'): ?>
-                            <span class="completed-badge badge me-2">COMPLETED</span>
-                        <?php elseif ($request['status'] === 'declined'): ?>
-                            <span class="declined-badge badge me-2">DECLINED</span>
-                        <?php endif; ?>
-                    <?php endif; ?>
+                    </div>
                 </div>
-            </div>
-        <?php endforeach; ?>
+            <?php endforeach; ?>
+        </div>
     </div>
+
 <?php endif; ?>
 
 <?php include_once 'accept_request_modal.php'; ?>
 <?php include_once 'decline_request_modal.php'; ?>
 
 <style>
+    .time-stamp {
+        min-width: 550px;
+    }
+
+    .requests-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .request-container {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 73.6px);
+        overflow: hidden;
+        min-width: 80%;
+        max-width: 80%;
+    }
+
     .request-card {
         background-color: #E2D4F0;
         border-radius: 50px;
-        padding: 15px;
-    }
-
-    .time-stamp {
-        min-width: 450px;
     }
 
     .info-btn {
@@ -112,11 +127,11 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
     }
 
     .info-btn:hover {
-        color: rgb(194, 149, 236);
+        color: #c295ec;
     }
 
     .pending-badge {
-        background-color: rgb(212, 202, 60);
+        background-color: #fecb32;
     }
 
     .completed-badge {
@@ -178,7 +193,7 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
         align-items: center;
         justify-content: center;
         text-align: center;
-        padding: 6px 12px;
+
         font-weight: bold;
         border-radius: 15px;
         width: 100px;
