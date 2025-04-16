@@ -32,7 +32,7 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                     <!-- User Profile Dropdown -->
                     <div class="dropdown">
                         <button
-                            class="btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center dropdown-toggle"
+                            class="menu-dropdown btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center dropdown-toggle"
                             style="width: 40px; height: 40px;" type="button" id="userDropdown" data-bs-toggle="dropdown">
                             <i class="bi bi-person"></i>
                         </button>
@@ -74,7 +74,7 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                 <!-- User Profile Dropdown -->
                 <div class="dropdown">
                     <button
-                        class="btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center dropdown-toggle"
+                        class="menu-dropdown btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center dropdown-toggle"
                         style="width: 40px; height: 40px;" type="button" id="userDropdown" data-bs-toggle="dropdown">
                         <i class="bi bi-person"></i>
                     </button>
@@ -125,7 +125,7 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                 <!-- User Profile Dropdown -->
                 <div class="dropdown">
                     <button
-                        class="btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center dropdown-toggle"
+                        class="menu-dropdown btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center dropdown-toggle"
                         style="width: 40px; height: 40px;" type="button" id="userDropdown" data-bs-toggle="dropdown">
                         <i class="bi bi-person"></i>
                     </button>
@@ -162,6 +162,10 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
 </div>
 
 <style>
+    .menu-dropdown {
+        margin-right: 5px;
+    }
+
     .navbar {
         position: fixed;
         top: 0;
