@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $request_id = $_POST['request_id'];
 
     $sql = "INSERT INTO reviews (service_id, reviewer_id, text, rating, created_at)
-            VALUES ($service_id, $reviewer_id, '$text', '$rating', NOW())";
+            VALUES ($service_id, $reviewer_id, '$text', $rating, NOW())";
     $result = DatabaseHandler::make_modify_query($sql);
 
     $sql = "UPDATE service_requests SET reviewed = 1 WHERE id = $request_id";
