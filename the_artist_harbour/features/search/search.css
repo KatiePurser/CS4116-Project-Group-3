@@ -2,26 +2,28 @@ div {
     padding: 0 !important;
 }
 
-/* .service_form {
-    max-width: 23%;
-    width: 23%;
-    padding-left: 1vw;
-    padding-right: 1vw;
-    padding-bottom: 1vw;
-} */
-
-@media (max-width: 576px) {
+@media(max-width: 576px) {     /*small screen*/
     .row {
         width: 100%;
         display: flex;
         align-content: center;
     }
+
+    .business-button{
+        text-decoration: none;
+        background-color: #E2D4F0;
+        color: black;
+        padding: 0.25vw;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        border-radius: 0.25vw;
+    }
     
     .card_button {
-        width: 98vw;
+        width: 90vw;
         padding-left: 1vw;
         padding-right: 1vw;
-        padding-bottom: 1vw;
         border: none;
         background-color: Transparent;
         align-content: center;
@@ -50,14 +52,39 @@ div {
         padding-left: 0.5vw;
         padding-right: 0.5vw;
     }
+
+    .image{
+        height: 30vh;
+        object-fit: cover;
+        
+    }
 }
 
-@media (min-width: 576px){
+@media(min-width: 576px) {  	/*wide screen*/
+    .row {
+        width: 100%;
+        display: flex;
+        align-content: center;
+    }
+
+    .business-button{
+        text-decoration: none;
+        background-color: #E2D4F0;
+        color: black;
+        padding: 0.25vw;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        border-radius: 0.25vw;
+    }
+
+    .card-group{
+        align-content: center;
+        margin-bottom: 1vw;
+    }
+
     .card_button {
-        width: 23vw;
-        padding-left: 1vw;
-        padding-right: 1vw;
-        padding-bottom: 1vw;
+        width: 24vw;
         border: none;
         background-color: Transparent;
     }
@@ -91,5 +118,11 @@ div {
         border-radius: 0.5vw;
         font-size: 1.5vw;
 
+    }
+
+    .image{
+        height: 30vh;
+        object-fit: cover;
+        border-radius: 1vw;
     }
 }
