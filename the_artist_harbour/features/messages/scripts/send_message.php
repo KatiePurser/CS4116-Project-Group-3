@@ -1,24 +1,26 @@
 <?php
-session_start();
 require_once __DIR__ . '/../../../utilities/databaseHandler.php';
+session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $sender_id = $_SESSION['user_id'];
-    $receiver_id = $_POST["receiver_id"];
-    $message_text = trim($_POST["message_text"]);
-    $status = 'accepted';
+    $current_user_id = $_SESSION['user_id'];
+    $conversation_id = $_POST['conversation_id'];
+    $message_text = $_POST['message_text'];
 
-    $sql = "INSERT INTO messages (sender_id, receiver_id, text, status, created_at)
-            VALUES ($sender_id, $receiver_id, '$message_text', '$status', NOW())";
+    $sql = "SELECT user1_id, user2_id FROM conversations WHERE id = $conversation_id";
+    $result = DatabaseHandler::make_select_query($sql);
 
+    $user1_id = $result[0]['user1_id'];
+    $user2_id = $result[0]['user2_id'];
+
+    $other_user_id = ($current_user_id === $user1_id) ? $user2_id : $user1_id;
+
+    $sql = "CALL SendMessage($current_user_id, $other_user_id, '$message_text', 'accepted')";
     $result = DatabaseHandler::make_modify_query($sql);
 
     if ($result) {
-        header("Location: ../inbox.php?sender_id=$receiver_id");
-    } else {
-        header("Location: ../inbox.php?sender_id=$receiver_id");
+        header("Location: ../inbox.php?conversation_id=$conversation_id");
     }
-
     exit();
 }
 ?>

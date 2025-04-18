@@ -66,7 +66,7 @@ class ServiceRequestHandler
      * @param int $user_id The ID of the customer making the request.
      * @param int $service_id The ID of the requested service.
      * @param string $message_text The message associated with the service request.
-     * @param string $price The price if the service is non-negotiable, otherwise leave empty and will set to NULL
+     * @param string $price The price if the service is non-negotiable, otherwise leave empty and will set to 0
      * @return bool True on success, false on failure.
      */
     public static function insertRequest($user_id, $service_id, $message_text, $price = 0): bool
@@ -106,9 +106,7 @@ class ServiceRequestHandler
      */
     private static function sendRequestMessage($sender_id, $receiver_id, $message_text): void
     {
-        $sql = "INSERT INTO messages (sender_id, receiver_id, text, status, created_at)
-            VALUES ($sender_id, $receiver_id, '$message_text', 'accepted', NOW())";
-
+        $sql = "CALL SendMessage($sender_id, $receiver_id, '$message_text', 'accepted')";
         $result = DatabaseHandler::make_modify_query($sql);
     }
 }

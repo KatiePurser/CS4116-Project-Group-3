@@ -110,6 +110,7 @@ $user_type = $_SESSION['user_type'] ?? '';
     }
 
     @media (max-width: 1200px) {
+
         .sidebar-link {
             justify-content: center;
         }
@@ -119,18 +120,7 @@ $user_type = $_SESSION['user_type'] ?? '';
         }
     }
 
-    @media (max-width: 992px) {
-        .sidebar-link {
-            justify-content: center;
-        }
-
-        .sidebar-link i {
-            font-size: 1.2rem;
-        }
-
-    }
-
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         .sidebar {
             width: 16.667%;
         }
@@ -141,17 +131,6 @@ $user_type = $_SESSION['user_type'] ?? '';
 
         .sidebar-link i {
             font-size: 1.2rem;
-        }
-    }
-
-    @media (max-width: 576px) {
-        .sidebar-link {
-            justify-content: center;
-        }
-
-        .sidebar-link i {
-            font-size: 1.2rem;
-
         }
     }
 </style>

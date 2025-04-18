@@ -40,7 +40,6 @@
     padding: 0;
 }
 
-
 .inbox-title-container,
 .chat-title-container {
     display: flex;
@@ -55,7 +54,7 @@
     font-weight: bold;
     font-size: 1.5rem;
     color: #49375a;
-    padding: 10px;
+    margin: 20px;
 }
 
 .sender-item {
@@ -137,38 +136,28 @@
     padding: 15px;
 }
 
-.message {
+
+
+.user-message {
     padding: 10px !important;
     border-radius: 10px;
     max-width: 80%;
     margin: 2%;
-}
-
-.sender-message {
-    background-color: #DDD2E5;
-    color: black;
-    align-self: flex-start;
-}
-
-.receiver-message {
     background-color: #d3d2d2;
     color: black;
     align-self: flex-end;
 }
 
-.red-flag {
-    color: red;
+.other-user-message {
+    padding: 10px !important;
+    border-radius: 10px;
+    max-width: 80%;
+    margin: 2%;
+    background-color: #DDD2E5;
+    color: black;
+    align-self: flex-start;
 }
 
-.sender-item.active {
-    background-color: #B5A9BF;
-}
-
-.btn-body {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
 
 @media (max-width: 768px) {
 
