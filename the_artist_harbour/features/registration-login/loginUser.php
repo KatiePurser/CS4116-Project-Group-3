@@ -29,6 +29,11 @@ if (!verifyPassword($password, $user_data["password"])) {
     exit();
 }
 
+if (isUserBanned($user_data["id"])) {
+    print("Sorry, you are currently banned from using the platform.");
+    exit();
+}
+
 $_SESSION["user_id"] = $user_data["id"];
 $_SESSION["user_type"] = $user_data["user_type"];
 
@@ -48,4 +53,10 @@ function getUserByEmail(string $email) {
 
 function verifyPassword(string $password, string $hashedPassword): bool {
     return password_verify($password, $hashedPassword);
+}
+
+function isUserBanned(int $userId): bool {
+    $query = "SELECT * FROM banned_users WHERE banned_user_id = $userId";
+    $result = DatabaseHandler::make_select_query($query);
+    return !empty($result);
 }
