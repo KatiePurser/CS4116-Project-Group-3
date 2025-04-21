@@ -60,6 +60,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    // Pagination for services
+$services_per_page = 6; // Show 6 services per page
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+$offset = ($page - 1) * $services_per_page;
+
+// Fetch services for the business with pagination
+$queryServices = "SELECT * FROM services 
+                 WHERE business_id = $business_id 
+                 ORDER BY created_at DESC 
+                 LIMIT $offset, $services_per_page";
+$services = DatabaseHandler::make_select_query($queryServices);
+
+// Get total number of services for pagination
+$queryTotalServices = "SELECT COUNT(*) as total FROM services WHERE business_id = $business_id";
+$totalServicesResult = DatabaseHandler::make_select_query($queryTotalServices);
+$total_services = $totalServicesResult[0]['total'] ?? 0;
+$total_pages = ceil($total_services / $services_per_page);
+
+// Ensure services is an array
+if (!is_array($services)) {
+    $services = [];
+}
     // Collect form data for social media links
     if (isset($_POST['instagram']) || isset($_POST['facebook']) || isset($_POST['tiktok']) || isset($_POST['pinterest']) || isset($_POST['website'])) {
         $instagram = filter_input(INPUT_POST, 'instagram', FILTER_SANITIZE_URL);
@@ -211,14 +233,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Fetch all services related to this business
-$query = "SELECT * FROM services WHERE business_id = $business_id";
-$services = DatabaseHandler::make_select_query($query);
+// Fetch all services related to this business(pagination)
+$services_per_page = 6; // Show 6 services per page
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+$offset = ($page - 1) * $services_per_page;
+
+// Fetch services for the business with pagination
+$queryServices = "SELECT * FROM services 
+                 WHERE business_id = $business_id 
+                 ORDER BY created_at DESC 
+                 LIMIT $offset, $services_per_page";
+$services = DatabaseHandler::make_select_query($queryServices);
+
+// Get total number of services for pagination
+$queryTotalServices = "SELECT COUNT(*) as total FROM services WHERE business_id = $business_id";
+$totalServicesResult = DatabaseHandler::make_select_query($queryTotalServices);
+$total_services = $totalServicesResult[0]['total'] ?? 0;
+$total_pages = ceil($total_services / $services_per_page);
 
 // Ensure services is an array
 if (!is_array($services)) {
     $services = [];
 }
+
 
 // Handle service deletion
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_service'])) {
@@ -250,11 +287,57 @@ if (isset($_GET['service_id']) && is_numeric($_GET['service_id'])) {
     $edit_service = $edit_service ? $edit_service[0] : null;
 
     if (!$edit_service) {
-        $_SESSION['message'] = 'Service not found or access denied.';
-        $_SESSION['message_type'] = 'danger';
-        header("Location: account.php");
+        die("Service not found or access denied.");
+    }
+
+// Handle form submission for editing service
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_name']) && !isset($_POST['update_service'])) {
+    $service_id = (int)$_POST['service_id'];
+    error_log("Updating service with ID: " . $service_id);
+    
+    $service_name = filter_input(INPUT_POST, 'service_name', FILTER_SANITIZE_STRING);
+    $service_description = filter_input(INPUT_POST, 'service_description', FILTER_SANITIZE_STRING);
+    
+    // Process tags for editing
+    $service_tags_str = '';
+    if (isset($_POST['tags']) && is_array($_POST['tags'])) {
+        $service_tags_str = implode(',', $_POST['tags']);
+    }
+    
+    $negotiable = isset($_POST['service_negotiable']) ? 1 : 0;
+    $min_price = $negotiable && isset($_POST['service_min_price']) && !empty($_POST['service_min_price']) 
+        ? filter_input(INPUT_POST, 'service_min_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) 
+        : null;
+    $max_price = filter_input(INPUT_POST, 'service_max_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+
+    // Create the update query with the correct field values
+    $update_query = "UPDATE services SET 
+        name = '" . addslashes($service_name) . "', 
+        description = '" . addslashes($service_description) . "',
+        tags = '" . addslashes($service_tags_str) . "',
+        min_price = " . ($min_price !== null ? $min_price : "NULL") . ",
+        max_price = " . ($max_price !== null ? $max_price : "NULL") . "
+        WHERE id = $service_id AND business_id = $business_id";
+
+    
+    // Execute the update query
+    $result = DatabaseHandler::make_modify_query($update_query);
+    
+    // Debug the result
+    error_log("Update result: " . ($result ? "Success" : "Failed"));
+
+    // Handle image upload separately after the basic update
+    if (isset($_FILES['service_image']) && $_FILES['service_image']['error'] === UPLOAD_ERR_OK) {
+        $uploadResult = ImageHandler::uploadAndStoreImage('service_image', 'services', 'image', 'id', $service_id);
+        error_log("Image upload result: " . $uploadResult);
+    }
+
+    // Redirect after successful update
+    if ($result !== false) {
+        echo "<script>alert('Service updated successfully!'); window.location='account.php';</script>";
         exit();
     }
+}
 }
 ?>
 
@@ -527,8 +610,30 @@ if ($userData && count($userData) > 0) {
                     </div>
                     <button type="submit" class="btn btn-primary">Update Service</button>
                 </form>
+        <div class="selected-tags" id="edit-selected-tags">
+            <?php 
+            foreach ($existing_tags as $tag):
+                if (trim($tag) !== ''):
+            ?>
+                <span class="selected-tag"><?php echo htmlspecialchars(trim($tag)); ?></span>
+            <?php
+                endif;
+            endforeach;
+            ?>
+        </div>
+    </div>
+</div>
+
+            
+            <div class="mb-3">
+                <label for="service_min_price" class="form-label">Min Price</label>
+                <input type="number" step="0.01" class="form-control" id="service_min_price" name="service_min_price" value="<?php echo $edit_service['min_price']; ?>" <?php echo $edit_service['min_price'] ? "" : "disabled"; ?>>
             </div>
-        <?php endif; ?>
+            <div class="mb-3">
+                <label for="service_max_price" class="form-label">Max Price</label>
+                <input type="number" step="0.01" class="form-control" id="service_max_price" name="service_max_price" value="<?php echo $edit_service['max_price']; ?>" required>
+            </div>
+            <div class="form-check mb-3">
 
                 <!-- Add New Service Form -->
                 <div class="card p-3 mb-3">
@@ -562,6 +667,10 @@ if ($userData && count($userData) > 0) {
                                 ?>
                             </div>
                         </div>
+        }
+        ?>
+    </div>
+</div>
         
         <div class="d-flex gap-2 mb-2">
             <input type="text" class="form-control" name="service_min_price" id="service_min_price" placeholder="Min Price" disabled>
