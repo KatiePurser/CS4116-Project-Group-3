@@ -68,11 +68,10 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
                                 </button>
 
                                 <button class="decline-btn btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#declineRequestModal"
-                                    data-request-id="<?= htmlspecialchars($request['request_id']) ?>"
-                                    data-service-id="<?= htmlspecialchars($request['service_id']) ?>"
-                                    data-created-at="<?= htmlspecialchars($request['created_at']) ?>"
-                                    data-service-name="<?= htmlspecialchars($request['service_name']) ?>"
-                                    data-price="<?= htmlspecialchars($request['price']) ?>">
+                                    data-decline-request-id="<?= htmlspecialchars($request['request_id']) ?>"
+                                    data-decline-service-id="<?= htmlspecialchars($request['service_id']) ?>"
+                                    data-decline-created-at="<?= htmlspecialchars($request['created_at']) ?>"
+                                    data-decline-service-name="<?= htmlspecialchars($request['service_name']) ?>">
                                     DECLINE
                                 </button>
 
@@ -265,6 +264,30 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
                 // Show price display
                 priceDisplayContainer.style.display = 'block';
             }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('declineRequestModal');
+
+        modal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            const requestId = button.getAttribute('data-decline-request-id');
+            const serviceId = button.getAttribute('data-decline-service-id');
+            const createdAt = button.getAttribute('data-decline-created-at');
+            const serviceName = button.getAttribute('data-decline-service-name');
+
+            document.getElementById('decline-request-id-display').textContent = requestId;
+            document.getElementById('decline-service-id-display').textContent = serviceId;
+            document.getElementById('decline-created-at-display').textContent = new Date(createdAt).toLocaleString();
+            document.getElementById('decline-service-name-display').textContent = serviceName;
+
+            document.getElementById('decline-request-id').value = requestId;
+            document.getElementById('decline-service-id').value = serviceId;
+            document.getElementById('decline-created-at').value = new Date(createdAt).toLocaleString();
+            document.getElementById('decline-service-name').value = serviceName;
+
         });
     });
 </script>
