@@ -17,10 +17,10 @@ if ($_SESSION['user_type'] != 'customer') {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Search Results</title>
-        <link rel="stylesheet" href="public/css/styles.css">
+        <link rel="stylesheet" href="../../public/css/styles.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-        <link rel="stylesheet" href="search.css">
+        <!-- <link rel="stylesheet" href="search.css"> -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <style>
             div {
@@ -32,6 +32,10 @@ if ($_SESSION['user_type'] != 'customer') {
                     width: 100%;
                     display: flex;
                     align-content: center;
+                }
+
+                .keyword_desc {
+                    margin-left: 1vw;
                 }
 
                 .business-button{
@@ -78,6 +82,11 @@ if ($_SESSION['user_type'] != 'customer') {
                     padding-right: 0.5vw;
                 }
 
+                .filter_buttons{
+                    background-color: #82689A;
+                    border-radius: 5px;
+                }
+
                 .image{
                     height: 30vh;
                     object-fit: cover;
@@ -90,6 +99,10 @@ if ($_SESSION['user_type'] != 'customer') {
                     width: 100%;
                     display: flex;
                     align-content: center;
+                }
+
+                .keyword_desc {
+                    margin-left: 1vw;
                 }
 
                 .business-button{
@@ -140,9 +153,7 @@ if ($_SESSION['user_type'] != 'customer') {
 
                 .filter_buttons{
                     background-color: #82689A;
-                    border-radius: 0.5vw;
-                    font-size: 1.5vw;
-
+                    border-radius: 5px;
                 }
 
                 .image{
@@ -259,8 +270,8 @@ if ($_SESSION['user_type'] != 'customer') {
                     </div>
                     <br>
                     <input class="filter_buttons" type="submit" value="Set Filters">
-                    <br><br>
                 </form>
+                <br>
                 <form action="search_page.php" method="post">
                     <input type="hidden" id="search" name="search" value=<?php echo $keyword?>>
                     <input class="filter_buttons" type="submit" name="clear" value="Clear Filters">
@@ -357,7 +368,7 @@ if ($_SESSION['user_type'] != 'customer') {
             $result = DatabaseHandler::make_select_query($sql);
             $i=0; 
             $businesses = DatabaseHandler::make_select_query("SELECT id, display_name FROM businesses ");?>
-            <div>
+            <div class="keyword_desc">
                 <p>Searching by keyword: <i><?php echo "\"".$keyword."\""?></i></p>
                 <br>
             </div>
