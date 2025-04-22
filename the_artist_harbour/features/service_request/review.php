@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = DatabaseHandler::make_modify_query($sql);
 
     if ($result) {
-        header("Location: service_request_page.php");
+        header("Location: ../service/service.php?service_id=$service_id");
     } else {
         header("Location: service_request_page.php");
     }

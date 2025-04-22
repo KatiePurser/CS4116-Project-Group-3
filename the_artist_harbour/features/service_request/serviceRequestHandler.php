@@ -14,48 +14,56 @@ class ServiceRequestHandler
      */
     public static function retrieveRequests($user_id): array|null
     {
-        $sql = "SELECT * FROM service_requests WHERE customer_user_id = $user_id OR business_user_id = $user_id";
-        $requests = [];
+        // Cast to integer to avoid SQL injection
+        $user_id = (int) $user_id;
+
+        $sql = "
+            SELECT 
+                sr.id AS request_id,
+                sr.service_id,
+                sr.created_at,
+                sr.status,
+                sr.price,
+                sr.reviewed,
+                b.display_name,
+                s.name AS service_name,
+                u.user_type,
+                cu.first_name AS customer_first_name,
+                cu.last_name AS customer_last_name
+            FROM service_requests sr
+            LEFT JOIN businesses b ON sr.business_user_id = b.user_id
+            LEFT JOIN services s ON sr.service_id = s.id
+            LEFT JOIN users u ON u.id = $user_id
+            LEFT JOIN users cu ON sr.customer_user_id = cu.id
+            WHERE sr.customer_user_id = $user_id OR sr.business_user_id = $user_id
+        ";
 
         $results = DatabaseHandler::make_select_query($sql);
 
-        if ($results !== null && count($results) > 0) {
+        if (!empty($results)) {
+            $requests = [];
             foreach ($results as $result) {
-                // Retreiving business name
-                $business_user_id = $result['business_user_id'];
-                $business = DatabaseHandler::make_select_query("SELECT display_name FROM businesses WHERE user_id = $business_user_id");
-
-                // Retreiving Service Name with the service ID retrieved from the last query
-                $service_id = $result['service_id'];
-                $service_name = DatabaseHandler::make_select_query("SELECT name FROM services WHERE id = $service_id");
-
-
-                // Retreiving User Type
-                $user_type = DatabaseHandler::make_select_query("SELECT user_type FROM users WHERE id = $user_id");
-
-                $customer_user_id = $result['customer_user_id'];
-                $customer_details = DatabaseHandler::make_select_query("SELECT first_name, last_name FROM users WHERE id = $customer_user_id");
-                $customer_name = $customer_details[0]['first_name'] . " " . $customer_details[0]['last_name'];
-
+                $customer_name = $result['customer_first_name'] . ' ' . $result['customer_last_name'];
                 $requests[] = [
-                    'request_id' => $result['id'],
+                    'request_id' => $result['request_id'],
                     'service_id' => $result['service_id'],
                     'created_at' => $result['created_at'],
                     'status' => $result['status'],
-                    'display_name' => $business[0]['display_name'],
-                    'service_name' => $service_name[0]['name'],
-                    'user_type' => $user_type[0]['user_type'],
+                    'display_name' => $result['display_name'],
+                    'service_name' => $result['service_name'],
+                    'user_type' => $result['user_type'],
                     'price' => $result['price'],
                     'reviewed' => $result['reviewed'],
                     'customer' => $customer_name
                 ];
             }
+            return $requests;
         } else {
-            $requests['error'] = "No requests found.";
+            return ['error' => "No requests found."];
         }
-
-        return $requests;
     }
+
+
 
     /**
      * Adds a new service request and sends a notification message.
