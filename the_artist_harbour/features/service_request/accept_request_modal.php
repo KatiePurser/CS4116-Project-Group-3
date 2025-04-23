@@ -14,20 +14,28 @@
                     <p><strong>Service ID:</strong> <span id="service-id-display"></span></p>
                     <p><strong>Created At:</strong> <span id="created-at-display"></span></p>
                     <p><strong>Service Name:</strong> <span id="service-name-display"></span></p>
+
                     <p id="price-display-container"><strong>Price:</strong> <span id="price-display"></span></p>
+                    <p id="price-display-range-container"><strong>Price Range:</strong> <span
+                            id="price-display-range"></span>
+                    </p>
 
                     <div id="price-input-container" class="mt-3" style="display: none;">
                         <label for="custom-price" class="form-label fw-semibold">Enter Price</label>
-                        <input type="number" min="0" step="1" class="form-control rounded-3 border" id="custom-price"
-                            name="custom_price">
+                        <input type="number" min="100" max="1000" step="1" class="form-control rounded-3 border"
+                            id="custom-price" name="custom_price">
+                        <div id="price-error" class="text-danger mt-1" style="display: none;">Price is not in range!
+                        </div>
                     </div>
+
 
                     <!-- Hidden fields -->
                     <input type="hidden" name="request_id" id="request-id">
                     <input type="hidden" name="service_id" id="service-id">
                     <input type="hidden" name="created_at" id="created-at">
                     <input type="hidden" name="service_name" id="service-name">
-                    <input type="hidden" name="price" id="price">
+                    <input type="hidden" name="min_price" id="min-price">
+                    <input type="hidden" name="max_price" id="max-price">
 
                 </div>
 

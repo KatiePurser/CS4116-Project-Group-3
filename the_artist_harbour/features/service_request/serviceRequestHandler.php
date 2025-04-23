@@ -18,25 +18,38 @@ class ServiceRequestHandler
         $user_id = (int) $user_id;
 
         $sql = "
-            SELECT 
-                sr.id AS request_id,
-                sr.service_id,
-                sr.created_at,
-                sr.status,
-                sr.price,
-                sr.reviewed,
-                b.display_name,
-                s.name AS service_name,
-                u.user_type,
-                cu.first_name AS customer_first_name,
-                cu.last_name AS customer_last_name
-            FROM service_requests sr
-            LEFT JOIN businesses b ON sr.business_user_id = b.user_id
-            LEFT JOIN services s ON sr.service_id = s.id
-            LEFT JOIN users u ON u.id = $user_id
-            LEFT JOIN users cu ON sr.customer_user_id = cu.id
-            WHERE sr.customer_user_id = $user_id OR sr.business_user_id = $user_id
-        ";
+                SELECT 
+                    sr.id AS request_id,
+                    sr.service_id,
+                    sr.created_at,
+                    sr.status,
+                    sr.min_price,
+                    sr.max_price,
+                    sr.reviewed,
+                    b.display_name,
+                    s.name AS service_name,
+                    u.user_type,
+                    cu.first_name AS customer_first_name,
+                    cu.last_name AS customer_last_name
+                FROM service_requests sr
+                LEFT JOIN businesses b ON sr.business_user_id = b.user_id
+                LEFT JOIN services s ON sr.service_id = s.id
+                LEFT JOIN users u ON u.id = $user_id
+                LEFT JOIN users cu ON sr.customer_user_id = cu.id
+                WHERE sr.customer_user_id = $user_id OR sr.business_user_id = $user_id
+                ORDER BY 
+                    CASE sr.status
+                        WHEN 'pending' THEN 0
+                        WHEN 'approved' THEN 1
+                        WHEN 'in progress' THEN 2
+                        WHEN 'completed' THEN 3
+                        WHEN 'declined' THEN 4
+                        ELSE 5 -- catch-all for unknown statuses
+                    END,
+                    sr.created_at DESC
+            ";
+
+
 
         $results = DatabaseHandler::make_select_query($sql);
 
@@ -52,7 +65,8 @@ class ServiceRequestHandler
                     'display_name' => $result['display_name'],
                     'service_name' => $result['service_name'],
                     'user_type' => $result['user_type'],
-                    'price' => $result['price'],
+                    'min_price' => $result['min_price'],
+                    'max_price' => $result['max_price'],
                     'reviewed' => $result['reviewed'],
                     'customer' => $customer_name
                 ];
@@ -74,10 +88,11 @@ class ServiceRequestHandler
      * @param int $user_id The ID of the customer making the request.
      * @param int $service_id The ID of the requested service.
      * @param string $message_text The message associated with the service request.
-     * @param string $price The price if the service is non-negotiable, otherwise leave empty and will set to 0
+     * @param string $min_price The minimum price of the service even if the price is non-negotiable
+     * @param string $max_price The maximum prcie of the service
      * @return bool True on success, false on failure.
      */
-    public static function insertRequest($user_id, $service_id, $message_text, $price = 0): bool
+    public static function insertRequest($user_id, $service_id, $message_text, $min_price, $max_price): bool
     {
         // Get business_user_id from the service_id
         $business_id_query = DatabaseHandler::make_select_query("SELECT business_id FROM services WHERE id = $service_id");
@@ -87,8 +102,8 @@ class ServiceRequestHandler
 
 
         // Inserting Service Request
-        $sql = "INSERT INTO service_requests (service_id, customer_user_id, business_user_id, message, status, price, created_at) 
-                VALUES ($service_id, $user_id, $business_user_id, '$message_text', 'pending', $price, NOW())";
+        $sql = "INSERT INTO service_requests (service_id, customer_user_id, business_user_id, message, status, min_price, max_price, created_at) 
+                VALUES ($service_id, $user_id, $business_user_id, '$message_text', 'pending', $min_price, $max_price, NOW())";
 
         $result = DatabaseHandler::make_modify_query($sql);
 
