@@ -76,6 +76,7 @@ if ($_SESSION['user_type'] !== 'customer') {
 
                 .service_price {
                     background-color: #82689A;
+                    color: white;
                     border-radius: 0.5vw;
                     max-width: fit-content;
                     margin: auto;
@@ -136,6 +137,7 @@ if ($_SESSION['user_type'] !== 'customer') {
 
                 .service_price {
                     background-color: #82689A;
+                    color: white;
                     border-radius: 0.5vw;
                     max-width: fit-content;
                     margin: auto;
