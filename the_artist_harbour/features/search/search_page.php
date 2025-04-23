@@ -75,6 +75,7 @@ if ($_SESSION['user_type'] != 'customer') {
 
                 .service_price {
                     background-color: #82689A;
+                    color: white;
                     border-radius: 0.5vw;
                     max-width: fit-content;
                     margin: auto;
@@ -99,6 +100,10 @@ if ($_SESSION['user_type'] != 'customer') {
                     width: 100%;
                     display: flex;
                     align-content: center;
+                }
+
+                .filter-title {
+                    margin-top: 1%;
                 }
 
                 .keyword_desc {
@@ -144,6 +149,7 @@ if ($_SESSION['user_type'] != 'customer') {
 
                 .service_price {
                     background-color: #82689A;
+                    color: white;
                     border-radius: 0.5vw;
                     max-width: fit-content;
                     margin: auto;
@@ -216,7 +222,7 @@ if ($_SESSION['user_type'] != 'customer') {
             ?>
 
             <div class="row g-0" style="background-color: #E2D4F0; text-align: center;">
-                <h3>Filter Services</h3>
+                <h3 class="filter-title">Filter Services</h3>
                 <form action="search_page.php" method="post">
                     <input type="hidden" id="search" name="search" value=<?php echo $keyword?>>
                 </form>
@@ -227,20 +233,22 @@ if ($_SESSION['user_type'] != 'customer') {
                     <label for="max_price">Maximum Price:</label>
                     <input type="number" name="max_price" id="max_price" value="<?php if (isset($_GET['max_price'])) echo "{$_GET['max_price']}";?>">
                     <select name="rating" id="rating">
-                        <option value="" disabled <?php if (!isset($_GET['rating'])) echo "selected";?> hidden>Filter By Reviews</option>
+                        <option value="" disabled <?php if ((!isset($_GET['rating'])) || ((isset($_GET['rating']) && $_GET['rating']=="6"))) echo "selected";?> hidden>Filter By Reviews</option>
                         <option value="0" <?php if (isset($_GET['rating']) && $_GET['rating']=="0") echo "selected";?>>0 Stars</option>
                         <option value="1" <?php if (isset($_GET['rating']) && $_GET['rating']=="1") echo "selected";?>>1 Star</option>
                         <option value="2" <?php if (isset($_GET['rating']) && $_GET['rating']=="2") echo "selected";?>>2 Stars</option>
                         <option value="3" <?php if (isset($_GET['rating']) && $_GET['rating']=="3") echo "selected";?>>3 Stars</option>
                         <option value="4" <?php if (isset($_GET['rating']) && $_GET['rating']=="4") echo "selected";?>>4 Stars</option>
                         <option value="5" <?php if (isset($_GET['rating']) && $_GET['rating']=="5") echo "selected";?>>5 Stars</option>
+                        <option value="6">Remove Selection</option>
                     </select>
                     <select name="filter" id="filter">
-                        <option value="" disabled <?php if (!isset($_GET['filter'])) echo "selected";?> hidden>Sort Services</option>
+                        <option value="" disabled <?php if ((!isset($_GET['filter'])) || ((isset($_GET['filter']) && $_GET['filter']=="5"))) echo "selected";?> hidden>Sort Services</option>
                         <option value="1" <?php if (isset($_GET['filter']) && $_GET['filter']=="1") echo "selected";?>>By Reviews (High to Low)</option>
                         <option value="2" <?php if (isset($_GET['filter']) && $_GET['filter']=="2") echo "selected";?>>By Reviews (Low to High)</option>
                         <option value="3" <?php if (isset($_GET['filter']) && $_GET['filter']=="3") echo "selected";?>>By Price (High to Low)</option>
                         <option value="4" <?php if (isset($_GET['filter']) && $_GET['filter']=="4") echo "selected";?>>By Price (Low to High)</option>
+                        <option value="5">Remove Selection</option>
                     </select><br>
                     <label for="tags">Filter by Tags:</label><br>
                     <div class="dropdown">
@@ -289,17 +297,14 @@ if ($_SESSION['user_type'] != 'customer') {
                     $min_price = $_GET['min_price'];
                     $max_price = $_GET['max_price'];
                     $sql.=" AND (min_price>=$min_price OR min_price IS NULL) AND max_price<=$max_price AND max_price>=$min_price";
-                    $description.= "Minimum Price=€{$min_price}; Maximum Price=€{$max_price};  ";
                 }else if($_GET['min_price']!=""){
                     //Any services more than given figure
                     $min_price = $_GET['min_price'];
                     $sql.=" AND (min_price>=$min_price OR min_price IS NULL) AND max_price>= $min_price";
-                    $description.= "Minimum Price=€{$min_price}; ";
                 }else if($_GET['max_price']!=""){
                     //Any services less than given figure
                     $max_price = $_GET['max_price'];
                     $sql.=" AND max_price<=$max_price";
-                    $description.= "Maximum Price=€{$max_price}; ";
                 }
             }
             
@@ -307,63 +312,54 @@ if ($_SESSION['user_type'] != 'customer') {
                 if($_GET['rating']==0){
                     //0 Stars
                     $sql.=" AND (reviews>=0.0 AND reviews<1.0)";
-                    $description.= "Rating=0 Stars; ";
                 }else if($_GET['rating']==1){
                     //1 Star
                     $sql.=" AND (reviews>=1.0 AND reviews<2.0)";
-                    $description.= "Rating=1 Star; ";
                 }else if($_GET['rating']==2){
                     //2 Stars
                     $sql.=" AND (reviews>=2.0 AND reviews<3.0)";
-                    $description.= "Rating=2 Stars; ";
                 }else if($_GET['rating']==3){
                     //3 Stars
                     $sql.=" AND (reviews>=3.0 AND reviews<4.0)";
-                    $description.= "Rating=3 Stars; ";
                 }else if($_GET['rating']==4){
                     //4 Stars
                     $sql.=" AND (reviews>=4.0 AND reviews<5.0)";
-                    $description.= "Rating=4 Stars; ";
                 }else if($_GET['rating']==5){
                     //5 Stars
                     $sql.=" AND reviews=5.0";
-                    $description.= "Rating=5 Stars; ";
                 }
             }
 
             $i=0;
             if(isset($_GET['tags'])){
-                $description.="Tags=";
+                $sql.=" AND (";
                 $tags_array = array_keys($_GET['tags']);
                 while($i<count($tags_array)){
                     $tag = $_GET['tags'][$tags_array[$i]];
-                    $sql.=" AND (tags LIKE '%,{$tag},%' OR tags LIKE '{$tag},%' OR tags LIKE '%,{$tag}' OR tags LIKE '{$tag}')";
+                    $sql.=" (tags LIKE '%,{$tag},%' OR tags LIKE '{$tag},%' OR tags LIKE '%,{$tag}' OR tags LIKE '{$tag}')";
+                    if($i<count($tags_array)-1){
+                        $sql.=" OR";
+                    }
                     $i++;
-                    $description.="{$tag} ";
                 }
-                $description.="; ";
+                $sql.=")";
             }
 
             if(isset($_GET['filter'])){
                 if($_GET['filter']==1){
                     //By Reviews (High to Low)
                     $sql.=" ORDER BY reviews DESC;";
-                    $description.="Order By=Reviews(High to Low); ";
                 }else if($_GET['filter']==2){
                     //By Reviews (Low to High)
                     $sql.=" ORDER BY reviews ASC;";
-                    $description.="Order By=Reviews(Low to High); ";
                 }else if($_GET['filter']==3){
                     //By Price (High to Low)
                     $sql.=" ORDER BY max_price DESC;";
-                    $description.="Order By=Price(High to Low); ";
                 }else if($_GET['filter']==4){
                     //By Price (Low to High)
                     $sql.=" ORDER BY max_price ASC;";
-                    $description.="Order By=Price(Low to High); ";
                 }
             }
-
 
             $result = DatabaseHandler::make_select_query($sql);
             $i=0; 
