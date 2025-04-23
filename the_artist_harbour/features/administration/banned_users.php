@@ -45,7 +45,7 @@ if ($_SESSION["user_type"] !== "admin") {
             padding: 0;
         }
 
-        .reports {
+        .banned-users {
             margin: 40px;
         }
     </style>
@@ -65,12 +65,13 @@ if ($_SESSION["user_type"] !== "admin") {
 
         <div class="col-10 col-md-11">
             <div class="report-title-container">
-                <p>Report Logs</p>
+                <p>Banned Users</p>
             </div>
 
-            <div class="reports">
-                <?php require 'reports_list.php'; ?>
-                <?php require 'modals/report_details_modal.php'; ?>
+            <div class="banned-users">
+                <?php require 'banned_users_list.php'; ?>
+                <?php require 'modals/banned_user_details_modal.php'; ?>
+                <?php require 'modals/unban_user_modal.php'; ?>
             </div>
         </div>
 
