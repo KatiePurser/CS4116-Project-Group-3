@@ -41,19 +41,110 @@ require_once(__DIR__ . "/review_report_modal.php");
         <script src="js/outcome_handling.js"></script>
 
         <style>
-            
+            .information {
+                max-height: 60%;
+                margin-top: 2vh;
+                margin-left: 2vw;
+                margin-right:2vw;
+                margin-bottom: 3vh;
+            }
+
+            .info-container {
+                max-height: fit-content;
+                border-radius: 2%;
+                padding: 1%;
+                padding-bottom: 3%;
+                text-align:center;
+            }
+
+            .margin {
+                max-height: fit-content;
+            }
+
+            .name-container {
+                margin: auto;
+                padding: 0.5%;
+                margin-bottom: 2vh;
+                background-color: #E2D4F0;
+                border:5px solid #82689A;
+                border-radius: 0.5vw;
+            }
+
+            .business-button {
+                font-size: 20px;
+                text-decoration: none;
+                color: black;
+            }
+
+            .business-button:hover {
+                color: hotpink;
+            }
+
+            .description-and-tags {
+                border-radius: 0.5vw;
+                background-color: #E2D4F0;
+                border-width: 0.5%;
+                padding-top: 1vh;
+                padding-bottom: 0.2vh;
+            }
+
+            .description-container {
+                margin: auto;
+                padding: 0.5%;
+                min-height: 10%;
+            }
+
+            .image-container {
+                padding:1%;
+                border: 10px solid #E2D4F0;
+                max-height: fit-content;
+                border-radius: 2%;
+                justify-content: center;
+            }
 
             .image {
-                width: 40vw;
+                height: fit-content;
+                max-height: 60%;
             } 
+
+            .price {
+                margin: auto;
+                margin-top: 2vh;
+                float: left;
+                padding-left: 5vw;
+                padding-right: 5vw;
+                background-color: #E2D4F0;
+                border-radius: 1vw;
+            }
+
+            .service-request-btn {
+                float: right;
+                margin-top: 2vh;
+                color: white;
+                background-color: #82689A; 
+                border-width: 2%; 
+                border-color: #82689A;
+                border-radius: 1vw;
+                font-size: 24;
+                width: 30%;
+            }
             
-            .review_title {
+            .review-title {
                 text-align:center;
+                color: white;
                 background-color: #82689A;
                 border-radius: 5px;
                 max-width: fit-content;
-                margin: auto;
+                margin-bottom: 1%;
                 padding: 0.25vw
+            }
+
+            .hovercard {
+                margin-bottom: 1%;
+                margin-left: 1%;
+                margin-right: 1%;
+                border-color: #82689A;
+                border-radius: 5%;
             }
         </style>
     </head>
@@ -64,56 +155,59 @@ require_once(__DIR__ . "/review_report_modal.php");
             </div>
         </div>
 
-        <div class="row g-0">
-            <div class="col-6 info-container" style="text-align:center;">
-                <div class="name_container">
+        <div class="row information g-0">
+            <div class="col-6 g-0 info-container justify-content-center">
+                <div class="name-container">
                     <h1 class="name"><?php echo $service['name'] ?></h1>
+                    <?php
+                    $url = "../business/profile.php?business_id=".$business['id'];
+                    echo '<a class="business-button" href='.$url.'> from '. $business['display_name'] .'</a>'; ?>
                 </div>
-                <div class="business_name_container">
-                    <h4 class="business_name"><?php echo $business['display_name'] ?></h3>
-                </div>
-                <div class="description_container">
-                    <h4 class="description"><?php echo $service['description'] ?></h4>
-                </div>
-                <div class="tags_container">
-                    <?php 
-                    $tags_string="";
-                    if($service['tags']!=NULL){
-                        $tags_string=="Tags: ";
-                        $tags=explode(",", $service['tags'], 25);
-                        $i=0;
-                        while($i<count($tags)){
-                            $tags_string.=$tags[$i];
-                            if($i!=count($tags)-1){
-                                $tags_string.= ", ";
+                <div class="description-and-tags">
+                    <div class="description-container">
+                        <h5 class="description-title">DESCRIPTION</h5>
+                        <h5 class="description"><?php echo $service['description'] ?></h5>
+                    </div>
+                    <div class="tags-container">
+                        <?php 
+                        $tags_string="";
+                        if($service['tags']!=NULL){
+                            $tags_string=="Tags: ";
+                            $tags=explode(",", $service['tags'], 25);
+                            $i=0;
+                            while($i<count($tags)){
+                                $tags_string.=$tags[$i];
+                                if($i!=count($tags)-1){
+                                    $tags_string.= ", ";
+                                }
+                                $i++;
                             }
-                            $i++;
-                        }
-                    } else { 
-                        $tags_string = "No Tags";
-                    } ?>
-                    <p class="tags"><?php echo $tags_string ?></p>
+                        } else { 
+                            $tags_string = "No Tags";
+                        } ?>
+                        <p class="tags"><?php echo $tags_string ?></p>
+                    </div>
                 </div>
                 <div>
-                    <div class="price_container">
+                    <div class="price-container">
                         <?php 
-                        if($service['min_price']==NULL){
-                            echo "€".$service['max_price'];
-                        }else{
-                            echo "€".$service['min_price']." - €".$service['max_price'];
-                        }
+                        if($service['min_price']==NULL){ ?>
+                            <h3 class="price"> <?php echo "€".$service['max_price']; ?> </h3>
+                        <?php }else{ ?>
+                            <h3 class="price"> <?php echo "€".$service['min_price']." - €".$service['max_price']; ?></h3>
+                        <?php }
                         ?>
                     </div>
                     <div class="service_request">
                         <?php if($_SESSION['user_type'] == 'customer') { 
                             if($service['min_price']==NULL){?>
-                                <button type="button" class="btn p-0" data-bs-toggle="modal" data-bs-target="#serviceRequestModal"
-                                    data-price-final="<?php echo $service['max_price']?>" data-service-id="<?php echo $service_id?>" style="background-color: #82689A; border-width: 2%; border-color: #82689A;">
+                                <button type="button" class="btn service-request-btn p-0" data-bs-toggle="modal" data-bs-target="#serviceRequestModal"
+                                    data-price-final="<?php echo $service['max_price']?>" data-service-id="<?php echo $service_id?>">
                                     Request Service
                                 </button>
                             <?php } else { ?>
                                 <button type="button" class="btn p-0" data-bs-toggle="modal" data-bs-target="#serviceRequestModal"
-                                    data-price-final="0" data-service-id="<?php echo $service_id?>" style="background-color: #82689A; border-width: 2%; border-color: #82689A;">
+                                    data-price-final="0" data-service-id="<?php echo $service_id?>">
                                     Request Service
                                 </button>
                             <?php } ?>
@@ -121,8 +215,8 @@ require_once(__DIR__ . "/review_report_modal.php");
                     </div>
                 </div>
             </div>
-            <div class="col-1"></div>
-            <div class="col-5 image" style="width: 40%; float: right;">
+            <div class="col-1 margin"></div>
+            <div class="col-5 image-container">
                 <?php
                 if(!empty($service['image'])){ ?>
                     <img src="../business/get_serviceImage.php?id=<?= $service['id'] ?>" class="card-img-top image" alt="Service Image">
@@ -132,9 +226,11 @@ require_once(__DIR__ . "/review_report_modal.php");
                 ?>
             </div>
         </div>
-        <br><br><br>
-        <div class="review_title">
-            <h2> REVIEWS </h2>
+        <br>
+        <div class="row g-0 justify-content-center">
+            <div class="review-title">
+                <h2> REVIEWS </h2>
+            </div>
         </div>
         <div class="reviews_containter">
         <?php
@@ -159,7 +255,7 @@ require_once(__DIR__ . "/review_report_modal.php");
                         <p class="card-text"><?php echo $review['text'] ?></p>
                         <?php if ($_SESSION['user_type'] == 'customer'){?>
                         <button type="button" class="btn p-0" data-bs-toggle="modal" data-bs-target="#insightRequestModal"
-                            data-receiver-id="<?php echo $review['reviewer_id']?>" data-service-id="<?php echo $service_id?>" style="background-color: #82689A; border-width: 2%; border-color: #82689A;">
+                            data-receiver-id="<?php echo $review['reviewer_id']?>" data-service-id="<?php echo $service_id?>" style="background-color: #82689A; border-width: 2%; border-color: #82689A; color: white;">
                             Request Insight
                         </button>
                         <?php } ?>
@@ -178,7 +274,7 @@ require_once(__DIR__ . "/review_report_modal.php");
                         <p class="card-text"><?php echo $review['text'] ?></p>
                         <?php if ($_SESSION['user_type'] == 'customer'){?>
                         <button type="button" class="btn p-0" data-bs-toggle="modal" data-bs-target="#insightRequestModal"
-                            data-receiver-id="<?php echo $review['reviewer_id']?>" data-service-id="<?php echo $service_id?>" style="background-color: #82689A; border-width: 2%; border-color: #82689A;">
+                            data-receiver-id="<?php echo $review['reviewer_id']?>" data-service-id="<?php echo $service_id?>" style="background-color: #82689A; border-width: 2%; border-color: #82689A; color: white;">
                             Request Insight
                         </button>
                         <?php } ?>
@@ -198,7 +294,7 @@ require_once(__DIR__ . "/review_report_modal.php");
                         <p class="card-text"><?php echo $review['text'] ?></p>
                         <?php if ($_SESSION['user_type'] == 'customer'){?>
                         <button type="button" class="btn p-0" data-bs-toggle="modal" data-bs-target="#insightRequestModal"
-                            data-receiver-id="<?php echo $review['reviewer_id']?>" data-service-id="<?php echo $service_id?>" style="background-color: #82689A; border-width: 2%; border-color: #82689A;">
+                            data-receiver-id="<?php echo $review['reviewer_id']?>" data-service-id="<?php echo $service_id?>" style="background-color: #82689A; border-width: 2%; border-color: #82689A; color: white;">
                             Request Insight
                         </button>
                         <?php } ?>
@@ -221,7 +317,7 @@ require_once(__DIR__ . "/review_report_modal.php");
                         <p class="card-text"><?php echo $review['text'] ?></p>
                         <?php if ($_SESSION['user_type'] == 'customer'){?>
                         <button type="button" class="btn p-0" data-bs-toggle="modal" data-bs-target="#insightRequestModal"
-                            data-receiver-id="<?php echo $review['reviewer_id']?>" data-service-id="<?php echo $service_id?>" style="background-color: #82689A; border-width: 2%; border-color: #82689A;">
+                            data-receiver-id="<?php echo $review['reviewer_id']?>" data-service-id="<?php echo $service_id?>" style="background-color: #82689A; border-width: 2%; border-color: #82689A; color: white;">
                             Request Insight
                         </button>
                         <?php } ?>
