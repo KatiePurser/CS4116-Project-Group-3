@@ -8,11 +8,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $target_id = $_POST['message_id'];
     $reason = $_POST['reason'];
     $status = 'pending';
-    $message_content = $_POST['message_content']; // TO BE USED WHEN ALEX NEEDS THE MESSAGE CONTENT IN THE DB
+    $message_content = $_POST['message_content'];
     $conversation_id = $_POST['conversation_id'];
 
-    $sql = "INSERT INTO reports (reporter_id, reported_id, target_type, target_id, reason, status, created_at) 
-            VALUES ('$reporter_id', '$reported_id', '$target_type', '$target_id', '$reason', '$status', NOW())";
+    $sql = "INSERT INTO reports (reporter_id, reported_id, target_type, target_id, target_content, reason, status, created_at) 
+            VALUES ('$reporter_id', '$reported_id', '$target_type', '$target_id', '$message_content', '$reason', '$status', NOW())";
 
     $result = DatabaseHandler::make_modify_query($sql);
 
