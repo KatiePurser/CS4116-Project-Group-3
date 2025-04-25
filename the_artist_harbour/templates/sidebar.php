@@ -27,7 +27,22 @@ $user_type = $_SESSION['user_type'] ?? '';
                         <span class="sidebar-text d-none d-xl-inline">Business</span>
                     </a>
                 </li>
+            <?php elseif ($user_type === 'admin'): ?>
+                <li class="sidebar-item">
+                    <a class="sidebar-link"
+                       href="/CS4116-Project-Group-3/the_artist_harbour/features/administration/admin_panel.php">
+                        <i class="bi bi-shield-exclamation"></i>
+                        <span class="sidebar-text d-none d-xl-inline">Report logs</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="/CS4116-Project-Group-3/the_artist_harbour/features/administration/banned_users.php">
+                        <i class="bi bi-person-x"></i>
+                        <span class="sidebar-text d-none d-xl-inline">Banned Users</span>
+                    </a>
+                </li>
             <?php endif; ?>
+            <?php if ($user_type === 'customer' || $user_type === 'business'): ?>
             <li class="sidebar-item">
                 <a class="sidebar-link"
                     href="/CS4116-Project-Group-3/the_artist_harbour/features/service_request/service_request_page.php">
@@ -41,6 +56,7 @@ $user_type = $_SESSION['user_type'] ?? '';
                     <span class="sidebar-text d-none d-xl-inline">Messages</span>
                 </a>
             </li>
+            <?php endif; ?>
         </ul>
     </div>
 </nav>

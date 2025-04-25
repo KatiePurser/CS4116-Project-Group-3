@@ -15,8 +15,13 @@
                         <p><strong>Service:</strong> <?= htmlspecialchars($request['service_name']) ?></p>
                         <p><strong>Date:</strong> <?= htmlspecialchars($request['created_at']) ?></p>
 
-                        <?php if ($request['price'] !== 0): ?>
-                            <p><strong>Price:</strong> €<?= htmlspecialchars($request['price']) ?></p>
+                        <?php if ($request['min_price'] == 0): ?>
+                            <!--  Displaying the Max price only if it is nonnegotiable-->
+                            <p><strong>Price:</strong> €<?= htmlspecialchars($request['max_price']) ?></p>
+                        <?php else: ?>
+                            <!--  Displaying the price range if the price is negotiable-->
+                            <p><strong>Price:</strong> €<?= htmlspecialchars($request['min_price']) ?> -
+                                €<?= htmlspecialchars($request['max_price']) ?></p>
                         <?php endif; ?>
                     </div>
 

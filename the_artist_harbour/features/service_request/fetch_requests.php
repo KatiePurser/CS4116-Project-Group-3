@@ -63,7 +63,8 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
                                     data-service-id="<?= htmlspecialchars($request['service_id']) ?>"
                                     data-created-at="<?= htmlspecialchars($request['created_at']) ?>"
                                     data-service-name="<?= htmlspecialchars($request['service_name']) ?>"
-                                    data-price="<?= htmlspecialchars($request['price']) ?>">
+                                    data-min-price="<?= htmlspecialchars($request['min_price']) ?>"
+                                    data-max-price="<?= htmlspecialchars($request['max_price']) ?>">
                                     ACCEPT
                                 </button>
 
@@ -130,7 +131,7 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
     }
 
     .pending-badge {
-        background-color: #fecb32;
+        background-color: rgb(230, 182, 25);
     }
 
     .completed-badge {
@@ -232,40 +233,68 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
             const serviceId = button.getAttribute('data-service-id');
             const createdAt = button.getAttribute('data-created-at');
             const serviceName = button.getAttribute('data-service-name');
-            const price = button.getAttribute('data-price');
+            const minPrice = parseInt(button.getAttribute('data-min-price'));
+            const maxPrice = parseInt(button.getAttribute('data-max-price'));
 
+            // Display data in modal
             document.getElementById('request-id-display').textContent = requestId;
             document.getElementById('service-id-display').textContent = serviceId;
             document.getElementById('created-at-display').textContent = new Date(createdAt).toLocaleString();
             document.getElementById('service-name-display').textContent = serviceName;
-            document.getElementById('price-display').textContent = price;
+            document.getElementById('price-display').textContent = maxPrice;
+            document.getElementById('price-display-range').textContent = '€' + minPrice + ' - €' + maxPrice;
 
+            // Hidden form fields
             document.getElementById('request-id').value = requestId;
             document.getElementById('service-id').value = serviceId;
             document.getElementById('created-at').value = new Date(createdAt).toLocaleString();
             document.getElementById('service-name').value = serviceName;
-            document.getElementById('price').value = price;
+            document.getElementById('min-price').value = minPrice;
+            document.getElementById('max-price').value = maxPrice;
 
             // Show or hide price input field
             const priceDisplayContainer = document.getElementById('price-display-container');
+            const priceDisplayRangeContainer = document.getElementById('price-display-range-container');
             const priceInputContainer = document.getElementById('price-input-container');
             const customPriceInput = document.getElementById('custom-price');
+            const errorDiv = document.getElementById('price-error');
+            customPriceInput.min = minPrice;
+            customPriceInput.max = maxPrice;
 
-            if (parseInt(price) === 0) {
+            customPriceInput.addEventListener('input', function () {
+                const value = parseInt(customPriceInput.value, 10);
+
+                if (isNaN(value) || value < minPrice || value > maxPrice) {
+                    errorDiv.style.display = 'block';
+                    errorDiv.textContent = `Price must be between €${minPrice} and €${maxPrice}.`;
+                } else {
+                    errorDiv.style.display = 'none';
+                }
+            });
+
+            if (minPrice !== 0) {
                 priceInputContainer.style.display = 'block';
                 customPriceInput.required = true;
 
                 // Hide price display
                 priceDisplayContainer.style.display = 'none';
+
+                // Show price range display
+                priceDisplayRangeContainer.style.display = 'block';
             } else {
                 priceInputContainer.style.display = 'none';
                 customPriceInput.required = false;
 
                 // Show price display
                 priceDisplayContainer.style.display = 'block';
+
+                // Hide price range display
+                priceDisplayRangeContainer.style.display = 'none';
             }
         });
     });
+
+
 
     document.addEventListener('DOMContentLoaded', function () {
         const modal = document.getElementById('declineRequestModal');
