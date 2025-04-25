@@ -128,23 +128,208 @@ require_once(__DIR__ . "/review_report_modal.php");
                 font-size: 24;
                 width: 30%;
             }
-            
-            .review-title {
-                text-align:center;
-                color: white;
-                background-color: #82689A;
-                border-radius: 5px;
-                max-width: fit-content;
-                margin-bottom: 1%;
-                padding: 0.25vw
+
+            /* Center container with responsive padding */
+            .center-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 40px;
             }
 
-            .hovercard {
-                margin-bottom: 1%;
-                margin-left: 1%;
-                margin-right: 1%;
+            /* Medium screens */
+            @media (min-width: 768px) {
+                .center-container {
+                    padding: 80px;
+                }
+            }
+
+            /* Large screens */
+            @media (min-width: 992px) {
+                .center-container {
+                    padding: 100px;
+                }
+            }
+
+            /* Extra large screens */
+            @media (min-width: 1400px) {
+                .center-container {
+                    max-width: 1320px;
+                    padding: 100px;
+                }
+            }
+
+            /* Small screens */
+            @media (max-width: 576px) {
+                .center-container {
+                    padding: 40px;
+                }
+            }
+            
+             /* Reviews Section */
+            .reviews-section {
+                margin-bottom: 30px;
+            }
+
+            .reviews-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+
+            .sort-options {
+                display: flex;
+                gap: 10px;
+            }
+
+            .sort-btn {
+                background-color: #f0f0f0;
+                border: 1px solid #ddd;
+                padding: 5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+                text-decoration: none;
+                color: #333;
+            }
+
+            .sort-btn.active {
+                background-color: #e0d8f3;
                 border-color: #82689A;
-                border-radius: 5%;
+                color: #49375a;
+            }
+
+            .review-item {
+                padding: 20px;
+                border: 1px solid #e0d8f3;
+                border-radius: 12px;
+                background-color: #fcfbfe;
+                margin-bottom: 15px;
+                box-shadow: 0 2px 4px rgba(130, 104, 154, 0.1);
+                transition: box-shadow 0.2s ease;
+            }
+
+            .review-item:hover {
+                box-shadow: 0 4px 10px rgba(130, 104, 154, 0.15);
+            }
+
+            .review-header {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
+
+            .reviewer-info {
+                font-weight: bold;
+                color: #4a3b5c;
+            }
+
+            .review-rating {
+                color: #82689A;
+            }
+
+            .review-content {
+                color: #666;
+                margin: 10px 0;
+            }
+
+            .review-date {
+                color: #999;
+                font-size: 0.9em;
+                text-align: right;
+            }
+
+            .service-reviewed-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 15px;
+                border-bottom: 1px solid #e0d8f3;
+                padding-bottom: 10px;
+            }
+
+            .service-reviewed-header h4 {
+                color: #49375a;
+                margin: 0;
+                font-size: 1.2rem;
+                font-weight: 600;
+            }
+
+            .review-actions {
+                display: flex;
+                gap: 10px;
+            }
+
+            .flag-review-btn {
+                color: #dc3545;
+                border-color: #dc3545;
+                padding: 0.25rem 0.5rem;
+                font-size: 0.875rem;
+            }
+
+            .flag-review-btn:hover {
+                background-color: #dc3545;
+                color: white;
+            }
+
+            .insight-request-btn {
+                color: #82689A;
+                border-color: #82689A;
+                padding: 0.25rem 0.5rem;
+                font-size: 0.875rem;
+            }
+
+            .insight-request-btn:hover {
+                background-color: #82689A;
+                color: white;
+            }
+
+            .btn-outline-purple {
+                color: #82689A;
+                border-color: #82689A;
+            }
+
+            .btn-outline-purple:hover {
+                background-color: #82689A;
+                color: white;
+            }
+
+            .pagination-container {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+            }
+
+            .pagination {
+                display: flex;
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .pagination li {
+                margin: 0 5px;
+            }
+
+            .pagination a {
+                display: block;
+                padding: 5px 10px;
+                background-color: #f0f0f0;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                text-decoration: none;
+                color: #333;
+                transition: background-color 0.3s;
+            }
+
+            .pagination a:hover {
+                background-color: #e0d8f3;
+            }
+
+            .pagination a.active {
+                background-color: #82689A;
+                color: white;
+                border-color: #70578c;
             }
         </style>
     </head>
@@ -193,24 +378,23 @@ require_once(__DIR__ . "/review_report_modal.php");
                         <?php 
                         if($service['min_price']==NULL){ ?>
                             <h3 class="price"> <?php echo "€".$service['max_price']; ?> </h3>
-                        <?php }else{ ?>
+                        <?php } else { ?>
                             <h3 class="price"> <?php echo "€".$service['min_price']." - €".$service['max_price']; ?></h3>
                         <?php }
                         ?>
                     </div>
                     <div class="service_request">
                         <?php if($_SESSION['user_type'] == 'customer') { 
-                            if($service['min_price']==NULL){?>
-                                <button type="button" class="btn service-request-btn p-0" data-bs-toggle="modal" data-bs-target="#serviceRequestModal"
-                                    data-price-final="<?php echo $service['max_price']?>" data-service-id="<?php echo $service_id?>">
-                                    Request Service
-                                </button>
-                            <?php } else { ?>
-                                <button type="button" class="btn p-0" data-bs-toggle="modal" data-bs-target="#serviceRequestModal"
-                                    data-price-final="0" data-service-id="<?php echo $service_id?>">
-                                    Request Service
-                                </button>
-                            <?php } ?>
+                            if($service['min_price'] == NULL){
+                                $min_price = '0';
+                            } else {
+                                $min_price = $service['min_price'];
+                            }?>
+                            <button type="button" class="btn service-request-btn p-0" data-bs-toggle="modal" data-bs-target="#serviceRequestModal"
+                                data-price-min="<?php echo $min_price ?>" data-price-max="<?php echo $service['max_price']?>" 
+                                data-service-id="<?php echo $service['id']?>" >
+                                Request Service
+                            </button>
                         <?php } ?>
                     </div>
                 </div>
@@ -227,107 +411,138 @@ require_once(__DIR__ . "/review_report_modal.php");
             </div>
         </div>
         <br>
-        <div class="row g-0 justify-content-center">
-            <div class="review-title">
-                <h2> REVIEWS </h2>
-            </div>
-        </div>
-        <div class="reviews_containter">
-        <?php
-        //RETRIEVE REVIEWS FROM REVIEWS TABLE
-        $sql = "SELECT * FROM reviews WHERE service_id={$service_id}";
-        $result = DatabaseHandler::make_select_query($sql);
-        if($result == NULL){ ?>
-            <h3 style="text-align: center;"> NO REVIEWS </h3>
-        <?php } else{
-            $review = $result[0];
-            $i=0;
-            while($i<count($result)-3){?>
-            <div class=" row g-0 card-group justify-content-center">
-                <div class="card hovercard text-center">
-                    <div class="card-body">
-                        <h3 class="card-title"><?php echo ServiceDetails::getReviewer($review['reviewer_id'])?></h3>
-                        <button type="button" class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#reviewReportModal"
-                            data-review-id="<?php echo $review['id'] ?>" data-reported-id="<?php echo $review['reviewer_id'] ?>" 
-                            data-review-content="<?php echo $review['text']?>" data-service-id="<?php echo $review['service_id']?>" style="float: right;">
-                            <i class="bi bi-flag" title="Report this message" style="color:red;"></i>
-                        </button>
-                        <p class="card-text"><?php echo $review['text'] ?></p>
-                        <?php if ($_SESSION['user_type'] == 'customer'){?>
-                        <button type="button" class="btn p-0" data-bs-toggle="modal" data-bs-target="#insightRequestModal"
-                            data-receiver-id="<?php echo $review['reviewer_id']?>" data-service-id="<?php echo $service_id?>" style="background-color: #82689A; border-width: 2%; border-color: #82689A; color: white;">
-                            Request Insight
-                        </button>
-                        <?php } ?>
-                    </div>
-                </div>
-                <?php $i++; 
-                $review=next($result);?>
-                <div class="card hovercard text-center">
-                    <div class="card-body">
-                        <h3 class="card-title"><?php echo ServiceDetails::getReviewer($review['reviewer_id'])?></h3>
-                        <button type="button" class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#reviewReportModal"
-                            data-review-id="<?php echo $review['id']; ?>" data-reported-id="<?php echo $review['reviewer_id']; ?>" 
-                            data-review-content="<?php echo $review['text']?>" data-service-id="<?php echo $review['service_id']?>" style="float: right;">
-                            <i class="bi bi-flag" title="Report this message" style="color:red;"></i>
-                        </button>
-                        <p class="card-text"><?php echo $review['text'] ?></p>
-                        <?php if ($_SESSION['user_type'] == 'customer'){?>
-                        <button type="button" class="btn p-0" data-bs-toggle="modal" data-bs-target="#insightRequestModal"
-                            data-receiver-id="<?php echo $review['reviewer_id']?>" data-service-id="<?php echo $service_id?>" style="background-color: #82689A; border-width: 2%; border-color: #82689A; color: white;">
-                            Request Insight
-                        </button>
-                        <?php } ?>
-                    </div>
-                </div>
-                <?php $i++; 
-                $review=next($result);
-                ?>
-                <div class="card hovercard text-center">
-                    <div class="card-body">
-                        <h3 class="card-title"><?php echo ServiceDetails::getReviewer($review['reviewer_id'])?></h3>
-                        <button type="button" class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#reviewReportModal"
-                            data-review-id="<?php echo $review['id']; ?>" data-reported-id="<?php echo $review['reviewer_id']; ?>" 
-                            data-review-content="<?php echo $review['text']?>" data-service-id="<?php echo $review['service_id']?>" style="float: right;">
-                            <i class="bi bi-flag" title="Report this message" style="color:red;"></i>
-                        </button>
-                        <p class="card-text"><?php echo $review['text'] ?></p>
-                        <?php if ($_SESSION['user_type'] == 'customer'){?>
-                        <button type="button" class="btn p-0" data-bs-toggle="modal" data-bs-target="#insightRequestModal"
-                            data-receiver-id="<?php echo $review['reviewer_id']?>" data-service-id="<?php echo $service_id?>" style="background-color: #82689A; border-width: 2%; border-color: #82689A; color: white;">
-                            Request Insight
-                        </button>
-                        <?php } ?>
-                    </div>
-                </div>
-                <?php $i++; 
-                $review=next($result);?>
-            </div>
-            <?php } ?>
-            <div class=" row g-0 card-group justify-content-center">
-                <?php while($i<count($result)){ ?>
-                <div class="card hovercard text-center">
-                    <div class="card-body">
-                        <h3 class="card-title"><?php echo ServiceDetails::getReviewer($review['reviewer_id'])?></h3>
-                        <button type="button" class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#reviewReportModal"
-                            data-review-id="<?php echo $review['id']; ?>" data-reported-id="<?php echo $review['reviewer_id']; ?>" 
-                            data-review-content="<?php echo $review['text']?>" data-service-id="<?php echo $review['service_id']?>" style="float: right;">
-                            <i class="bi bi-flag" title="Report this message" style="color:red;"></i>
-                        </button>
-                        <p class="card-text"><?php echo $review['text'] ?></p>
-                        <?php if ($_SESSION['user_type'] == 'customer'){?>
-                        <button type="button" class="btn p-0" data-bs-toggle="modal" data-bs-target="#insightRequestModal"
-                            data-receiver-id="<?php echo $review['reviewer_id']?>" data-service-id="<?php echo $service_id?>" style="background-color: #82689A; border-width: 2%; border-color: #82689A; color: white;">
-                            Request Insight
-                        </button>
-                        <?php } ?>
-                    </div>
-                </div>
-                <?php $i++; 
-                $review=next($result);}?>
-            </div>
-            <?php } ?>
-        </div>
 
+        <!-- Reviews -->
+         <?php 
+            $reviews_per_page = 5;
+            $review_page = isset($_GET['review_page']) ? (int) $_GET['review_page'] : 1;
+            $review_offset = ($review_page - 1) * $reviews_per_page;
+
+            $sql="SELECT * FROM reviews WHERE service_id=$service_id";
+            $num_reviews = count(DatabaseHandler::make_select_query($sql));
+            $total_review_pages = ceil($num_reviews / $reviews_per_page);
+
+            $sort_by = isset($_GET['sort']) ? $_GET['sort'] : 'newest';
+
+            if($num_reviews > 0){
+                if ($sort_by == "newest"){
+                    $sql.=" ORDER BY created_at DESC";
+                } else if ($sort_by == "highest"){
+                    $sql.=" ORDER BY rating DESC";
+                } else if ($sort_by == "lowest"){
+                    $sql.=" ORDER BY rating ASC";
+                }
+                $sql.=" LIMIT $review_offset, $reviews_per_page";
+                $reviews = DatabaseHandler::make_select_query($sql);
+            }
+         ?>
+
+        <div class="center-container">
+            <div class="reviews-section">
+                <div class="reviews-header">
+                    <h2> REVIEWS </h2>
+
+                    <?php if ($num_reviews > 0): ?>
+                        <div class="sort-options">
+                            <a href="?service_id=<?php echo $service_id; ?>&sort=newest"
+                                class="sort-btn <?php echo $sort_by === 'newest' ? 'active' : ''; ?>">
+                                Newest
+                            </a>
+                            <a href="?service_id=<?php echo $service_id; ?>&sort=highest"
+                                class="sort-btn <?php echo $sort_by === 'highest' ? 'active' : ''; ?>">
+                                Highest Rating
+                            </a>
+                            <a href="?service_id=<?php echo $service_id; ?>&sort=lowest"
+                                class="sort-btn <?php echo $sort_by === 'lowest' ? 'active' : ''; ?>">
+                                Lowest Rating
+                            </a>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <?php if($reviews && count($reviews) > 0){ 
+                    foreach ($reviews as $review){ ?>
+                        <div class="review-item">
+                            <div class="service-reviewed-header">
+                                <div class="reviewer-info">
+                                    <?php echo htmlspecialchars(ServiceDetails::getReviewer($review['reviewer_id'])); ?>
+                                </div>
+
+                                <div class="review-actions">
+                                    <!-- Flag button for inappropriate reviews -->
+                                    <button type="button" class="btn btn-sm btn-outline-danger flag-review-btn"
+                                        data-bs-toggle="modal" data-bs-target="#reviewReportModal"
+                                        data-review-id="<?php echo $review['id']; ?>" data-reported-id="<?php echo $review['reviewer_id']; ?>"
+                                        data-service-id="<?php echo $service_id; ?>" data-review-content="<?php echo $review['text']; ?>"> 
+                                        <i class="bi bi-flag"></i> Flag
+                                    </button>
+
+                                    <!-- Insight Request button for customers only -->
+                                    <?php if ($_SESSION['user_type'] === 'customer'): ?>
+                                        <button type="button" class="btn btn-sm btn-outline-purple insight-request-btn"
+                                            data-bs-toggle="modal" data-bs-target="#insightRequestModal"
+                                            data-service-id="<?php echo $review['service_id']; ?>"
+                                            data-receiver-id="<?php echo $review['reviewer_id'];; ?>">
+                                            <i class="bi bi-lightbulb"></i> Request Insight
+                                        </button>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+
+                            <div class="review-header">
+                                <div class="review-rating">
+                                    <?php
+                                    $rating = $review['rating'];
+                                    for ($i = 1; $i <= 5; $i++) {
+                                        if ($i <= $rating) {
+                                            echo '<i class="bi bi-star-fill"></i>';
+                                        } elseif ($i - 0.5 <= $rating) {
+                                            echo '<i class="bi bi-star-half"></i>';
+                                        } else {
+                                            echo '<i class="bi bi-star"></i>';
+                                        }
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="review-content">
+                                <?php echo htmlspecialchars($review['text']); ?>
+                            </div>
+                            <div class="review-date">
+                                <em>Reviewed on: <?php echo date("F j, Y", strtotime($review['created_at'])); ?></em>
+                            </div>
+                        </div>
+                    <?php } ?>
+
+                    <!-- Pagination for Reviews -->
+                    <?php if ($total_review_pages > 1): ?>
+                        <div class="pagination-container">
+                            <ul class="pagination">
+                                <?php if ($review_page > 1): ?>
+                                    <li><a
+                                            href="?service_id=<?php echo $service_id; ?>&review_page=<?php echo $review_page - 1; ?>&sort=<?php echo $sort_by; ?>">&laquo;
+                                            Previous</a></li>
+                                <?php endif; ?>
+
+                                <?php for ($i = 1; $i <= $total_review_pages; $i++): ?>
+                                    <li>
+                                        <a href="?service_id=<?php echo $service_id; ?>&review_page=<?php echo $i; ?>&sort=<?php echo $sort_by; ?>"
+                                            <?php echo $i === $review_page ? 'class="active"' : ''; ?>>
+                                            <?php echo $i; ?>
+                                        </a>
+                                    </li>
+                                <?php endfor; ?>
+
+                                <?php if ($review_page < $total_review_pages): ?>
+                                    <li><a
+                                            href="?service_id=<?php echo $service_id; ?>&review_page=<?php echo $review_page + 1; ?>&sort=<?php echo $sort_by; ?>">Next
+                                            &raquo;</a></li>
+                                <?php endif; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>               
+                <?php } ?>
+            </div>
+        </div>
     </body>
 </html>
