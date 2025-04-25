@@ -7,13 +7,6 @@
  */
 
 class ServiceDetails{
-    public static function getServicePrice($min_price, $max_price){
-        if($min_price===null){
-            return "€".$max_price;
-        }else{
-            return "€".$min_price." - €".$max_price;
-        }
-    }
 
     public static function getRating($rating){
         if($rating===null){
@@ -30,4 +23,5 @@ class ServiceDetails{
         $reviewer = DatabaseHandler::make_select_query($sql);
         return $reviewer[0]['first_name']." ".$reviewer[0]['last_name'];
     }
+
 }
