@@ -24,11 +24,15 @@
                                             <input type="hidden" name="conversation_id"
                                                 value="<?php echo $conversation['conversation_id']; ?>">
 
-                                            <button type="submit" name="action" value="accept" class="accept-btn">Accept</button>
-                                            <button type="submit" name="action" value="decline" class="decline-btn">Decline</button>
+                                            <button type="submit" name="action" value="accept" class="accept-btn">ACCEPT</button>
+                                            <button type="submit" name="action" value="decline" class="decline-btn">DECLINE</button>
                                         </form>
                                     </div>
-
+                                <?php elseif ($conversation['latest_message']['status'] === 'pending' && $conversation['latest_message']['sender_id'] === $_SESSION['user_id']): ?>
+                                    <div class="user-action-container">
+                                        <span><?php echo $conversation['other_user']; ?></span>
+                                        <span class="pending-badge badge me-2">REQUEST PENDING</span>
+                                    </div>
 
                                 <?php else: ?>
                                     <div
@@ -64,6 +68,16 @@
         margin-top: 4px;
     }
 
+    .pending-badge {
+        background-color: #e69419;
+        padding: 7px 10px;
+        font-size: 0.8rem;
+        border: none;
+        border-radius: 4px;
+        color: white;
+        margin-top: 8px;
+        font-weight: normal;
+    }
 
     .user-action-container {
         display: flex;
