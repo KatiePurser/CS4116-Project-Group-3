@@ -51,6 +51,15 @@
             }
 
         }
+
+        public static function read($csv){
+            $file = fopen($csv, 'r');
+            while (!feof($file) ) {
+                $line[] = fgetcsv($file, 1024);
+            }
+            fclose($file);
+            return $line;
+        }
     }
 
 ?>

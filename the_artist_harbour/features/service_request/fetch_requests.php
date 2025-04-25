@@ -4,7 +4,7 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
 ?>
 
 <?php if (!$requests || count($requests) === 0): ?>
-    <p>No service requests found.</p>
+    <p class="no-requests-message">You Have No Requests Currently</p>
 <?php else: ?>
     <div class="requests-container">
         <div class="request-container">
@@ -131,7 +131,7 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
     }
 
     .pending-badge {
-        background-color: rgb(230, 182, 25);
+        background-color: #e69419;
     }
 
     .completed-badge {
@@ -219,6 +219,22 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
     .review-btn:hover,
     .reviewed-btn:hover {
         background-color: rgb(88, 66, 109);
+    }
+
+    .no-requests-message {
+        text-align: center;
+        font-size: 1.5rem;
+        color: #49375a;
+        margin-top: 50px;
+        font-weight: 600;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #E2D4F0;
+        padding: 20px 40px;
+        border-radius: 15px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     }
 </style>
 

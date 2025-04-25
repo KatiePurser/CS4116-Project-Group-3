@@ -1,4 +1,4 @@
-<p?php
+<?php
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
@@ -14,259 +14,380 @@ if ($_SESSION['user_type'] != 'customer') {
 
 <!DOCTYPE html>
 <html>
+    <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Search Results</title>
         <link rel="stylesheet" href="../../public/css/styles.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-        <!-- <link rel="stylesheet" href="search.css"> -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script src="./../service/js/handle_service_request.js"></script>
+        
         <style>
-            div {
-                padding: 0 !important;
+            
+            body {
+                font-family: sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #fff;
+                overflow-x: hidden;
+                padding-top: 73.6px;
             }
 
-            @media(max-width: 576px) {     /*small screen*/
-                .row {
-                    width: 100%;
-                    display: flex;
-                    align-content: center;
-                }
+            .filter-container {
+                background-color: #E2D4F0; 
+                text-align: center;
+                border-bottom: 2px dashed #82689A;
+            }
 
-                .keyword_desc {
-                    margin-left: 1vw;
-                }
+            .filter-title {
+                padding: 0.5%;
+                border: 2px dashed #82689A;
+                max-width: fit-content;
+                margin: auto;
+                margin-bottom: 0.5%;
+                margin-top: 0.5%;
+                border-radius: 5px;
+            }
 
-                .business-button{
-                    text-decoration: none;
-                    background-color: #E2D4F0;
-                    color: black;
-                    padding: 0.25vw;
-                    text-align: center;
-                    text-decoration: none;
-                    display: inline-block;
-                    border-radius: 0.25vw;
-                }
-                
-                .card_button {
-                    width: 90vw;
-                    padding-left: 1vw;
-                    padding-right: 1vw;
-                    border: none;
-                    background-color: Transparent;
-                    align-content: center;
-                }
+            .tags-title {
+                font-size: 20px;
+                padding-top: 2vh;
+            }
 
-                .hovercard {
-                    width:100%;
-                    height:100%;
-                    word-wrap: break-word;
-                    border-color: #82689A;
-                    border-radius: 1vw;
-                    border-width: 0.2vw;
-                }
+            .tags-container {
+                margin-left: 5%;
+                margin-right: 5%;
 
-                .card-title {
-                    display: block;
-                    word-wrap: break-word;
-                    max-width:100%;
-                }
+            }
 
-                .service_price {
-                    background-color: #82689A;
-                    border-radius: 0.5vw;
-                    max-width: fit-content;
-                    margin: auto;
-                    padding-left: 0.5vw;
-                    padding-right: 0.5vw;
-                }
+            .tag-label {
+                padding-left: 1vw;
+            }
 
-                .filter_buttons{
-                    background-color: #82689A;
-                    border-radius: 5px;
-                }
+            .filter_buttons {
+                background-color: #82689A;
+                color: white;
+                border: 1px solid #82689A;
+                border-radius: 5px;
+                margin-bottom: 2vh;
+            }
 
-                .image{
-                    height: 30vh;
-                    object-fit: cover;
-                    
+            .center-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 40px;
+            }
+
+            /* Medium screens */
+            @media (min-width: 768px) {
+                .center-container {
+                    padding: 80px;
                 }
             }
 
-            @media(min-width: 576px) {  	/*wide screen*/
-                .row {
-                    width: 100%;
-                    display: flex;
-                    align-content: center;
-                }
-
-                .keyword_desc {
-                    margin-left: 1vw;
-                }
-
-                .business-button{
-                    text-decoration: none;
-                    background-color: #E2D4F0;
-                    color: black;
-                    padding: 0.25vw;
-                    text-align: center;
-                    text-decoration: none;
-                    display: inline-block;
-                    border-radius: 0.25vw;
-                }
-
-                .card-group{
-                    align-content: center;
-                    margin-bottom: 1vw;
-                }
-
-                .card_button {
-                    width: 24vw;
-                    border: none;
-                    background-color: Transparent;
-                }
-
-                .hovercard {
-                    width:100%;
-                    height:100%;
-                    word-wrap: break-word;
-                    border-color: #82689A;
-                    border-radius: 1vw;
-                    border-width: 0.2vw;
-                }
-
-                .card-title {
-                    display: block;
-                    word-wrap: break-word;
-                    max-width:100%;
-                }
-
-                .service_price {
-                    background-color: #82689A;
-                    border-radius: 0.5vw;
-                    max-width: fit-content;
-                    margin: auto;
-                    padding-left: 0.5vw;
-                    padding-right: 0.5vw;
-                }
-
-                .filter_buttons{
-                    background-color: #82689A;
-                    border-radius: 5px;
-                }
-
-                .image{
-                    height: 30vh;
-                    object-fit: cover;
-                    border-radius: 1vw;
+            /* Large screens */
+            @media (min-width: 992px) {
+                .center-container {
+                    padding: 100px;
                 }
             }
+
+            /* Extra large screens */
+            @media (min-width: 1400px) {
+                .center-container {
+                    max-width: 1320px;
+                    padding: 100px;
+                }
+            }
+
+            /* Small screens */
+            @media (max-width: 576px) {
+                .center-container {
+                    padding: 40px;
+                }
+            }
+
+            .services-section {
+                margin-bottom: 30px;
+            }
+
+            .service-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 20px;
+            }
+
+            .service-item {
+                border: 1px solid #e0d8f3;
+                border-radius: 12px;
+                background-color: #fdfcff;
+                overflow: hidden;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .service-item:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(130, 104, 154, 0.15);
+            }
+
+            .service-image {
+                height: 180px;
+                background-color: #f0f0f0;
+                overflow: hidden;
+            }
+
+            .service-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .service-details {
+                padding: 15px;
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .service-details h4 {
+                color: #4a3b5c;
+                margin-top: 0;
+                margin-bottom: 10px;
+            }
+
+            .service-details p {
+                color: #777;
+                margin-bottom: 15px;
+                flex-grow: 1;
+            }
+
+            .service-rating {
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .service-rating p {
+                padding-left: 7px;
+            }
+
+            .service-meta {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: auto;
+            }
+
+            .service-price {
+                font-weight: bold;
+                color: #4a2c5d;
+            }
+
+            .service-tags {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+                margin-bottom: 15px;
+            }
+
+            .tag {
+                background-color: #e0d8f3;
+                color: #49375a;
+                padding: 3px 8px;
+                border-radius: 20px;
+                font-size: 0.8rem;
+            }
+
+            .request-btn {
+                background-color: #82689A;
+                color: white;
+                border: none;
+                padding: 8px 15px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 0.9em;
+                transition: background-color 0.3s ease;
+            }
+
+            .request-btn:hover {
+                background-color: #70578c;
+                color: white;
+            }
+
+            .service-card-link {
+                display: block;
+                text-decoration: none;
+                color: inherit;
+            }
+
+            .service-card-link:hover {
+                text-decoration: none;
+                color: inherit;
+            }
+
+            @media (max-width: 576px) {
+                .service-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .content-wrapper {
+                    padding: 15px;
+                }
+            }
+
+            .pagination-container {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+            }
+
+            .pagination {
+                display: flex;
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .pagination li {
+                margin: 0 5px;
+            }
+
+            .pagination a {
+                display: block;
+                padding: 5px 10px;
+                background-color: #f0f0f0;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                text-decoration: none;
+                color: #333;
+                transition: background-color 0.3s;
+            }
+
+            .pagination a:hover {
+                background-color: #e0d8f3;
+            }
+
+            .pagination a.active {
+                background-color: #82689A;
+                color: white;
+                border-color: #70578c;
+            }
+
         </style>
     </head>
-    <body style="padding-top: 73.6px;">
+
+
+    <body>
 
         <?php 
-        require_once __DIR__ . '/../../utilities/InputValidationHelper.php';
-        try{
-            if(!isset($_GET['search'])){
-                $keyword=$_POST['search'];
-            }else{
-                $keyword=$_GET["search"];
+            require_once __DIR__ . '/../../utilities/InputValidationHelper.php';
+            require_once __DIR__ . '/../service/service_request_modal.php';
+
+            try{
+                if(!isset($_GET['search'])){
+                    $keyword=$_POST['search'];
+                }else{
+                    $keyword=$_GET["search"];
+                }
+                $search = InputValidationHelper::validateSearch("Search", $keyword, 0, 30);
+            }catch (InvalidArgumentException $exception) {
+                $_SESSION['error'] = $exception->getMessage();
+                header("Location: ../../public/home_page.php");
+                exit();
             }
-            $search = InputValidationHelper::validateSearch("Search", $keyword, 0, 30);
-        }catch (InvalidArgumentException $exception) {
-            $_SESSION['error'] = $exception->getMessage();
-            header("Location: ../../public/home_page.php");
-            exit();
-        }
-        
-        if(isset($_POST['clear'])){
-            unset($_GET['min_price']);
-            unset($_GET['max_price']);
-            unset($_GET['rating']);
-            unset($_GET['filter']);
-            unset($_GET['tags']);
-        }
+            
+            //check whether the customer requested to clear selections
+            if(isset($_POST['clear'])){
+                unset($_GET['min_price']);
+                unset($_GET['max_price']);
+                unset($_GET['rating']);
+                unset($_GET['filter']);
+                unset($_GET['tags']);
+            }
         ?>
 
-        <div class="container-fluid">
-            <div class="row g-0">
-                <div class="col-12">
-                    <?php include __DIR__ . '/../../templates/header.php'; ?>
-                </div>
-            </div>
+        <div>
+            <?php include __DIR__ . '/../../templates/header.php'; ?>
+        </div>
+
         <?php 
             require_once(__DIR__ . "/../../utilities/databaseHandler.php");
             require_once(__DIR__ . "/../service/serviceDetails.php"); 
             require_once(__DIR__ . "/../../utilities/imageHandler.php");
             require_once(__DIR__ . "/searchMethods.php");
 
-            function read($csv){
-                $file = fopen($csv, 'r');
-                while (!feof($file) ) {
-                    $line[] = fgetcsv($file, 1024);
-                }
-                fclose($file);
-                return $line;
-            }
 
             $csv = __DIR__ . "/../../utilities/tags.csv";
-            $tags = read($csv);
+            $tags = SearchMethods::read($csv);
             ?>
 
-            <div class="row g-0" style="background-color: #E2D4F0; text-align: center;">
-                <h3>Filter Services</h3>
+            <!-- form for applying filters -->
+            <div class="row g-0 filter-container" style="background-color: #E2D4F0; text-align: center;">
+                <h3 class="filter-title">Filter Services</h3>
                 <form action="search_page.php" method="post">
                     <input type="hidden" id="search" name="search" value=<?php echo $keyword?>>
                 </form>
                 <form action="search_page.php" method="get">
                     <input type="hidden" id="search" name="search" value=<?php echo $keyword?>>
+                    <!-- apply a price range -->
                     <label for="min_price">Minimum Price:</label>
                     <input type="number" name="min_price" id="min_price" value="<?php if (isset($_GET['min_price'])) echo "{$_GET['min_price']}";?>">
                     <label for="max_price">Maximum Price:</label>
                     <input type="number" name="max_price" id="max_price" value="<?php if (isset($_GET['max_price'])) echo "{$_GET['max_price']}";?>">
+                    <!-- apply a desired rating -->
                     <select name="rating" id="rating">
-                        <option value="" disabled <?php if (!isset($_GET['rating'])) echo "selected";?> hidden>Filter By Reviews</option>
+                        <option value="" disabled <?php if ((!isset($_GET['rating'])) || ((isset($_GET['rating']) && $_GET['rating']=="6"))) echo "selected";?> hidden>Filter By Reviews</option>
                         <option value="0" <?php if (isset($_GET['rating']) && $_GET['rating']=="0") echo "selected";?>>0 Stars</option>
                         <option value="1" <?php if (isset($_GET['rating']) && $_GET['rating']=="1") echo "selected";?>>1 Star</option>
                         <option value="2" <?php if (isset($_GET['rating']) && $_GET['rating']=="2") echo "selected";?>>2 Stars</option>
                         <option value="3" <?php if (isset($_GET['rating']) && $_GET['rating']=="3") echo "selected";?>>3 Stars</option>
                         <option value="4" <?php if (isset($_GET['rating']) && $_GET['rating']=="4") echo "selected";?>>4 Stars</option>
                         <option value="5" <?php if (isset($_GET['rating']) && $_GET['rating']=="5") echo "selected";?>>5 Stars</option>
+                        <option value="6">Remove Selection</option>
                     </select>
+                    <!-- apply an ordering method -->
                     <select name="filter" id="filter">
-                        <option value="" disabled <?php if (!isset($_GET['filter'])) echo "selected";?> hidden>Sort Services</option>
+                        <option value="" disabled <?php if ((!isset($_GET['filter'])) || ((isset($_GET['filter']) && $_GET['filter']=="5"))) echo "selected";?> hidden>Sort Services</option>
                         <option value="1" <?php if (isset($_GET['filter']) && $_GET['filter']=="1") echo "selected";?>>By Reviews (High to Low)</option>
                         <option value="2" <?php if (isset($_GET['filter']) && $_GET['filter']=="2") echo "selected";?>>By Reviews (Low to High)</option>
                         <option value="3" <?php if (isset($_GET['filter']) && $_GET['filter']=="3") echo "selected";?>>By Price (High to Low)</option>
                         <option value="4" <?php if (isset($_GET['filter']) && $_GET['filter']=="4") echo "selected";?>>By Price (Low to High)</option>
+                        <option value="5">Remove Selection</option>
                     </select><br>
-                    <label for="tags">Filter by Tags:</label><br>
-                    <div class="dropdown">
-                        <div id="tags" class="tags_div">
-                            <?php 
-                            $i=0;
-                            $j=0;
-                            if(isset($_GET['tags'])){
-                                $tags_array = array_keys($_GET['tags']);
-                                $count=count($tags_array);
-                            }
-                            while ($i < count($tags)) { 
-                                $tag = $tags[$i][0];?>
-                                <label class="tag_label"><input class="tag_checkbox" type="checkbox" name="tags[<?php echo $i ?>]" value="<?php echo $tag ?>" 
-                                    <?php if(isset($_GET['tags'])){
-                                        if($j<$count){
-                                            if($tags_array[$j]==$i){ 
-                                                echo " checked ";
-                                                $j++;
-                                            }
+                    <!-- checkboxes for applying tags -->
+                    <label class="tags-title" for="tags">Filter by Tags:</label><br>
+                    <div id="tags" class="tags-container">
+                        <?php 
+                        $i=0;
+                        $j=0;
+                        if(isset($_GET['tags'])){
+                            $tags_array = array_keys($_GET['tags']);
+                            $count=count($tags_array);
+                        }
+                        while ($i < count($tags)) { 
+                            $tag = $tags[$i][0];?>
+                            <label class="tag-label">
+                                <input class="tag-checkbox" type="checkbox" name="tags[<?php echo $i ?>]" value="<?php echo $tag ?>" 
+                                <?php if(isset($_GET['tags'])){
+                                    if($j<$count){
+                                        if($tags_array[$j]==$i){ 
+                                            echo " checked ";
+                                            $j++;
                                         }
-                                    }?>><?php echo $tag ?></label>
-                                <?php $i++;
-                            }
-                            ?>
-                        </div>
+                                    }
+                                }?>><?php echo $tag ?>
+                            </label>
+                            <?php $i++;
+                        }
+                        ?>
                     </div>
                     <br>
                     <input class="filter_buttons" type="submit" value="Set Filters">
@@ -274,6 +395,7 @@ if ($_SESSION['user_type'] != 'customer') {
                 <br>
                 <form action="search_page.php" method="post">
                     <input type="hidden" id="search" name="search" value=<?php echo $keyword?>>
+                    <input type="hidden" id="page" name="page" value="1">
                     <input class="filter_buttons" type="submit" name="clear" value="Clear Filters">
                 </form>
             </div>
@@ -283,256 +405,213 @@ if ($_SESSION['user_type'] != 'customer') {
 
             $sql = "SELECT * FROM services WHERE name LIKE '%{$keyword}%'";
             $description = "Keyword=\"{$keyword}\"; ";
+
+            //add a price min, max or range to the query
             if(isset($_GET['min_price'])){               
                 if($_GET['min_price']!="" && $_GET['max_price']!=""){
                     //Any services within the given range
                     $min_price = $_GET['min_price'];
                     $max_price = $_GET['max_price'];
                     $sql.=" AND (min_price>=$min_price OR min_price IS NULL) AND max_price<=$max_price AND max_price>=$min_price";
-                    $description.= "Minimum Price=€{$min_price}; Maximum Price=€{$max_price};  ";
                 }else if($_GET['min_price']!=""){
                     //Any services more than given figure
                     $min_price = $_GET['min_price'];
                     $sql.=" AND (min_price>=$min_price OR min_price IS NULL) AND max_price>= $min_price";
-                    $description.= "Minimum Price=€{$min_price}; ";
                 }else if($_GET['max_price']!=""){
                     //Any services less than given figure
                     $max_price = $_GET['max_price'];
                     $sql.=" AND max_price<=$max_price";
-                    $description.= "Maximum Price=€{$max_price}; ";
                 }
             }
             
+            //add a rating range to the query
             if(isset($_GET['rating'])){
                 if($_GET['rating']==0){
                     //0 Stars
                     $sql.=" AND (reviews>=0.0 AND reviews<1.0)";
-                    $description.= "Rating=0 Stars; ";
                 }else if($_GET['rating']==1){
                     //1 Star
                     $sql.=" AND (reviews>=1.0 AND reviews<2.0)";
-                    $description.= "Rating=1 Star; ";
                 }else if($_GET['rating']==2){
                     //2 Stars
                     $sql.=" AND (reviews>=2.0 AND reviews<3.0)";
-                    $description.= "Rating=2 Stars; ";
                 }else if($_GET['rating']==3){
                     //3 Stars
                     $sql.=" AND (reviews>=3.0 AND reviews<4.0)";
-                    $description.= "Rating=3 Stars; ";
                 }else if($_GET['rating']==4){
                     //4 Stars
                     $sql.=" AND (reviews>=4.0 AND reviews<5.0)";
-                    $description.= "Rating=4 Stars; ";
                 }else if($_GET['rating']==5){
                     //5 Stars
                     $sql.=" AND reviews=5.0";
-                    $description.= "Rating=5 Stars; ";
                 }
             }
 
+            //query for chosen tags
             $i=0;
             if(isset($_GET['tags'])){
-                $description.="Tags=";
+                $sql.=" AND (";
                 $tags_array = array_keys($_GET['tags']);
                 while($i<count($tags_array)){
                     $tag = $_GET['tags'][$tags_array[$i]];
-                    $sql.=" AND (tags LIKE '%,{$tag},%' OR tags LIKE '{$tag},%' OR tags LIKE '%,{$tag}' OR tags LIKE '{$tag}')";
+                    $sql.=" (tags LIKE '%,{$tag},%' OR tags LIKE '{$tag},%' OR tags LIKE '%,{$tag}' OR tags LIKE '{$tag}')";
+                    if($i<count($tags_array)-1){
+                        $sql.=" OR";
+                    }
                     $i++;
-                    $description.="{$tag} ";
                 }
-                $description.="; ";
+                $sql.=")";
             }
 
+            //applying a chosen ordering method to the query
             if(isset($_GET['filter'])){
                 if($_GET['filter']==1){
                     //By Reviews (High to Low)
                     $sql.=" ORDER BY reviews DESC;";
-                    $description.="Order By=Reviews(High to Low); ";
                 }else if($_GET['filter']==2){
                     //By Reviews (Low to High)
                     $sql.=" ORDER BY reviews ASC;";
-                    $description.="Order By=Reviews(Low to High); ";
                 }else if($_GET['filter']==3){
                     //By Price (High to Low)
                     $sql.=" ORDER BY max_price DESC;";
-                    $description.="Order By=Price(High to Low); ";
                 }else if($_GET['filter']==4){
                     //By Price (Low to High)
                     $sql.=" ORDER BY max_price ASC;";
-                    $description.="Order By=Price(Low to High); ";
                 }
-            }
+            } 
+            ?>
 
-
-            $result = DatabaseHandler::make_select_query($sql);
-            $i=0; 
-            $businesses = DatabaseHandler::make_select_query("SELECT id, display_name FROM businesses ");?>
             <div class="keyword_desc">
                 <p>Searching by keyword: <i><?php echo "\"".$keyword."\""?></i></p>
                 <br>
             </div>
-            <div class="justify-content-center">
-                <h1 style="text-align: center;"> SERVICES </h1>
-            </div> 
+
             <?php
-            if($result == NULL){
-                ?> <h3 style="text-align: center;">NO SERVICES MATCH THE KEYWORD</h3> <br><br><br> <?php
-            }else{ 
-                $service=$result[0];
-                while($i<count($result)-4){ ?>
-                    <div class="card-group justify-content-center row g-0">
-                        <div class="col-sm-3">
-                            <form class="card_form" action="../service/service.php" method="get">
-                                <button class="card_button" type="submit">
-                                    <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
-                                    <div class="card hovercard text-center">
-                                        <?php if (!empty($service['image'])){ ?>
-                                            <img src="../business/get_serviceImage.php?id=<?= $service['id'] ?>" class="card-img-top image" alt="Service Image">
-                                        <?php }else{ ?>
-                                            <img src="../../public/images/default-service.png" class="card-img-top image" alt="Default Image">
-                                        <?php } ?>
-                                        <div class="card-body">
-                                            <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                            <?php $url = "../business/profile.php?business_id=".$service['business_id'];
-                                            echo '<a class="business-button" href='.$url.'>'. searchMethods::getBusinessName($businesses, $service['business_id']).'</a>'; ?>
-                                            <p><?php if(isset($service['tags'])){
-                                                echo "Tags: ".searchMethods::formatTags($service['tags']);
-                                            }else{
-                                                echo "No tags";
-                                            }?></p>
-                                            <h4 class="card-subtitle service_price"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
-                                            <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
-                                            echo $rating;?></p>
+            // Set variables
+            $cards_per_page = 15;
+            $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+            $offset = ($page - 1) * $cards_per_page;
+
+            // Retrieve the necessary information from the DB
+            $numServices = count(DatabaseHandler::make_select_query($sql));
+
+            $sql.=" LIMIT $offset, $cards_per_page";
+
+            $services = DatabaseHandler::make_select_query($sql);
+
+            $total_service_pages = ceil($numServices / $cards_per_page);
+            
+            $businesses = DatabaseHandler::make_select_query("SELECT id, display_name FROM businesses ");
+            ?>
+
+            <div class="center-container">
+                <div class="services-section">
+                    <h1 style="text-align: center;"> SERVICES </h1>
+                    <?php
+                    if($services == NULL) {
+                        ?> <h3 style="text-align: center;">NO SERVICES MATCH THE KEYWORD</h3> <br><br><br> <?php
+                    } else { 
+                    ?>
+                    <div class="service-grid">
+                        <?php foreach ($services as $service){ ?>
+                        <a href="../service/service.php?service_id=<?= $service['id'] ?>" class="service-card-link">
+                            <div class="service-item">
+                                <div class="service-image">
+                                    <?php if (!empty($service['image'])){ ?>
+                                        <img src="../business/get_serviceImage.php?id=<?= $service['id'] ?>" alt="<?php echo htmlspecialchars($service['name']); ?>">
+                                    <?php }else{ ?>
+                                        <img src="../../public/images/default-service.png" alt="Default Service Image">
+                                    <?php } ?>
+                                </div>
+                                <div class="service-details">
+                                    <h4><?php echo htmlspecialchars($service['name']); ?></h4>
+                                    <p><?php echo htmlspecialchars(searchMethods::getBusinessName($businesses, $service['business_id'])); ?></p>
+                                    <?php if (!empty($service['tags'])){ ?>
+                                        <div class="service-tags">
+                                            <?php
+                                            $tags = explode(',', $service['tags']);
+                                            foreach ($tags as $tag){
+                                                if (trim($tag) !== ''){
+                                                    ?>
+                                                    <span class="tag"><?php echo htmlspecialchars(trim($tag)); ?></span>
+                                                    <?php
+                                                };
+                                            };
+                                            ?>
                                         </div>
+                                    <?php }; ?>
+                                    <div class="service-rating">
+                                        <?php
+                                        $rating = $service['reviews'];
+                                        for ($i = 1; $i <= 5; $i++) {
+                                            if ($i <= $rating) {
+                                                echo '<i class="bi bi-star-fill"></i>';
+                                            } elseif ($i - 0.5 <= $rating) {
+                                                echo '<i class="bi bi-star-half"></i>';
+                                            } else {
+                                                echo '<i class="bi bi-star"></i>';
+                                            }
+                                        }?>
+                                        <p> <?php echo ServiceDetails::getRating($service['reviews']) ?> </p>
                                     </div>
-                                </button>
-                            </form>
-                        </div>
-                        <?php $service = next($result); 
-                        $i++;?>
-                        <div class="col-sm-3">
-                            <form class="card_form" action="../service/service.php" method="get">
-                                <button class="card_button" type="submit">
-                                    <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
-                                    <div class="card hovercard text-center">
-                                        <?php if (!empty($service['image'])){ ?>
-                                            <img src="../business/get_serviceImage.php?id=<?= $service['id'] ?>" class="card-img-top image" alt="Service Image">
-                                        <?php }else{ ?>
-                                            <img src="../../public/images/default-service.png" class="card-img-top image" alt="Default Image">
-                                        <?php } ?>
-                                        <div class="card-body">
-                                            <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                            <?php $url = "../business/profile.php?business_id=".$service['business_id'];
-                                            echo '<a class="business-button" href='.$url.'>'. searchMethods::getBusinessName($businesses, $service['business_id']).'</a>'; ?>
-                                            <p><?php if(isset($service['tags'])){
-                                                echo "Tags: ".searchMethods::formatTags($service['tags']);
-                                            }else{
-                                                echo "No tags";
-                                            }?></p>
-                                            <h4 class="card-subtitle service_price"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
-                                            <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
-                                            echo $rating;?></p>
+                                    <div class="service-meta">
+                                        <div class="service-price">
+                                            <?php
+                                            if ($service['min_price'] !== null && $service['max_price'] !== null) {
+                                                echo '€' . htmlspecialchars($service['min_price']) . " - €" . htmlspecialchars($service['max_price']);
+                                            } elseif ($service['max_price'] !== null) {
+                                                echo '€' . htmlspecialchars($service['max_price']);
+                                            } else {
+                                                echo "Contact for price";
+                                            }
+                                            ?>
                                         </div>
-                                    </div>
-                                </button>
-                            </form>
-                        </div>
-                        <?php $service = next($result); 
-                        $i++;?>
-                        <div class="col-sm-3">
-                            <form class="card_form" action="../service/service.php" method="get">
-                                <button class="card_button" type="submit">
-                                    <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
-                                    <div class="card hovercard text-center">
-                                        <?php if (!empty($service['image'])){ ?>
-                                            <img src="../business/get_serviceImage.php?id=<?= $service['id'] ?>" class="card-img-top image" alt="Service Image">
-                                        <?php }else{ ?>
-                                            <img src="../../public/images/default-service.png" class="card-img-top image" alt="Default Image">
+                                        <?php if ($_SESSION['user_type'] != 'business'){ // Only show request button if not the owner 
+                                            if($service['min_price'] == NULL){
+                                                $min_price = '0';
+                                            } else {
+                                                $min_price = $service['min_price'];
+                                            }
+                                            $service_id = $service['id'];
+                                            $max_price = $service['max_price'];
+                                            ?>
+                                            <button type="button" class="btn request-btn p-0" data-bs-toggle="modal" data-bs-target="#serviceRequestModal"
+                                                data-price-min="<?php echo $min_price;?>" data-price-max="<?php echo $max_price;?>"
+                                                data-service-id="<?php echo $service_id?>" onclick="event.preventDefault(); event.stopPropagation();">
+                                                Request 
+                                            </button> 
                                         <?php } ?>
-                                        <div class="card-body">
-                                            <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                            <?php $url = "../business/profile.php?business_id=".$service['business_id'];
-                                            echo '<a class="business-button" href='.$url.'>'. searchMethods::getBusinessName($businesses, $service['business_id']).'</a>'; ?>
-                                            <p><?php if(isset($service['tags'])){
-                                                echo "Tags: ".searchMethods::formatTags($service['tags']);
-                                            }else{
-                                                echo "No tags";
-                                            }?></p>
-                                            <h4 class="card-subtitle service_price"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
-                                            <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
-                                            echo $rating;?></p>
-                                        </div>
                                     </div>
-                                </button>
-                            </form>
-                        </div>
-                        <?php $service = next($result); 
-                        $i++;?>
-                        <div class="col-sm-3">
-                            <form class="card_form" action="../service/service.php" method="get">
-                                <button class="card_button" type="submit">
-                                    <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
-                                    <div class="card hovercard text-center">
-                                        <?php if (!empty($service['image'])){ ?>
-                                            <img src="../business/get_serviceImage.php?id=<?= $service['id'] ?>" class="card-img-top image" alt="Service Image">
-                                        <?php }else{ ?>
-                                            <img src="../../public/images/default-service.png" class="card-img-top image" alt="Default Image">
-                                        <?php } ?>
-                                        <div class="card-body">
-                                            <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                            <?php $url = "../business/profile.php?business_id=".$service['business_id'];
-                                            echo '<a class="business-button" href='.$url.'>'. searchMethods::getBusinessName($businesses, $service['business_id']).'</a>'; ?>
-                                            <p><?php if(isset($service['tags'])){
-                                                echo "Tags: ".searchMethods::formatTags($service['tags']);
-                                            }else{
-                                                echo "No tags";
-                                            }?></p>
-                                            <h4 class="card-subtitle service_price"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
-                                            <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
-                                            echo $rating;?></p>
-                                        </div>
-                                    </div>
-                                </button>
-                            </form>
-                        </div>
-                        <?php $service = next($result); 
-                        $i++;?>
-                    </div>
-                <?php } ?>
-                    <div class="card-group justify-content-center">
-                        <?php while($i<count($result)){ ?>
-                            <form class="card_form" action="../service/service.php" method="get">
-                                <button class="card_button" type="submit">
-                                    <input type="hidden" id="service_id" name="service_id" value=<?php echo $service["id"]?>>
-                                    <div class="card hovercard text-center">
-                                        <?php if (!empty($service['image'])){ ?>
-                                            <img src="../business/get_serviceImage.php?id=<?= $service['id'] ?>" class="card-img-top image" alt="Service Image">
-                                        <?php }else{ ?>
-                                            <img src="../../public/images/default-service.png" class="card-img-top image" alt="Default Image">
-                                        <?php } ?>
-                                        <div class="card-body">
-                                            <h3 class="card-title"><?php echo $service["name"]; ?></h3>
-                                            <?php $url = "../business/profile.php?business_id=".$service['business_id'];
-                                            echo '<a class="business-button" href='.$url.'>'. searchMethods::getBusinessName($businesses, $service['business_id']).'</a>'; ?>
-                                            <p><?php if(isset($service['tags'])){
-                                                echo "Tags: ".searchMethods::formatTags($service['tags']);
-                                            }else{
-                                                echo "No tags";
-                                            }?></p>
-                                            <h4 class="card-subtitle service_price"><?php echo ServiceDetails::getServicePrice($service['min_price'], $service['max_price'])."\n"; ?></h4>
-                                            <p class="card-text"><?php $rating = ServiceDetails::getRating($service["reviews"]); 
-                                            echo $rating;?></p>
-                                        </div>
-                                    </div>
-                                </button>
-                            </form>
-                            <?php $service = next($result);  
-                            $i++;?>
+                                </div>
+                            </div>
+                        </a>
                         <?php } ?>
                     </div>
-                <br><br><br>
-            <?php } 
+
+                    <?php if ($total_service_pages > 1){ ?>
+                        <div class="pagination-container">
+                            <ul class="pagination">
+                                <?php if ($page > 1){ ?>
+                                    <li><a href="?search=<?php echo $_GET['search']?>&page=<?php echo $page - 1; ?>">&laquo; Previous</a></li>
+                                <?php } ?>
+
+                                <?php for ($i = 1; $i <= $total_service_pages; $i++){ ?>
+                                    <li>
+                                        <a href="?search=<?php echo $_GET['search']?>&page=<?php echo $i; ?>" <?php echo $i === $page ? 'class="active"' : ''; ?>>
+                                            <?php echo $i; ?>
+                                        </a>
+                                    </li>
+                                <?php }; ?>
+
+                                <?php if ($page < $total_service_pages){ ?>
+                                    <li><a href="?search=<?php echo $_GET['search']?>&page=<?php echo $page + 1; ?>">Next &raquo;</a></li>
+                                <?php }; ?>
+                            </ul>
+                        </div>
+                    <?php }; ?>
+                </div>
+                <?php } 
+                
 
             if(!isset($_GET['min_price']) && !isset($_GET['max_price']) && !isset($_GET['rating']) && !isset($_GET['tags']) && !isset($_GET['filter'])){
                 //SEARCH BUSINESSES BY KEYWORD
@@ -540,123 +619,35 @@ if ($_SESSION['user_type'] != 'customer') {
                 $result = DatabaseHandler::make_select_query($sql);
                 $users = DatabaseHandler::make_select_query("SELECT id, profile_picture FROM users");
                 $i=0; ?>
-                <div>
+                <div class="services-section">
                     <h1 style="text-align: center;"> BUSINESSES </h1>
+                    <?php
+                    if($result==NULL){
+                        ?> <h3 style="text-align: center;">NO BUSINESSES MATCH THE KEYWORD</h3> <?php
+                    }else{ 
+                    ?>
+                    <div class="service-grid">
+                        <?php foreach ($result as $business){ ?>
+                            <a href="../business/profile.php?business_id=<?= $business['id']?>" class="service-card-link">
+                                <div class="service-item">
+                                    <div class="service-image">
+                                        <?php if(searchMethods::getProfileImage($users, $business['id'])==true){?>
+                                            <img src="../user/get_image.php?id=<?= $business['id'] ?>" class="card-img-top image" style="height: 200px; object-fit: cover;">
+                                        <?php }else{ ?>
+                                            <img src="../../public/images/default-service.png" class="card-img-top image" alt="Default Image" style="max-height: 200px; object-fit: cover;">
+                                        <?php } ?>
+                                    </div>
+                                    <div class="service-details">
+                                        <h4><?php echo htmlspecialchars($business['display_name']); ?></h4>
+                                        <p><?php echo ServiceDetails::getRating($business["reviews"]); ?></p>
+                                    </div>
+                                </div>
+                            </a>
+                        <?php } ?>
+                    </div>
+                    <?php }?>
                 </div>
-                <?php
-                if($result==NULL){
-                    ?> <h3 style="text-align: center;">NO BUSINESSES MATCH THE KEYWORD</h3> <?php
-                }else{ 
-                    $business=$result[0];
-                    while($i<count($result)-4){ ?>
-                    <div class="row g-0 justify-content-center">
-                        <div class="card-group justify-content-center">
-                            <form class="card_form" action="../business/profile.php" method="get">
-                                <button class="card_button" type="submit">
-                                    <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
-                                    <div class="card hovercard text-center">
-                                        <?php if(searchMethods::getProfileImage($users, $business['id'])==true){?>
-                                            <img src="../user/get_image.php?id=<?= $business['id'] ?>" class="card-img-top image" style="height: 200px; object-fit: cover;">
-                                        <?php }else{ ?>
-                                            <img src="../../public/images/default-service.png" class="card-img-top image" alt="Default Image" style="max-height: 200px; object-fit: cover;">
-                                        <?php } ?>
-                                        <div class="card-body">
-                                            <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
-                                            <p class="card-text"><?php $rating = ServiceDetails::getRating($business["reviews"]); 
-                                            echo $rating;?></p>
-                                        </div>
-                                    </div>
-                                </button>
-                            </form>
-                            <?php $business = next($result); 
-                            $i++;?>
-                            <form class="card_form" action="../business/profile.php" method="get">
-                                <button class="card_button" type="submit">
-                                    <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
-                                    <div class="card hovercard text-center">
-                                        <?php if(searchMethods::getProfileImage($users, $business['id'])==true){?>
-                                            <img src="../user/get_image.php?id=<?= $business['id'] ?>" class="card-img-top image" style="height: 200px; object-fit: cover;">
-                                        <?php }else{ ?>
-                                            <img src="../../public/images/default-service.png" class="card-img-top image" alt="Default Image" style="max-height: 200px; object-fit: cover;">
-                                        <?php } ?>
-                                        <div class="card-body">
-                                            <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
-                                            <p class="card-text"><?php $rating = ServiceDetails::getRating($business["reviews"]); 
-                                            echo $rating;?></p>
-                                        </div>
-                                    </div>
-                                </button>
-                            </form>
-                            <?php $business = next($result); 
-                            $i++;?>
-                            <form class="card_form" action="../business/profile.php" method="get">
-                                <button class="card_button" type="submit">
-                                    <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
-                                    <div class="card hovercard text-center">
-                                        <?php if(searchMethods::getProfileImage($users, $business['id'])==true){?>
-                                            <img src="../user/get_image.php?id=<?= $business['id'] ?>" class="card-img-top image" style="height: 200px; object-fit: cover;">
-                                        <?php }else{ ?>
-                                            <img src="../../public/images/default-service.png" class="card-img-top image" alt="Default Image" style="max-height: 200px; object-fit: cover;">
-                                        <?php } ?>
-                                        <div class="card-body">
-                                            <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
-                                            <p class="card-text"><?php $rating = ServiceDetails::getRating($business["reviews"]); 
-                                            echo $rating;?></p>
-                                        </div>
-                                    </div>
-                                </button>
-                            </form>
-                            <?php $business = next($result); 
-                            $i++;?>
-                            <form class="card_form" action="../business/profile.php" method="get">
-                                <button class="card_button" type="submit">
-                                    <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
-                                    <div class="card hovercard text-center">
-                                        <?php if(searchMethods::getProfileImage($users, $business['id'])==true){?>
-                                            <img src="../user/get_image.php?id=<?= $business['id'] ?>" class="card-img-top image" style="height: 200px; object-fit: cover;">
-                                        <?php }else{ ?>
-                                            <img src="../../public/images/default-service.png" class="card-img-top image" alt="Default Image" style="max-height: 200px; object-fit: cover;">
-                                        <?php } ?>
-                                        <div class="card-body">
-                                            <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
-                                            <p class="card-text"><?php $rating = ServiceDetails::getRating($business["reviews"]); 
-                                            echo $rating;?></p>
-                                        </div>
-                                    </div>
-                                </button>
-                            </form>
-                            <?php $business = next($result); 
-                            $i++;?>
-                        </div>
-                    </div>
-                    <?php } ?>
-                    <div class="row g-0">
-                        <div class="card-group justify-content-center">
-                            <?php while($i<count($result)){ ?>
-                                <form class="card_form" action="../business/profile.php" method="get">
-                                    <button class="card_button" type="submit">
-                                        <input type="hidden" id="business_id" name="business_id" value=<?php echo $business["id"]?>>
-                                        <div class="card hovercard text-center">
-                                            <?php if(searchMethods::getProfileImage($users, $business['id'])==true){?>
-                                                <img src="../user/get_image.php?id=<?= $business['id'] ?>" class="card-img-top image" style="height: 200px; object-fit: cover;">
-                                            <?php }else{ ?>
-                                                <img src="../../public/images/default-service.png" class="card-img-top image" alt="Default Image" style="max-height: 200px; object-fit: cover;">
-                                            <?php } ?>
-                                            <div class="card-body">
-                                                <h3 class="card-title"><?php echo $business["display_name"]; ?></h3>
-                                                <p class="card-text"><?php $rating = ServiceDetails::getRating($business["reviews"]); 
-                                                echo $rating;?></p>
-                                            </div>
-                                        </div>
-                                    </button>
-                                </form>
-                                <?php $business = next($result);  
-                                $i++;?>
-                            <?php } ?>
-                        </div>
-                    </div>
-                <?php } 
-            }?>
-            
+                <?php } ?>
+            </div>
     </body>
 </html>
