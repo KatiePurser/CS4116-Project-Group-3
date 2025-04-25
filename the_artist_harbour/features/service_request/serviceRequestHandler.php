@@ -73,7 +73,7 @@ class ServiceRequestHandler
             }
             return $requests;
         } else {
-            return ['error' => "No requests found."];
+            return [];
         }
     }
 
