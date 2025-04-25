@@ -22,11 +22,16 @@ $conversation_id = $conversation_data['conversation_id'];
                 <?php if ($user_id === $message['sender_id']): ?>
                     <div class="user-message">
                         <?php echo $message['text']; ?>
-                        <p><?php echo date('d-m-Y H:i', strtotime($message['created_at'])); ?></p>
+
+                        <div class="message-time" style="font-size: 0.75rem; color: #666; margin-top: 4px;">
+                            <?php echo date('d-m-Y H:i', strtotime($message['created_at'])); ?>
+                        </div>
                     </div>
+
                 <?php else: ?>
                     <div class="other-user-message">
                         <?php echo $message['text']; ?>
+
                         <button type="button" class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#reportModal"
                             data-message-id="<?php echo $message['id']; ?>"
                             data-reported-user-id="<?php echo $message['sender_id']; ?>"
@@ -35,8 +40,12 @@ $conversation_id = $conversation_data['conversation_id'];
                             data-conversation-id="<?php echo $conversation_id; ?>">
                             <i class="bi bi-flag" title="Report this message" style="color:red;"></i>
                         </button>
-                        <p><?php echo date('d-m-Y H:i', strtotime($message['created_at'])); ?></p>
+
+                        <div class="message-time" style="font-size: 0.75rem; color: #666; margin-top: 4px;">
+                            <?php echo date('d-m-Y H:i', strtotime($message['created_at'])); ?>
+                        </div>
                     </div>
+
                 <?php endif; ?>
 
             <?php endforeach; ?>
@@ -56,3 +65,11 @@ $conversation_id = $conversation_data['conversation_id'];
         </div>
     <?php endif; ?>
 </div>
+
+<style>
+    .message-time {
+        font-size: 0.75rem;
+        color: #666;
+        margin-top: 4px;
+    }
+</style>

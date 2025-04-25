@@ -136,8 +136,6 @@
     padding: 15px;
 }
 
-
-
 .user-message {
     padding: 10px !important;
     border-radius: 10px;
@@ -158,37 +156,3 @@
     align-self: flex-start;
 }
 
-
-@media (max-width: 768px) {
-
-    .inbox-title,
-    .chat-title {
-        font-size: 1.2rem;
-    }
-
-    .btn-body {
-        font-size: 1rem;
-    }
-
-    .message-time {
-        font-size: 0.8rem;
-        display: none;
-    }
-}
-
-@media (max-width: 576px) {
-
-    .inbox-title,
-    .chat-title {
-        font-size: 1rem;
-    }
-
-    .btn-body {
-        font-size: 0.9rem;
-    }
-
-    .message-time {
-        font-size: 0.7rem;
-        display: none;
-    }
-}
