@@ -42,7 +42,7 @@
             </div>
 
             <div class="modal-body text-center px-4 py-4">
-                <div id="actionFeedback" class="alert d-none fw-semibold" role="alert">
+                <div id="actionFeedbackService" class="alert d-none fw-semibold" role="alert">
                     <!-- Message is dynamically inserted here -->
                 </div>
 
