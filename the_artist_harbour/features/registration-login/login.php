@@ -46,12 +46,12 @@ if (isset($_SESSION["user_id"])) {
             <form method="post" action="loginUser.php" class="w-100">
                 <div class="mb-3">
                     <label for="login-email" class="form-label">Email Address <span class="text-danger">*</span></label>
-                    <input type="email" name="email" placeholder="Enter your Email Address" required id="login-email" class="form-control">
+                    <input type="email" name="email" placeholder="Enter your Email Address" value="<?php echo $_SESSION['email_address'] ?? ''; ?>" required id="login-email" class="form-control">
                 </div>
                 <div class="mb-3">
                     <label for="login-password" class="form-label">Password <span class="text-danger">*</span></label>
                     <div class="input-group">
-                        <input type="password" name="password" placeholder="Enter your Password" required id="login-password" class="form-control">
+                        <input type="password" name="password" placeholder="Enter your Password" value="<?php echo $_SESSION['password'] ?? ''; ?>" required id="login-password" class="form-control">
                         <span class="input-group-text" style="cursor: pointer;"><i class="bi bi-eye-slash"></i></span>
                     </div>
                 </div>
@@ -64,7 +64,7 @@ if (isset($_SESSION["user_id"])) {
         </div>
     </div>
 </div>
-
+<?php $_SESSION = []; ?>
 <script src="togglePasswordVisibility.js"></script>
 </body>
 </html>
