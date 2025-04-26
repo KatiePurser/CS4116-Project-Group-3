@@ -786,6 +786,19 @@ if ($serviceIds && count($serviceIds) > 0) {
             background-color: #70578c;
             border-color: #5f4a7b;
         }
+
+        .modal-header,
+        .submit-btn {
+            background-color: #82689A;
+        }
+
+        .submit-btn:hover {
+            background-color: #5b496d;
+        }
+
+        .modal-title {
+            padding: 10px;
+        }
     </style>
 </head>
 
@@ -1072,8 +1085,10 @@ if ($serviceIds && count($serviceIds) > 0) {
                             <?php if ($_SESSION['user_type'] === 'business' && $reply_exists == NULL) { ?>
                                 <form id="responseForm" method="POST" action="../review/submit_review_reply.php">
                                     <input type="hidden" name="review_id" id="reviewId" value="<?php echo $review['id']?>">
-                                    <input type="hidden" name="page" id="page" value="service">
-                                    <input type="hidden" name="service_id" id="service_id" value="<?php echo $service_id ?>">
+                                    <input type="hidden" name="page" id="page" value="profile">
+                                    <input type="hidden" name="business_id" id="business_id" value="<?php echo $business_id ?>">
+                                    <input type="hidden" name="review_page" id="business_id" value="<?php echo $_GET['review_page']?>">
+                                    <input type="hidden" name="sort" id="sort" value="<?php echo $_GET['sort']?>">
                                 
                                     <div class="mb-4">
                                         <label for="reviewResponseText" class="form-label fw-semibold">Your Response</label>
@@ -1081,7 +1096,7 @@ if ($serviceIds && count($serviceIds) > 0) {
                                             placeholder="Type your response here..." required></textarea>
                                     </div>
                                 
-                                    <div class="modal-footer d-flex justify-content-between border-0 px-0">
+                                    <div class="review-reply-footer d-flex justify-content-between border-0 px-0">
                                         <button type="submit" class="submit-btn btn text-white px-4">Submit Response</button>
                                     </div>
                                 </form>
