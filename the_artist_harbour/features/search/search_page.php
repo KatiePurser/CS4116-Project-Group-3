@@ -178,7 +178,7 @@ if ($_SESSION['user_type'] != 'customer') {
             .service-image img {
                 width: 100%;
                 height: 100%;
-                object-fit: cover;
+                object-fit: fill;
             }
 
             .service-details {
@@ -575,7 +575,7 @@ if ($_SESSION['user_type'] != 'customer') {
                                     <?php if (!empty($service['image'])){ ?>
                                         <img src="../business/get_serviceImage.php?id=<?= $service['id'] ?>" alt="<?php echo htmlspecialchars($service['name']); ?>">
                                     <?php }else{ ?>
-                                        <img src="../../public/images/default-service.png" alt="Default Service Image">
+                                        <img src="../../public/images/default.png" alt="Default Service Image">
                                     <?php } ?>
                                 </div>
                                 <div class="service-details">
@@ -689,7 +689,7 @@ if ($_SESSION['user_type'] != 'customer') {
                                         <?php if(searchMethods::getProfileImage($users, $business['id'])==true){?>
                                             <img src="../user/get_image.php?id=<?= $business['id'] ?>" class="card-img-top image" style="height: 200px; object-fit: cover;">
                                         <?php }else{ ?>
-                                            <img src="../../public/images/default-service.png" class="card-img-top image" alt="Default Image" style="max-height: 200px; object-fit: cover;">
+                                            <img src="../../public/images/default.png" class="card-img-top image" alt="Default Image" style="max-height: 200px; object-fit: cover;">
                                         <?php } ?>
                                     </div>
                                     <div class="service-details">

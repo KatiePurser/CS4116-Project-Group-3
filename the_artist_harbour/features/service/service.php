@@ -493,7 +493,7 @@ require_once(__DIR__ . "/review_report_modal.php");
                 if(!empty($service['image'])){ ?>
                     <img src="../business/get_serviceImage.php?id=<?= $service['id'] ?>" class="card-img-top image" alt="Service Image">
                 <?php }else{?>
-                    <img src="../../public/images/default-service.png" class="card-img-top image" alt="Default Image">
+                    <img src="../../public/images/default.png" class="card-img-top image" alt="Default Image">
                 <?php }
                 ?>
             </div>
