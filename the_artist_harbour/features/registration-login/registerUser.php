@@ -20,18 +20,21 @@ try {
 
 } catch (InvalidArgumentException $exception) {
     $_SESSION['error'] = $exception->getMessage();
+    saveInputFieldsValues();
     header("Location: registration.php");
     exit();
 }
 
 if ($password !== $confirm_password) {
     $_SESSION['error'] = "Passwords do not match.";
+    saveInputFieldsValues();
     header("Location: registration.php");
     exit();
 }
 
 if (getUserByEmail($email) !== null)  {
     $_SESSION['error'] = "Email is already registered.";
+    saveInputFieldsValues();
     header("Location: registration.php");
     exit();
 }
@@ -67,4 +70,22 @@ function createNewBusiness(int $user_id, string $business_name): bool {
     $query = "INSERT INTO businesses (user_id, display_name) VALUES ($user_id, '$business_name')";
     $result = DatabaseHandler::make_modify_query($query);
     return $result === 1;
+}
+
+function saveInputFieldsValues(): void {
+    if ($_POST["user_type"] === "customer") {
+        $_SESSION['customer_email_address'] = $_POST["email"] ?? "";
+        $_SESSION['customer_first_name'] = $_POST["first_name"] ?? "";
+        $_SESSION['customer_last_name'] = $_POST["last_name"] ?? "";
+        $_SESSION['customer_password'] = $_POST["password"] ?? "";
+        $_SESSION['customer_confirm_password'] = $_POST["confirm_password"] ?? "";
+
+    } else if ($_POST["user_type"] === "business") {
+        $_SESSION['business_email_address'] = $_POST["email"] ?? "";
+        $_SESSION['business_first_name'] = $_POST["first_name"] ?? "";
+        $_SESSION['business_last_name'] = $_POST["last_name"] ?? "";
+        $_SESSION['business_name'] = $_POST["business_name"] ?? "";
+        $_SESSION['business_password'] = $_POST["password"] ?? "";
+        $_SESSION['business_confirm_password'] = $_POST["confirm_password"] ?? "";
+    }
 }

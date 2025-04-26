@@ -63,17 +63,17 @@ if (isset($_SESSION["user_id"])) {
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="customer-email" class="form-label">Email Address <span class="text-danger">*</span></label>
-                                    <input type="email" name="email" placeholder="Enter your Email Address" value="<?php echo $_SESSION['email'] ?? ''; ?>" required id="customer-email" class="form-control">
+                                    <input type="email" name="email" placeholder="Enter your Email Address" value="<?php echo $_SESSION['customer_email_address'] ?? ''; ?>" required id="customer-email" class="form-control">
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="customer-first-name" class="form-label">First Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="first_name" placeholder="Enter your First Name" value="<?php echo $_SESSION['first_name'] ?? ''; ?>" required id="customer-first-name" class="form-control">
+                                    <input type="text" name="first_name" placeholder="Enter your First Name" value="<?php echo $_SESSION['customer_first_name'] ?? ''; ?>" required id="customer-first-name" class="form-control">
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="customer-last-name" class="form-label">Last Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="last_name" placeholder="Enter your Last Name" value="<?php echo $_SESSION['last_name'] ?? ''; ?>" required id="customer-last-name" class="form-control">
+                                    <input type="text" name="last_name" placeholder="Enter your Last Name" value="<?php echo $_SESSION['customer_last_name'] ?? ''; ?>" required id="customer-last-name" class="form-control">
                                 </div>
 
                             </div>
@@ -81,7 +81,7 @@ if (isset($_SESSION["user_id"])) {
                                 <div class="mb-3">
                                     <label for="customer-password" class="form-label">Password <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <input type="password" name="password" placeholder="Enter your Password" value="<?php echo $_SESSION['password'] ?? ''; ?>" required id="customer-password" class="form-control">
+                                        <input type="password" name="password" placeholder="Enter your Password" value="<?php echo $_SESSION['customer_password'] ?? ''; ?>" required id="customer-password" class="form-control">
                                         <span class="input-group-text" style="cursor: pointer;"><i class="bi bi-eye-slash"></i></span>
                                     </div>
                                 </div>
@@ -89,7 +89,7 @@ if (isset($_SESSION["user_id"])) {
                                 <div class="mb-3">
                                     <label for="customer-confirm-password" class="form-label">Confirm Password <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <input type="password" name="confirm_password" placeholder="Confirm your Password" value="<?php echo $_SESSION['confirm_password'] ?? ''; ?>" required id="customer-confirm-password" class="form-control">
+                                        <input type="password" name="confirm_password" placeholder="Confirm your Password" value="<?php echo $_SESSION['customer_confirm_password'] ?? ''; ?>" required id="customer-confirm-password" class="form-control">
                                         <span class="input-group-text" style="cursor: pointer;"><i class="bi bi-eye-slash" ></i></span>
                                     </div>
                                 </div>
@@ -113,17 +113,17 @@ if (isset($_SESSION["user_id"])) {
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="business-email" class="form-label">Email Address <span class="text-danger">*</span></label>
-                                    <input type="email" name="email" placeholder="Enter your Email Address" required id="business-email" class="form-control">
+                                    <input type="email" name="email" placeholder="Enter your Email Address" value="<?php echo $_SESSION['business_email_address'] ?? ''; ?>" required id="business-email" class="form-control">
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="business-first-name" class="form-label">First Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="first_name" placeholder="Enter your First Name" required id="business-first-name" class="form-control">
+                                    <input type="text" name="first_name" placeholder="Enter your First Name" value="<?php echo $_SESSION['business_first_name'] ?? ''; ?>" required id="business-first-name" class="form-control">
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="business-last-name" class="form-label">Last Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="last_name" placeholder="Enter your Last Name" required id="business-last-name" class="form-control">
+                                    <input type="text" name="last_name" placeholder="Enter your Last Name" value="<?php echo $_SESSION['business_last_name'] ?? ''; ?>" required id="business-last-name" class="form-control">
                                 </div>
 
                             </div>
@@ -131,13 +131,13 @@ if (isset($_SESSION["user_id"])) {
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="business-name" class="form-label">Business Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="business_name" placeholder="Enter your Business Name" required id="business-name" class="form-control">
+                                    <input type="text" name="business_name" placeholder="Enter your Business Name" value="<?php echo $_SESSION['business_business_name'] ?? ''; ?>" required id="business-name" class="form-control">
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="business-password" class="form-label">Password <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <input type="password" name="password" placeholder="Enter your Password" required id="business-password" class="form-control">
+                                        <input type="password" name="password" placeholder="Enter your Password" value="<?php echo $_SESSION['business_password'] ?? ''; ?>" required id="business-password" class="form-control">
                                         <span class="input-group-text" style="cursor: pointer;"><i class="bi bi-eye-slash"></i></span>
                                     </div>
                                 </div>
@@ -145,7 +145,7 @@ if (isset($_SESSION["user_id"])) {
                                 <div class="mb-3">
                                     <label for="business-confirm-password" class="form-label">Confirm Password <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <input type="password" name="confirm_password" placeholder="Confirm your Password" required id="business-confirm-password" class="form-control">
+                                        <input type="password" name="confirm_password" placeholder="Confirm your Password" value="<?php echo $_SESSION['business_confirm_password'] ?? ''; ?>" required id="business-confirm-password" class="form-control">
                                         <span class="input-group-text" style="cursor: pointer;"><i class="bi bi-eye-slash"></i></span>
                                     </div>
                                 </div>
@@ -163,7 +163,7 @@ if (isset($_SESSION["user_id"])) {
         </div>
     </div>
 </div>
-
+<?php $_SESSION = []; ?>
 <script src="togglePasswordVisibility.js"></script>
 </body>
 </html>

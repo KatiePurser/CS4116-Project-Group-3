@@ -8,7 +8,9 @@
             </div>
 
             <div class="modal-body px-4 py-3">
+                <p class="text-danger" id="report-details-modal-user-is-already-banned-warning"><strong>This user is currently banned!</strong></p>
                 <p><strong>Report ID:</strong> <span id="report-details-modal-report-id"></span></p>
+                <p><strong>Reported User ID:</strong> <span id="report-details-modal-reported-user-id"></span></p>
                 <p><strong>Type:</strong> <span id="report-details-modal-report-type"></span></p>
                 <p><strong>Content:</strong> <span id="report-details-modal-report-content"</p>
                 <p><strong>Reason:</strong> <span id="report-details-modal-report-reason"></span></p>
