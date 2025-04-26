@@ -17,7 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     } else if ($page === "profile") {
         $business_id = $_POST['business_id'];
-        header("Location: ../business/profile.php?business_id=$business_id");
+        $review_page = $_POST['review_page'];
+        $sort = $_POST['sort'];
+        header("Location: ../business/profile.php?business_id=$business_id&review_page=$review_page&sort=$sort");
         exit();
     };
 }
