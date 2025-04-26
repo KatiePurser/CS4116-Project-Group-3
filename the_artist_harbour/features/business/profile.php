@@ -3,6 +3,7 @@ session_start();
 // Include the necessary files (for database connection, etc.)
 include_once __DIR__ . '/../../utilities/databaseHandler.php';
 
+
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/registration-login/login.php");
@@ -164,16 +165,18 @@ if ($serviceIds && count($serviceIds) > 0) {
 
     // Fetch reviews with service names
     if ($total_reviews > 0) {
-        $query = "SELECT r.id, r.text, r.rating, r.created_at, r.service_id, u.first_name, u.last_name, s.name as service_name
-            FROM reviews r
-            JOIN users u ON r.reviewer_id = u.id
-            JOIN services s ON r.service_id = s.id
-            WHERE r.service_id IN ($serviceIdString)
-            $sort_clause
-            LIMIT $review_offset, $reviews_per_page";
+        $query = "SELECT r.id, r.text, r.rating, r.created_at, r.service_id, r.reviewer_id, u.first_name, u.last_name, s.name as service_name
+        FROM reviews r
+        JOIN users u ON r.reviewer_id = u.id
+        JOIN services s ON r.service_id = s.id
+        WHERE r.service_id IN ($serviceIdString)
+        $sort_clause
+        LIMIT $review_offset, $reviews_per_page";
         $reviews = DatabaseHandler::make_select_query($query);
     }
 }
+require_once(__DIR__ . "/../service/insight_request_modal.php");
+require_once(__DIR__ . "/../service/review_report_modal.php");
 ?>
 
 
@@ -188,618 +191,701 @@ if ($serviceIds && count($serviceIds) > 0) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-        body {
-            font-family: sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #fff;
-            overflow-x: hidden;
-        }
+    <script src="../service/js/handle_insight_request.js"></script>
+    <script src="../service/js/handle_review_report.js"></script>
+    <script src="../service/js/outcome_handling.js"></script>
+</head>
+<style>
+    body {
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #fff;
+        overflow-x: hidden;
+    }
 
-        /* Center container with responsive padding */
+    /* Center container with responsive padding */
+    .center-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px;
+    }
+
+    /* Medium screens */
+    @media (min-width: 768px) {
         .center-container {
-            max-width: 1200px;
-            margin: 0 auto;
+            padding: 80px;
+        }
+    }
+
+    /* Large screens */
+    @media (min-width: 992px) {
+        .center-container {
+            padding: 100px;
+        }
+    }
+
+    /* Extra large screens */
+    @media (min-width: 1400px) {
+        .center-container {
+            max-width: 1320px;
+            padding: 100px;
+        }
+    }
+
+    /* Small screens */
+    @media (max-width: 576px) {
+        .center-container {
             padding: 40px;
         }
+    }
 
-        /* Medium screens */
-        @media (min-width: 768px) {
-            .center-container {
-                padding: 80px;
-            }
-        }
+    /* Main layout containers */
+    .business-profile-container {
+        display: flex;
+        min-height: calc(100vh - 73.6px);
+    }
 
-        /* Large screens */
-        @media (min-width: 992px) {
-            .center-container {
-                padding: 100px;
-            }
-        }
+    .sidebar-container {
+        position: fixed;
+        width: 4%;
+        height: 100vh;
+        z-index: 1000;
+        background-color: #9074a8;
+    }
 
-        /* Extra large screens */
-        @media (min-width: 1400px) {
-            .center-container {
-                max-width: 1320px;
-                padding: 100px;
-            }
-        }
+    .content-container {
+        margin-left: 4%;
+        width: 96%;
+        overflow-y: auto;
+        padding-top: 20px;
+    }
 
-        /* Small screens */
-        @media (max-width: 576px) {
-            .center-container {
-                padding: 40px;
-            }
-        }
+    .main-content {
+        margin-top: 20px;
+        padding: 20px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
-        /* Main layout containers */
-        .business-profile-container {
-            display: flex;
-            min-height: calc(100vh - 73.6px);
-        }
+    .content-wrapper {
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        padding: 30px;
+    }
 
-        .sidebar-container {
-            position: fixed;
-            width: 4%;
-            height: 100vh;
-            z-index: 1000;
-            background-color: #9074a8;
-        }
+    /* Profile Section */
+    .profile-section {
+        position: relative;
+        margin-bottom: 30px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
 
-        .content-container {
-            margin-left: 4%;
-            width: 96%;
-            overflow-y: auto;
-            padding-top: 20px;
-        }
+    .cover-photo {
+        height: 180px;
+        background-color: #82689A;
+        background-image: linear-gradient(135deg, #82689A 0%, #49375a 100%);
+        position: relative;
+    }
 
-        .main-content {
-            margin-top: 20px;
-            padding: 20px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+    .profile-content {
+        background-color: #f8f8f8;
+        border: 1px solid #e0d8f3;
+        border-top: none;
+        padding: 25px;
+        position: relative;
+    }
 
-        .content-wrapper {
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-            padding: 30px;
-        }
+    .profile-img-container {
+        margin-top: -80px;
+        position: relative;
+        z-index: 10;
+    }
 
-        /* Profile Section */
-        .profile-section {
-            position: relative;
-            margin-bottom: 30px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-        }
+    .profile-img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 5px solid #fff;
+        box-shadow: 0 2px 8px rgba(130, 104, 154, 0.2);
+        background-color: #fff;
+    }
 
-        .cover-photo {
-            height: 180px;
-            background-color: #82689A;
-            background-image: linear-gradient(135deg, #82689A 0%, #49375a 100%);
-            position: relative;
-        }
+    .profile-info {
+        padding-top: 10px;
+    }
 
-        .profile-content {
-            background-color: #f8f8f8;
-            border: 1px solid #e0d8f3;
-            border-top: none;
-            padding: 25px;
-            position: relative;
-        }
+    .profile-info h2 {
+        color: #49375a;
+        margin-top: 0;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
 
+    .profile-info p {
+        color: #555;
+        margin-bottom: 15px;
+        line-height: 1.5;
+    }
+
+    .social-links {
+        display: flex;
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .social-links a {
+        color: #82689A;
+        font-size: 1.5rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #f0ebf7;
+    }
+
+    .social-links a:hover {
+        color: #fff;
+        background-color: #82689A;
+        transform: translateY(-3px);
+    }
+
+    .rating-summary {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        background-color: #f0ebf7;
+        padding: 8px 15px;
+        border-radius: 20px;
+        display: inline-flex;
+    }
+
+    .stars {
+        color: #82689A;
+        margin-right: 10px;
+        font-size: 1.1rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
         .profile-img-container {
-            margin-top: -80px;
-            position: relative;
-            z-index: 10;
+            margin-top: -70px;
+            margin-bottom: 15px;
         }
 
         .profile-img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 5px solid #fff;
-            box-shadow: 0 2px 8px rgba(130, 104, 154, 0.2);
-            background-color: #fff;
+            width: 120px;
+            height: 120px;
         }
 
         .profile-info {
-            padding-top: 10px;
-        }
-
-        .profile-info h2 {
-            color: #49375a;
-            margin-top: 0;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        .profile-info p {
-            color: #555;
-            margin-bottom: 15px;
-            line-height: 1.5;
+            text-align: center;
         }
 
         .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .social-links a {
-            color: #82689A;
-            font-size: 1.5rem;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #f0ebf7;
-        }
-
-        .social-links a:hover {
-            color: #fff;
-            background-color: #82689A;
-            transform: translateY(-3px);
-        }
-
-        .rating-summary {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-            background-color: #f0ebf7;
-            padding: 8px 15px;
-            border-radius: 20px;
-            display: inline-flex;
-        }
-
-        .stars {
-            color: #82689A;
-            margin-right: 10px;
-            font-size: 1.1rem;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .profile-img-container {
-                margin-top: -70px;
-                margin-bottom: 15px;
-            }
-
-            .profile-img {
-                width: 120px;
-                height: 120px;
-            }
-
-            .profile-info {
-                text-align: center;
-            }
-
-            .social-links {
-                justify-content: center;
-                margin-top: 20px;
-            }
-
-            .rating-summary {
-                justify-content: center;
-                margin: 15px auto;
-                display: inline-flex;
-            }
-        }
-
-        .stars {
-            color: #82689A;
-            margin-right: 10px;
-        }
-
-        /* Services Section */
-        .section-title {
-            color: #49375a;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e0d8f3;
-        }
-
-        .services-section {
-            margin-bottom: 30px;
-        }
-
-        .service-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .service-item {
-            border: 1px solid #e0d8f3;
-            border-radius: 12px;
-            background-color: #fdfcff;
-            overflow: hidden;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .service-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(130, 104, 154, 0.15);
-        }
-
-        .service-image {
-            height: 180px;
-            background-color: #f0f0f0;
-            overflow: hidden;
-        }
-
-        .service-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .service-details {
-            padding: 15px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .service-details h4 {
-            color: #4a3b5c;
-            margin-top: 0;
-            margin-bottom: 10px;
-        }
-
-        .service-details p {
-            color: #777;
-            margin-bottom: 15px;
-            flex-grow: 1;
-        }
-
-        .service-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: auto;
-        }
-
-        .service-price {
-            font-weight: bold;
-            color: #4a2c5d;
-        }
-
-        .service-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-bottom: 15px;
-        }
-
-        .tag {
-            background-color: #e0d8f3;
-            color: #49375a;
-            padding: 3px 8px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-        }
-
-        .request-btn {
-            background-color: #82689A;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: background-color 0.3s ease;
-        }
-
-        .request-btn:hover {
-            background-color: #70578c;
-            color: white;
-        }
-
-        .service-card-link {
-            display: block;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .service-card-link:hover {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        /* Reviews Section */
-        .reviews-section {
-            margin-bottom: 30px;
-        }
-
-        .reviews-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .sort-options {
-            display: flex;
-            gap: 10px;
-        }
-
-        .sort-btn {
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            text-decoration: none;
-            color: #333;
-        }
-
-        .sort-btn.active {
-            background-color: #e0d8f3;
-            border-color: #82689A;
-            color: #49375a;
-        }
-
-        .review-item {
-            padding: 20px;
-            border: 1px solid #e0d8f3;
-            border-radius: 12px;
-            background-color: #fcfbfe;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 4px rgba(130, 104, 154, 0.1);
-            transition: box-shadow 0.2s ease;
-        }
-
-        .review-item:hover {
-            box-shadow: 0 4px 10px rgba(130, 104, 154, 0.15);
-        }
-
-        .review-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .reviewer-info {
-            font-weight: bold;
-            color: #4a3b5c;
-        }
-
-        .review-rating {
-            color: #82689A;
-        }
-
-        .review-content {
-            color: #666;
-            margin: 10px 0;
-        }
-
-        .review-date {
-            color: #999;
-            font-size: 0.9em;
-            text-align: right;
-        }
-
-        .service-reviewed-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #e0d8f3;
-            padding-bottom: 10px;
-        }
-
-        .service-reviewed-header h4 {
-            color: #49375a;
-            margin: 0;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        .review-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .flag-review-btn {
-            color: #dc3545;
-            border-color: #dc3545;
-            padding: 0.25rem 0.5rem;
-            font-size: 0.875rem;
-        }
-
-        .flag-review-btn:hover {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .insight-request-btn {
-            color: #82689A;
-            border-color: #82689A;
-            padding: 0.25rem 0.5rem;
-            font-size: 0.875rem;
-        }
-
-        .insight-request-btn:hover {
-            background-color: #82689A;
-            color: white;
-        }
-
-        .btn-outline-purple {
-            color: #82689A;
-            border-color: #82689A;
-        }
-
-        .btn-outline-purple:hover {
-            background-color: #82689A;
-            color: white;
-        }
-
-        .pagination-container {
-            display: flex;
             justify-content: center;
             margin-top: 20px;
         }
 
-        .pagination {
-            display: flex;
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        .rating-summary {
+            justify-content: center;
+            margin: 15px auto;
+            display: inline-flex;
+        }
+    }
+
+    .stars {
+        color: #82689A;
+        margin-right: 10px;
+    }
+
+    /* Services Section */
+    .section-title {
+        color: #49375a;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e0d8f3;
+    }
+
+    .services-section {
+        margin-bottom: 30px;
+    }
+
+    /* Service Cards Styling */
+    .service-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .service-item {
+        border: 1px solid #e0d8f3;
+        border-radius: 12px;
+        background-color: #fdfcff;
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .service-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(130, 104, 154, 0.15);
+    }
+
+    .service-image {
+        width: 100%;
+        height: 0;
+        padding-bottom: 66.67%;
+        position: relative;
+        overflow: hidden;
+        border-radius: 12px 12px 0 0;
+        background-color: #f0f0f0;
+    }
+
+    .service-image img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+        /* Changed from 'contain' to 'fill' */
+        object-position: center;
+    }
+
+
+    .service-details {
+        padding: 15px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .service-details h4 {
+        color: #4a3b5c;
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
+    .service-details p {
+        color: #777;
+        margin-bottom: 15px;
+        flex-grow: 1;
+    }
+
+    .service-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+    }
+
+    .service-price {
+        font-weight: bold;
+        color: #4a2c5d;
+    }
+
+    .service-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-bottom: 15px;
+    }
+
+    .tag {
+        background-color: #e0d8f3;
+        color: #49375a;
+        padding: 3px 8px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+    }
+
+    .request-btn {
+        background-color: #82689A;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: background-color 0.3s ease;
+    }
+
+    .request-btn:hover {
+        background-color: #70578c;
+        color: white;
+    }
+
+    .service-card-link {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .service-card-link:hover {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    /* Responsive adjustments for service cards */
+    @media (max-width: 992px) {
+        .service-grid {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .service-grid {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
         }
 
-        .pagination li {
-            margin: 0 5px;
+        .service-details {
+            padding: 12px;
         }
 
-        .pagination a {
-            display: block;
-            padding: 5px 10px;
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            text-decoration: none;
-            color: #333;
-            transition: background-color 0.3s;
+        .service-details h4 {
+            font-size: 1.1rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .service-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
         }
 
-        .pagination a:hover {
-            background-color: #e0d8f3;
-        }
-
-        .pagination a.active {
-            background-color: #82689A;
-            color: white;
-            border-color: #70578c;
-        }
-
-        /* Additional responsive adjustments */
-        @media (max-width: 768px) {
-            .profile-img-container {
-                position: relative;
-                top: -80px;
-                left: 50%;
-                transform: translateX(-50%);
-                margin-bottom: -60px;
-            }
-
-            .profile-info {
-                margin-left: 0;
-                text-align: center;
-            }
-
-            .social-links {
-                justify-content: center;
-            }
-
-            .reviews-header {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .sort-options {
-                width: 100%;
-                justify-content: space-between;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .service-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .content-wrapper {
-                padding: 15px;
-            }
-        }
-
-        /* Additional styles for the modals */
-        .modal-content {
-            background-color: #f5f0ff;
-            /* Light purple background for modal body */
-            border: none;
-            border-radius: 12px;
-        }
-
-        .modal-header {
-            background-color: #82689A;
-            /* Dark purple background for modal header */
-            color: white;
-            /* White text for better contrast */
-            border-bottom: 1px solid #70578c;
-            border-top-left-radius: 12px;
-            border-top-right-radius: 12px;
-            padding: 15px 20px;
-        }
-
-        .modal-title {
-            color: white;
-            font-weight: 600;
-        }
-
-        .modal-footer {
-            border-top: 1px solid #e0d8f3;
-            background-color: #f5f0ff;
-            /* Light purple background for modal footer */
-            border-bottom-left-radius: 12px;
-            border-bottom-right-radius: 12px;
-        }
-
-        .modal-body {
-            padding: 20px;
-        }
-
-        /* Style for the close button in the header */
-        .modal-header .btn-close {
-            color: white;
-            opacity: 0.8;
-            filter: brightness(0) invert(1);
-            /* Make the close button white */
-        }
-
-        .modal-header .btn-close:hover {
-            opacity: 1;
-        }
-
-        /* Style for primary buttons in modals */
-        .modal .btn-primary {
-            background-color: #82689A;
-            border-color: #70578c;
-        }
-
-        .modal .btn-primary:hover {
-            background-color: #70578c;
-            border-color: #5f4a7b;
-        }
-
-        .modal-header,
-        .submit-btn {
-            background-color: #82689A;
-        }
-
-        .submit-btn:hover {
-            background-color: #5b496d;
-        }
-
-        .modal-title {
+        .service-details {
             padding: 10px;
         }
-    </style>
+
+        .service-details h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .service-details p {
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        .service-tags {
+            margin-bottom: 10px;
+        }
+
+        .tag {
+            padding: 2px 6px;
+            font-size: 0.7rem;
+        }
+
+        .service-price {
+            font-size: 0.9rem;
+        }
+
+        .request-btn {
+            padding: 5px 10px;
+            font-size: 0.8em;
+        }
+    }
+
+    /* Reviews Section */
+    .reviews-section {
+        margin-bottom: 30px;
+    }
+
+    .reviews-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .sort-options {
+        display: flex;
+        gap: 10px;
+    }
+
+    .sort-btn {
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        text-decoration: none;
+        color: #333;
+    }
+
+    .sort-btn.active {
+        background-color: #e0d8f3;
+        border-color: #82689A;
+        color: #49375a;
+    }
+
+    .review-item {
+        padding: 20px;
+        border: 1px solid #e0d8f3;
+        border-radius: 12px;
+        background-color: #fcfbfe;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 4px rgba(130, 104, 154, 0.1);
+        transition: box-shadow 0.2s ease;
+    }
+
+    .review-item:hover {
+        box-shadow: 0 4px 10px rgba(130, 104, 154, 0.15);
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .reviewer-info {
+        font-weight: bold;
+        color: #4a3b5c;
+    }
+
+    .review-rating {
+        color: #82689A;
+    }
+
+    .review-content {
+        color: #666;
+        margin: 10px 0;
+    }
+
+    .review-date {
+        color: #999;
+        font-size: 0.9em;
+        text-align: right;
+    }
+
+    .service-reviewed-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #e0d8f3;
+        padding-bottom: 10px;
+    }
+
+    .service-reviewed-header h4 {
+        color: #49375a;
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .review-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .flag-review-btn {
+        color: #dc3545;
+        border-color: #dc3545;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .flag-review-btn:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .insight-request-btn {
+        color: #82689A;
+        border-color: #82689A;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .insight-request-btn:hover {
+        background-color: #82689A;
+        color: white;
+    }
+
+    .btn-outline-purple {
+        color: #82689A;
+        border-color: #82689A;
+    }
+
+    .btn-outline-purple:hover {
+        background-color: #82689A;
+        color: white;
+    }
+
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .pagination li {
+        margin: 0 5px;
+    }
+
+    .pagination a {
+        display: block;
+        padding: 5px 10px;
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #333;
+        transition: background-color 0.3s;
+    }
+
+    .pagination a:hover {
+        background-color: #e0d8f3;
+    }
+
+    .pagination a.active {
+        background-color: #82689A;
+        color: white;
+        border-color: #70578c;
+    }
+
+    /* Additional responsive adjustments */
+    @media (max-width: 768px) {
+        .profile-img-container {
+            position: relative;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: -60px;
+        }
+
+        .profile-info {
+            margin-left: 0;
+            text-align: center;
+        }
+
+        .social-links {
+            justify-content: center;
+        }
+
+        .reviews-header {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sort-options {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .service-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .content-wrapper {
+            padding: 15px;
+        }
+    }
+
+    /* Additional styles for the modals */
+    .modal-content {
+        background-color: #f5f0ff;
+        /* Light purple background for modal body */
+        border: none;
+        border-radius: 12px;
+    }
+
+    .modal-header {
+        background-color: #82689A;
+        /* Dark purple background for modal header */
+        color: white;
+        /* White text for better contrast */
+        border-bottom: 1px solid #70578c;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        padding: 15px 20px;
+    }
+
+    .modal-title {
+        color: white;
+        font-weight: 600;
+    }
+
+    .modal-footer {
+        border-top: 1px solid #e0d8f3;
+        background-color: #f5f0ff;
+        /* Light purple background for modal footer */
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    /* Style for the close button in the header */
+    .modal-header .btn-close {
+        color: white;
+        opacity: 0.8;
+        filter: brightness(0) invert(1);
+        /* Make the close button white */
+    }
+
+    .modal-header .btn-close:hover {
+        opacity: 1;
+    }
+
+    /* Style for primary buttons in modals */
+    .modal .btn-primary {
+        background-color: #82689A;
+        border-color: #70578c;
+    }
+
+    .modal .btn-primary:hover {
+        background-color: #70578c;
+        border-color: #5f4a7b;
+    }
+
+.modal .btn-primary:hover {
+background-color: #70578c;
+border-color: #5f4a7b;
+}
+
+.modal-header,
+.submit-btn {
+background-color: #82689A;
+}
+
+.submit-btn:hover {
+background-color: #5b496d;
+}
+
+.modal-title {
+padding: 10px;
+}
+</style>
+
 </head>
 
 <body>
@@ -829,7 +915,8 @@ if ($serviceIds && count($serviceIds) > 0) {
                     <div class="col-md-9">
                         <h2 class="card-title text-purple"><?php echo htmlspecialchars($business_name); ?></h2>
                         <p class="text-muted mb-2">Owned by
-                            <?php echo htmlspecialchars($owner_first_name . ' ' . $owner_last_name); ?></p>
+                            <?php echo htmlspecialchars($owner_first_name . ' ' . $owner_last_name); ?>
+                        </p>
 
                         <!-- Business Description -->
                         <div class="mb-3">
@@ -907,6 +994,9 @@ if ($serviceIds && count($serviceIds) > 0) {
         <!-- Services Section -->
         <?php include __DIR__ . '/../service/service_request_modal.php'; ?>
         <script src="../../features/service/js/handle_service_request.js"></script>
+        <script src="../../features/service/js/outcome_handling.js"></script>
+
+
         <div class="services-section">
             <h3 class="section-title">Services</h3>
 
@@ -921,7 +1011,7 @@ if ($serviceIds && count($serviceIds) > 0) {
                                         <img src="./get_serviceImage.php?id=<?= $service['id'] ?>"
                                             alt="<?php echo htmlspecialchars($service['name']); ?>">
                                     <?php else: ?>
-                                        <img src="../../public/images/default-service.png" alt="Default Service Image">
+                                        <img src="../../public/images/default.png" alt="Default Service Image">
                                     <?php endif; ?>
                                 </div>
                                 <div class="service-details">
@@ -944,6 +1034,7 @@ if ($serviceIds && count($serviceIds) > 0) {
 
                                     <p><?php echo htmlspecialchars($service['description']); ?></p>
 
+                                    <!-- Find this section in the code -->
                                     <div class="service-meta">
                                         <div class="service-price">
                                             <?php
@@ -956,17 +1047,17 @@ if ($serviceIds && count($serviceIds) > 0) {
                                             }
                                             ?>
                                         </div>
-                                        <?php if (!$is_own_profile): // Only show request button if not the owner ?>
-    <button type="button" class="button" 
-            data-bs-toggle="modal" 
-            data-bs-target="#serviceRequestModal" 
-            data-service-id="<?= $service['id'] ?>" 
-            data-price-final="<?= isset($service['max_price']) ? $service['max_price'] : '' ?>"
-            onclick="event.preventDefault(); event.stopPropagation();">
-        Request
-    </button>
-<?php endif; ?>
+                                        <?php if (!isset($is_own_profile) || !$is_own_profile): // Only show request button if not the owner ?>
+                                            <button type="button" class="btn btn-purple request-btn" data-bs-toggle="modal"
+                                                data-bs-target="#serviceRequestModal" data-service-id="<?= $service['id'] ?>"
+                                                data-price-final="<?= isset($service['max_price']) ? $service['max_price'] : '0' ?>"
+                                                data-business-user-id="<?= $business['user_id'] ?>"
+                                                onclick="event.preventDefault(); event.stopPropagation();">
+                                                <i class="bi bi-calendar-check me-1"></i> Request
+                                            </button>
+                                        <?php endif; ?>
                                     </div>
+
                                 </div>
                             </div>
                         </a>
@@ -1002,6 +1093,7 @@ if ($serviceIds && count($serviceIds) > 0) {
         </div>
 
 
+
         <!-- Reviews Section -->
         <div class="reviews-section">
             <div class="reviews-header">
@@ -1026,10 +1118,10 @@ if ($serviceIds && count($serviceIds) > 0) {
             </div>
 
             <?php if ($reviews && count($reviews) > 0): ?>
-                <?php foreach ($reviews as $review): 
+                <?php foreach ($reviews as $review):
                     $id = $review['id'];
                     $sql = "SELECT * FROM review_replies WHERE review_id=$id";
-                    $reply_exists = DatabaseHandler::make_select_query($sql);?>
+                    $reply_exists = DatabaseHandler::make_select_query($sql); ?>
                     <div class="review-item">
                         <!-- Service name at the top in bigger text -->
                         <div class="service-reviewed-header">
@@ -1038,8 +1130,11 @@ if ($serviceIds && count($serviceIds) > 0) {
                             <div class="review-actions">
                                 <!-- Flag button for inappropriate reviews -->
                                 <button type="button" class="btn btn-sm btn-outline-danger flag-review-btn"
-                                    data-bs-toggle="modal" data-bs-target="#flagReviewModal"
-                                    data-review-id="<?php echo $review['id']; ?>">
+                                    data-bs-toggle="modal" data-bs-target="#reviewReportModal"
+                                    data-review-id="<?php echo $review['id']; ?>"
+                                    data-reported-id="<?php echo $review['reviewer_id']; ?>"
+                                    data-service-id="<?php echo $review['service_id']; ?>"
+                                    data-review-content="<?php echo htmlspecialchars($review['text']); ?>">
                                     <i class="bi bi-flag"></i> Flag
                                 </button>
 
@@ -1048,7 +1143,7 @@ if ($serviceIds && count($serviceIds) > 0) {
                                     <button type="button" class="btn btn-sm btn-outline-purple insight-request-btn"
                                         data-bs-toggle="modal" data-bs-target="#insightRequestModal"
                                         data-service-id="<?php echo $review['service_id']; ?>"
-                                        data-business-id="<?php echo $business_id; ?>">
+                                        data-receiver-id="<?php echo $review['reviewer_id']; ?>">
                                         <i class="bi bi-lightbulb"></i> Request Insight
                                     </button>
                                 <?php endif; ?>
@@ -1084,7 +1179,7 @@ if ($serviceIds && count($serviceIds) > 0) {
                             <!-- Review Reply Button for Businesses only -->
                             <?php if ($_SESSION['user_type'] === 'business' && $reply_exists == NULL) { ?>
                                 <form id="responseForm" method="POST" action="../review/submit_review_reply.php">
-                                    <input type="hidden" name="review_id" id="reviewId" value="<?php echo $review['id']?>">
+                                    <input type="hidden" name="review_id" id="reviewId" value="<?php echo $review['id'] ?>">
                                     <input type="hidden" name="page" id="page" value="profile">
                                     <input type="hidden" name="business_id" id="business_id" value="<?php echo $business_id ?>">
                                     <input type="hidden" name="review_page" id="review_page" value="<?php echo $review_page?>">
@@ -1092,30 +1187,33 @@ if ($serviceIds && count($serviceIds) > 0) {
                                 
                                     <div class="mb-4">
                                         <label for="reviewResponseText" class="form-label fw-semibold">Your Response</label>
-                                        <textarea class="form-control rounded-3 border" id="reviewResponseText" name="review_response_text" rows="4"
-                                            placeholder="Type your response here..." required></textarea>
+                                        <textarea class="form-control rounded-3 border" id="reviewResponseText"
+                                            name="review_response_text" rows="4" placeholder="Type your response here..."
+                                            required></textarea>
                                     </div>
-                                
+
                                     <div class="review-reply-footer d-flex justify-content-between border-0 px-0">
                                         <button type="submit" class="submit-btn btn text-white px-4">Submit Response</button>
                                     </div>
                                 </form>
                             <?php } else if ($reply_exists) { ?>
-                                <div class="review-reply-content">
-                                    <div class="replied">
+                                    <div class="review-reply-content">
+                                        <div class="replied">
                                         <?php echo htmlspecialchars("Reply from Business:"); ?>
-                                    </div>
-                                    <div class="reply-text">
+                                        </div>
+                                        <div class="reply-text">
                                         <?php echo htmlspecialchars($reply_exists[0]['text']); ?>
+                                        </div>
+                                        <div class="review-date">
+                                            <em>Replied on:
+                                            <?php echo date("F j, Y", strtotime($reply_exists[0]['created_at'])); ?></em>
+                                        </div>
                                     </div>
-                                    <div class="review-date">
-                                        <em>Replied on: <?php echo date("F j, Y", strtotime($reply_exists[0]['created_at'])); ?></em>
-                                    </div>
-                                </div>
                             <?php } ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
+
 
 
                 <!-- Pagination for Reviews -->
@@ -1151,101 +1249,36 @@ if ($serviceIds && count($serviceIds) > 0) {
             <?php endif; ?>
         </div>
 
-        <!-- Flag Review Modal -->
-        <div class="modal fade" id="flagReviewModal" tabindex="-1" aria-labelledby="flagReviewModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="flagReviewModalLabel">Flag Inappropriate Review</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form id="flagReviewForm" action="../reviews/flag_review.php" method="post">
-                        <div class="modal-body">
-                            <input type="hidden" id="review_id" name="review_id">
-                            <div class="mb-3">
-                                <label for="flag_reason" class="form-label">Reason for flagging:</label>
-                                <select class="form-select" id="flag_reason" name="flag_reason" required>
-                                    <option value="">Select a reason</option>
-                                    <option value="inappropriate">Inappropriate content</option>
-                                    <option value="spam">Spam</option>
-                                    <option value="offensive">Offensive language</option>
-                                    <option value="false">False information</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="flag_details" class="form-label">Additional details (optional):</label>
-                                <textarea class="form-control" id="flag_details" name="flag_details"
-                                    rows="3"></textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-danger">Flag Review</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Insight Request Modal -->
-        <?php if ($_SESSION['user_type'] === 'customer'): ?>
-            <div class="modal fade" id="insightRequestModal" tabindex="-1" aria-labelledby="insightRequestModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="insightRequestModalLabel">Request Insight</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <form id="insightRequestForm" action="../messages/scripts/insight_request.php" method="post">
-                            <div class="modal-body">
-                                <input type="hidden" id="service_id" name="service_id">
-                                <input type="hidden" id="business_id" name="business_id">
-                                <p>Request more information about this service from the business owner.</p>
-                                <div class="mb-3">
-                                    <label for="message" class="form-label">Your message:</label>
-                                    <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary">Send Request</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        <?php endif; ?>
-
-        <!-- JavaScript for handling modals -->
         <script>
-            // Handle passing data to the flag review modal
             document.addEventListener('DOMContentLoaded', function () {
-                const flagReviewModal = document.getElementById('flagReviewModal');
-                if (flagReviewModal) {
-                    flagReviewModal.addEventListener('show.bs.modal', function (event) {
-                        const button = event.relatedTarget;
-                        const reviewId = button.getAttribute('data-review-id');
-                        document.getElementById('review_id').value = reviewId;
-                    });
+                // Fix the form action in the insight request modal
+                const insightRequestForm = document.querySelector('#insightRequestModal form');
+                if (insightRequestForm) {
+                    insightRequestForm.action = "/CS4116-Project-Group-3/the_artist_harbour/features/service/submit_insight_request.php";
                 }
 
-                // Handle passing data to the insight request modal
-                const insightRequestModal = document.getElementById('insightRequestModal');
-                if (insightRequestModal) {
-                    insightRequestModal.addEventListener('show.bs.modal', function (event) {
-                        const button = event.relatedTarget;
-                        const serviceId = button.getAttribute('data-service-id');
-                        const businessId = button.getAttribute('data-business-id');
-                        document.getElementById('service_id').value = serviceId;
-                        document.getElementById('business_id').value = businessId;
-                    });
+                // Fix the form action in the review report modal
+                const reviewReportForm = document.querySelector('#reviewReportModal form');
+                if (reviewReportForm) {
+                    reviewReportForm.action = "/CS4116-Project-Group-3/the_artist_harbour/features/service/submit_review_report.php";
                 }
             });
         </script>
 
+        <script src="../../features/service/js/handle_service_request.js"></script>
+        <script>
+            // Prevent service card navigation when clicking the request button
+            document.addEventListener('DOMContentLoaded', function () {
+                const requestButtons = document.querySelectorAll('[data-bs-target="#serviceRequestModal"]');
+
+                requestButtons.forEach(button => {
+                    button.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+                });
+            });
+        </script>
 
         <!-- JavaScript for handling pagination and sorting -->
         <script>

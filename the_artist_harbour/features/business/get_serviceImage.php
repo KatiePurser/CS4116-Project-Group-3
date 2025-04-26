@@ -29,7 +29,7 @@ if ($serviceData && count($serviceData) > 0 && !empty($serviceData[0]['image']))
 } else {
     // Return default service image if no image is found
     header("Content-Type: image/png");
-    readfile(__DIR__ . "/../../public/images/default-service.png");
+    readfile(__DIR__ . "/../../public/images/default.png");
     exit;
 }
 ?>
