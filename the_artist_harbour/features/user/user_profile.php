@@ -60,6 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
             if (DatabaseHandler::make_modify_query($query) === null) {
                 $messages[] = "Failed to update user details. Please try again.";
+            } else {
+                $messages[] = "User details updated successfully!";
             }
         }
     }
@@ -86,14 +88,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
             if (DatabaseHandler::make_modify_query($query) === null) {
                 $messages[] = "Failed to update password. Please try again.";
+            } else {
+                $messages[] = "Password updated successfully!";
             }
         }
     }
 
     // Handle profile picture upload
-    if (isset($_FILES['profile_picture'])) {
+    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
         $uploadMessage = ImageHandler::uploadAndStoreImage('profile_picture', 'users', 'profile_picture', 'id', $user_id);
         $messages[] = $uploadMessage;
+        // Refresh the page to show the new profile picture
+        header("Location: user_profile.php");
+        exit();
+    }
+    
+    // Handle profile picture deletion
+    if (isset($_POST['delete_profile_picture'])) {
+        $query = "UPDATE users SET profile_picture = NULL WHERE id = $user_id";
+        if (DatabaseHandler::make_modify_query($query) === null) {
+            $messages[] = "Failed to delete profile picture. Please try again.";
+        } else {
+            $messages[] = "Profile picture deleted successfully!";
+            $profile_picture = null;
+        }
     }
 }
 
@@ -128,6 +146,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .btn-secondary {
             background-color: #ac8ebf;
             border-color: #ac8ebf;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
         }
         .sidebar-container {
             background-color: #9074a8;
@@ -189,12 +211,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="col-12">
                 <?php include __DIR__ . '/../../templates/header.php'; ?>
             </div>
-            <div class="col-12 subheader">
-                <h>Profile</h>
-            </div>
         </div>
-        <div class="row g-0">
-            <div class="col-1">
+        
+        <div class="row g-0 flex-grow-1 profile-system-container">
+            <div class="col-md-1 d-none d-md-block">
                 <?php include __DIR__ . '/../../templates/sidebar.php'; ?>
             </div>
             
@@ -211,54 +231,118 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 <?php endif; ?>
 
-<h4 class="mt-2"><?php echo htmlspecialchars($first_name . " " . $last_name); ?></h4>
-                    <p class="text-muted"><?php echo htmlspecialchars($email); ?></p>
+                    <h4 class="user-name"><?php echo htmlspecialchars($first_name . " " . $last_name); ?></h4>
+                    <p class="user-email"><?php echo htmlspecialchars($email); ?></p>
                 </div>
             </div>
         
             <!-- Main content area -->
-            <div class="col-9 p-4">
-                <!-- Display error/success messages -->
-                <?php if (!empty($messages)): ?>
-                    <div class="alert <?= (strpos($messages[0], 'success') !== false) ? 'alert-success' : 'alert-danger' ?>">
-                        <ul>
-                            <?php foreach ($messages as $message): ?>
-                                <li><?php echo htmlspecialchars($message); ?></li>
-                            <?php endforeach; ?>
-                        </ul>
+            <div class="col-8 col-md-9 profile-content-container">
+                <div class="profile-title-container">
+                    <h5 class="profile-title">Profile Settings</h5>
+                </div>
+                
+                <div class="content-padding">
+                    <!-- Display error/success messages -->
+                    <?php if (!empty($messages)): ?>
+                        <div class="alert <?= (strpos($messages[0], 'success') !== false) ? 'alert-success' : 'alert-danger' ?>">
+                            <ul>
+                                <?php foreach ($messages as $message): ?>
+                                    <li><?php echo htmlspecialchars($message); ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- User Details Card -->
+                    <div class="card p-3 mb-3">
+                        <h5>User Details</h5>
+                        <form method="POST" action="user_profile.php">
+                            <input type="text" class="form-control mb-2" name="first_name" value="<?php echo htmlspecialchars($first_name); ?>" placeholder="First Name">
+                            <input type="text" class="form-control mb-2" name="last_name" value="<?php echo htmlspecialchars($last_name); ?>" placeholder="Last Name">
+                            <input type="email" class="form-control mb-2" name="email" value="<?php echo htmlspecialchars($email); ?>" placeholder="Email">
+                            <button class="btn btn-secondary" type="submit">Update User Details</button>
+                        </form>
                     </div>
-                <?php endif; ?>
 
-                <!-- User Details Card -->
-                <div class="card p-3 mb-3">
-                    <h5>User Details</h5>
-                    <form method="POST" action="user_profile.php">
-                        <input type="text" class="form-control mb-2" name="first_name" value="<?php echo htmlspecialchars($first_name); ?>" placeholder="First Name">
-                        <input type="text" class="form-control mb-2" name="last_name" value="<?php echo htmlspecialchars($last_name); ?>" placeholder="Last Name">
-                        <input type="email" class="form-control mb-2" name="email" value="<?php echo htmlspecialchars($email); ?>" placeholder="Email">
-                        <button class="btn btn-secondary" type="submit">Update User Details</button>
-                    </form>
-                </div>
+                    <!-- Change Password Card -->
+                    <div class="card p-3 mb-3">
+                        <h5>Change Password</h5>
+                        <form method="POST" action="user_profile.php">
+                            <div class="input-group mb-2">
+                                <input type="password" class="form-control" id="new_password" name="new_password" placeholder="New Password" required>
+                                <span class="input-group-text" onclick="togglePasswordVisibility('new_password')">
+                                    <i class="bi bi-eye-slash" id="new_password_toggle"></i>
+                                </span>
+                            </div>
+                            <div class="input-group mb-2">
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required>
+                                <span class="input-group-text" onclick="togglePasswordVisibility('confirm_password')">
+                                    <i class="bi bi-eye-slash" id="confirm_password_toggle"></i>
+                                </span>
+                            </div>
+                            <button class="btn btn-secondary" type="submit">Update Password</button>
+                        </form>
+                    </div>
 
-                <!-- Change Password Card -->
-                <div class="card p-3 mb-3">
-                    <h5>Change Password</h5>
-                    <form method="POST" action="user_profile.php">
-                        <input type="password" class="form-control mb-2" name="new_password" placeholder="New Password" required>
-                        <input type="password" class="form-control mb-2" name="confirm_password" placeholder="Confirm Password" required>
-                        <button class="btn btn-secondary" type="submit">Update Password</button>
-                    </form>
-                </div>
-
-                <div class="card p-3 mb-3">
-                    <h5>Upload Profile Picture</h5>
-                    <form method="POST" enctype="multipart/form-data">
-                        <input type="file" class="form-control mb-2" name="profile_picture" accept="image/*">
-                        <button type="submit" class="btn btn-secondary">Upload</button>
-                    </form>
+                    <!-- Profile Picture Card -->
+                    <div class="card p-3 mb-3">
+                        <h5>Profile Picture</h5>
+                        <form method="POST" enctype="multipart/form-data">
+                            <div class="mb-2">
+                                <input type="file" class="form-control" id="profile_picture" name="profile_picture" accept="image/*" onchange="previewImage()">
+                                <img id="image_preview" class
+                                <input type="file" class="form-control" id="profile_picture" name="profile_picture" accept="image/*" onchange="previewImage()">
+                                <img id="image_preview" class="image-preview" src="#" alt="Image Preview">
+                            </div>
+                            <div class="profile-picture-actions">
+                                <button type="submit" class="btn btn-secondary">Upload Picture</button>
+                                <?php if ($profile_picture): ?>
+                                    <button type="submit" name="delete_profile_picture" class="btn btn-danger">Delete Picture</button>
+                                <?php endif; ?>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        // Toggle password visibility
+        function togglePasswordVisibility(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleIcon = document.getElementById(inputId + '_toggle');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('bi-eye-slash');
+                toggleIcon.classList.add('bi-eye');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('bi-eye');
+                toggleIcon.classList.add('bi-eye-slash');
+            }
+        }
+
+        // Preview image before upload
+        function previewImage() {
+            const fileInput = document.getElementById('profile_picture');
+            const imagePreview = document.getElementById('image_preview');
+            
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                }
+                
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                imagePreview.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
