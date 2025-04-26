@@ -18,12 +18,10 @@ if (!isset($data['user_id'])) {
 
 $userId = intval($data['user_id']);
 
-$userData = AdminUtilities::fetchUserData($userId);
-unset($userData["profile_picture"]);
+$userIsAlreadyBanned = AdminUtilities::isUserAlreadyBanned($userId);
 
-if (empty($userData)) {
-    echo json_encode(['error' => 'Failed to fetch user data']);
+if ($userIsAlreadyBanned) {
+    echo json_encode(['success' => 'User is already banned', 'user_is_banned' => true]);
 } else {
-    echo json_encode(['success' => 'User data fetched successfully', 'user_data' => $userData]);
+    echo json_encode(['success' => 'User is not banned', 'user_is_banned' => false]);
 }
-

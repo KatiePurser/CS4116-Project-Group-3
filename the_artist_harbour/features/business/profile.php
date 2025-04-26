@@ -865,6 +865,19 @@ require_once(__DIR__ . "/../service/review_report_modal.php");
             background-color: #70578c;
             border-color: #5f4a7b;
         }
+
+        .modal-header,
+        .submit-btn {
+            background-color: #82689A;
+        }
+
+        .submit-btn:hover {
+            background-color: #5b496d;
+        }
+
+        .modal-title {
+            padding: 10px;
+        }
     </style>
 
 </head>
@@ -1102,11 +1115,14 @@ require_once(__DIR__ . "/../service/review_report_modal.php");
             </div>
 
             <?php if ($reviews && count($reviews) > 0): ?>
-<?php foreach ($reviews as $review): ?>
-    <div class="review-item">
-        <!-- Service name at the top in bigger text -->
-        <div class="service-reviewed-header">
-            <h4><?php echo htmlspecialchars($review['service_name']); ?></h4>
+                <?php foreach ($reviews as $review): 
+                    $id = $review['id'];
+                    $sql = "SELECT * FROM review_replies WHERE review_id=$id";
+                    $reply_exists = DatabaseHandler::make_select_query($sql);?>
+                    <div class="review-item">
+                        <!-- Service name at the top in bigger text -->
+                        <div class="service-reviewed-header">
+                            <h4><?php echo htmlspecialchars($review['service_name']); ?></h4>
 
             <div class="review-actions">
                 <!-- Flag button for inappropriate reviews -->
@@ -1131,33 +1147,67 @@ require_once(__DIR__ . "/../service/review_report_modal.php");
             </div>
         </div>
 
-        <div class="review-header">
-            <div class="reviewer-info">
-                <?php echo htmlspecialchars($review['first_name'] . " " . $review['last_name']); ?>
-            </div>
-            <div class="review-rating">
-                <?php
-                $rating = $review['rating'];
-                for ($i = 1; $i <= 5; $i++) {
-                    if ($i <= $rating) {
-                        echo '<i class="bi bi-star-fill"></i>';
-                    } elseif ($i - 0.5 <= $rating) {
-                        echo '<i class="bi bi-star-half"></i>';
-                    } else {
-                        echo '<i class="bi bi-star"></i>';
-                    }
-                }
-                ?>
-            </div>
-        </div>
-        <div class="review-content">
-            <?php echo htmlspecialchars($review['text']); ?>
-        </div>
-        <div class="review-date">
-            <em>Reviewed on: <?php echo date("F j, Y", strtotime($review['created_at'])); ?></em>
-        </div>
-    </div>
-<?php endforeach; ?>
+                        <div class="review-header">
+                            <div class="reviewer-info">
+                                <?php echo htmlspecialchars($review['first_name'] . " " . $review['last_name']); ?>
+                            </div>
+                            <div class="review-rating">
+                                <?php
+                                $rating = $review['rating'];
+                                for ($i = 1; $i <= 5; $i++) {
+                                    if ($i <= $rating) {
+                                        echo '<i class="bi bi-star-fill"></i>';
+                                    } elseif ($i - 0.5 <= $rating) {
+                                        echo '<i class="bi bi-star-half"></i>';
+                                    } else {
+                                        echo '<i class="bi bi-star"></i>';
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </div>
+                        <div class="review-content">
+                            <?php echo htmlspecialchars($review['text']); ?>
+                        </div>
+                        <div class="review-date">
+                            <em>Reviewed on: <?php echo date("F j, Y", strtotime($review['created_at'])); ?></em>
+                        </div>
+                        <div class="review-reply">
+                            <!-- Review Reply Button for Businesses only -->
+                            <?php if ($_SESSION['user_type'] === 'business' && $reply_exists == NULL) { ?>
+                                <form id="responseForm" method="POST" action="../review/submit_review_reply.php">
+                                    <input type="hidden" name="review_id" id="reviewId" value="<?php echo $review['id']?>">
+                                    <input type="hidden" name="page" id="page" value="profile">
+                                    <input type="hidden" name="business_id" id="business_id" value="<?php echo $business_id ?>">
+                                    <input type="hidden" name="review_page" id="business_id" value="<?php echo $_GET['review_page']?>">
+                                    <input type="hidden" name="sort" id="sort" value="<?php echo $_GET['sort']?>">
+                                
+                                    <div class="mb-4">
+                                        <label for="reviewResponseText" class="form-label fw-semibold">Your Response</label>
+                                        <textarea class="form-control rounded-3 border" id="reviewResponseText" name="review_response_text" rows="4"
+                                            placeholder="Type your response here..." required></textarea>
+                                    </div>
+                                
+                                    <div class="review-reply-footer d-flex justify-content-between border-0 px-0">
+                                        <button type="submit" class="submit-btn btn text-white px-4">Submit Response</button>
+                                    </div>
+                                </form>
+                            <?php } else if ($reply_exists) { ?>
+                                <div class="review-reply-content">
+                                    <div class="replied">
+                                        <?php echo htmlspecialchars("Reply from Business:"); ?>
+                                    </div>
+                                    <div class="reply-text">
+                                        <?php echo htmlspecialchars($reply_exists[0]['text']); ?>
+                                    </div>
+                                    <div class="review-date">
+                                        <em>Replied on: <?php echo date("F j, Y", strtotime($reply_exists[0]['created_at'])); ?></em>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
 
 
 

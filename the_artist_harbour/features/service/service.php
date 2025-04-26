@@ -307,6 +307,16 @@ require_once(__DIR__ . "/review_report_modal.php");
                 text-align: right;
             }
 
+            .replied {
+                font-weight: bold;
+                color: #4a3b5c;
+            }
+
+            .reply-text {
+                color: #666;
+                margin: 10px 0;
+            }
+
             .service-reviewed-header {
                 display: flex;
                 justify-content: space-between;
@@ -541,7 +551,7 @@ require_once(__DIR__ . "/review_report_modal.php");
                 <?php if(count($reviews) > 0){ 
                     foreach ($reviews as $review){ 
                         $id = $review['id'];
-                        $sql = "SELECT id FROM review_replies WHERE review_id=$id";
+                        $sql = "SELECT * FROM review_replies WHERE review_id=$id";
                         $reply_exists = DatabaseHandler::make_select_query($sql);
                         ?>
                         <div class="review-item">
@@ -560,7 +570,7 @@ require_once(__DIR__ . "/review_report_modal.php");
                                     </button>
 
                                     <!-- Insight Request button for customers only -->
-                                    <?php if ($_SESSION['user_type'] === 'customer'){ ?>
+                                    <?php if ($_SESSION['user_type'] === 'customer' && $_SESSION['user_id']!=$review['reviewer_id']){ ?>
                                         <button type="button" class="btn btn-sm btn-outline-purple insight-request-btn"
                                             data-bs-toggle="modal" data-bs-target="#insightRequestModal"
                                             data-service-id="<?php echo $review['service_id']; ?>"
@@ -611,6 +621,18 @@ require_once(__DIR__ . "/review_report_modal.php");
                                             <button type="submit" class="submit-btn btn text-white px-4">Submit Response</button>
                                         </div>
                                     </form>
+                                <?php } else if ($reply_exists) { ?>
+                                    <div class="review-reply-content">
+                                        <div class="replied">
+                                            <?php echo htmlspecialchars("Reply from Business:"); ?>
+                                        </div>
+                                        <div class="reply-text">
+                                            <?php echo htmlspecialchars($reply_exists[0]['text']); ?>
+                                        </div>
+                                        <div class="review-date">
+                                            <em>Replied on: <?php echo date("F j, Y", strtotime($reply_exists[0]['created_at'])); ?></em>
+                                        </div>
+                                    </div>
                                 <?php } ?>
                             </div>
                         </div>

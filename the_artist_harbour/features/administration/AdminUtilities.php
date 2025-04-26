@@ -29,10 +29,29 @@ class AdminUtilities {
         return empty($result) ? [] : $result[0];
     }
 
+    public static function fetchConversationIdFromMessageData($messageId): int {
+        $query = "SELECT * FROM messages WHERE id = $messageId";
+        $message = DatabaseHandler::make_select_query($query)[0];
+        $conversation_id = $message["conversation_id"];
+
+        return $conversation_id;
+    }
+
+    public static function isUserAlreadyBanned(int $userId): bool {
+        $query = "SELECT * FROM banned_users WHERE banned_user_id = $userId";
+        $result = DatabaseHandler::make_select_query($query);
+        return !empty($result);
+    }
+
     private static function dismissReport(int $report_id): bool {
         $query = "UPDATE reports SET status = 'dismissed' WHERE id = $report_id";
         $result = DatabaseHandler::make_modify_query($query);
         return $result === 1;
+    }
+
+    public static function dismissAllOtherReportsAimingTarget(string $target_type, int $target_id): void {
+        $query = "UPDATE reports SET status = 'dismissed' WHERE target_type = '$target_type' AND target_id = $target_id";
+        DatabaseHandler::make_modify_query($query);
     }
 
     private static function resolveReport(int $report_id): bool {
@@ -41,8 +60,13 @@ class AdminUtilities {
         return $result === 1;
     }
 
-    private static function deleteMessage(int $message_id): bool {
-        $query = "DELETE FROM messages WHERE id = $message_id";
+    public static function resolveAllOtherReportsAimingTarget(string $target_type, int $target_id): void {
+        $query = "UPDATE reports SET status = 'resolved' WHERE target_type = '$target_type' AND target_id = $target_id";
+        DatabaseHandler::make_modify_query($query);
+    }
+
+    private static function deleteConversation(int $conversation_id): bool {
+        $query = "DELETE FROM conversations WHERE id = $conversation_id";
         $result = DatabaseHandler::make_modify_query($query);
         return $result === 1;
     }
@@ -57,7 +81,8 @@ class AdminUtilities {
         $result = false;
 
         if ($target_type === "message") {
-            $result = self::deleteMessage($target_id);
+            $conversation_id = self::fetchConversationIdFromMessageData($target_id);
+            $result = self::deleteConversation($conversation_id);;
         } elseif ($target_type === "review") {
             $result = self::deleteReview($target_id);
         }
@@ -83,20 +108,23 @@ class AdminUtilities {
         return $result === 1;
     }
 
-    public static function dismissReportAction(int $report_id): bool {
+    public static function dismissReportAction(int $report_id, string $target_type, int $target_id): bool {
         $report_dismissed = self::dismissReport($report_id);
+        self::dismissAllOtherReportsAimingTarget($target_type, $target_id);
         return $report_dismissed;
     }
 
     public static function deleteTargetAction(string $target_type, int $target_id, int $report_id): bool {
         $target_deleted = self::deleteTarget($target_type, $target_id);
         $report_resolved = self::resolveReport($report_id);
+        self::resolveAllOtherReportsAimingTarget($target_type, $target_id);
         return $target_deleted && $report_resolved;
     }
 
-    public static function banUserAction(int $user_id, int $banned_by, string $ban_reason, int $report_id): bool {
+    public static function banUserAction(int $user_id, int $banned_by, string $ban_reason, int $report_id, string $target_type, int $target_id): bool {
         $user_banned = self::banUser($user_id, $banned_by, $ban_reason);
         $report_resolved = self::resolveReport($report_id);
+        self::resolveAllOtherReportsAimingTarget($target_type, $target_id);
         return $user_banned && $report_resolved;
     }
 
@@ -107,7 +135,8 @@ class AdminUtilities {
 
     public static function deleteUserAction(int $user_id, int $report_id): bool {
         $user_deleted = self::deleteUser($user_id);
-        $report_resolved = self::resolveReport($report_id);
-        return $user_deleted && $report_resolved;
+//        $report_resolved = self::resolveReport($report_id); # not needed because the report is deleted when the user is deleted in a cascade manner
+//        return $user_deleted && $report_resolved;
+        return $user_deleted;
     }
 }
