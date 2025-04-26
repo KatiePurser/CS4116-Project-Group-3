@@ -1087,8 +1087,8 @@ if ($serviceIds && count($serviceIds) > 0) {
                                     <input type="hidden" name="review_id" id="reviewId" value="<?php echo $review['id']?>">
                                     <input type="hidden" name="page" id="page" value="profile">
                                     <input type="hidden" name="business_id" id="business_id" value="<?php echo $business_id ?>">
-                                    <input type="hidden" name="review_page" id="business_id" value="<?php echo $_GET['review_page']?>">
-                                    <input type="hidden" name="sort" id="sort" value="<?php echo $_GET['sort']?>">
+                                    <input type="hidden" name="review_page" id="review_page" value="<?php echo $review_page?>">
+                                    <input type="hidden" name="sort" id="sort" value="<?php echo $sort_by?>">
                                 
                                     <div class="mb-4">
                                         <label for="reviewResponseText" class="form-label fw-semibold">Your Response</label>
