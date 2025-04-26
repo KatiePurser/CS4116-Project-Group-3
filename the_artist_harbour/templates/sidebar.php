@@ -10,7 +10,7 @@ $user_type = $_SESSION['user_type'] ?? '';
                     <a class="sidebar-link"
                         href="/CS4116-Project-Group-3/the_artist_harbour/features/user/user_profile.php">
                         <i class="bi bi-person"></i>
-                        <span class="d-none d-xl-inline">Account</span>
+                        <span class="sidebar-text d-none d-xl-inline">Account</span>
                     </a>
                 </li>
             <?php elseif ($user_type === 'business'): ?>
@@ -18,29 +18,45 @@ $user_type = $_SESSION['user_type'] ?? '';
                     <a class="sidebar-link"
                         href="/CS4116-Project-Group-3/the_artist_harbour/features/user/user_profile.php">
                         <i class="bi bi-person"></i>
-                        <span class="d-none d-xl-inline">Account</span>
+                        <span class="sidebar-text d-none d-xl-inline">Account</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">
                         <i class="bi bi-house"></i>
-                        <span class="d-none d-xl-inline">Business</span>
+                        <span class="sidebar-text d-none d-xl-inline">Business</span>
+                    </a>
+                </li>
+            <?php elseif ($user_type === 'admin'): ?>
+                <li class="sidebar-item">
+                    <a class="sidebar-link"
+                       href="/CS4116-Project-Group-3/the_artist_harbour/features/administration/admin_panel.php">
+                        <i class="bi bi-shield-exclamation"></i>
+                        <span class="sidebar-text d-none d-xl-inline">Report logs</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="/CS4116-Project-Group-3/the_artist_harbour/features/administration/banned_users.php">
+                        <i class="bi bi-person-x"></i>
+                        <span class="sidebar-text d-none d-xl-inline">Banned Users</span>
                     </a>
                 </li>
             <?php endif; ?>
+            <?php if ($user_type === 'customer' || $user_type === 'business'): ?>
             <li class="sidebar-item">
                 <a class="sidebar-link"
-                    href="/CS4116-Project-Group-3/the_artist_harbour/features/service_request/service_request.php">
+                    href="/CS4116-Project-Group-3/the_artist_harbour/features/service_request/service_request_page.php">
                     <i class="bi bi-briefcase"></i>
-                    <span class="d-none d-xl-inline">Requests</span>
+                    <span class="sidebar-text d-none d-xl-inline">Requests</span>
                 </a>
             </li>
             <li class="sidebar-item">
                 <a class="sidebar-link" href="/CS4116-Project-Group-3/the_artist_harbour/features/messages/inbox.php">
                     <i class="bi bi-envelope"></i>
-                    <span class="d-none d-xl-inline">Messages</span>
+                    <span class="sidebar-text d-none d-xl-inline">Messages</span>
                 </a>
             </li>
+            <?php endif; ?>
         </ul>
     </div>
 </nav>
@@ -49,6 +65,11 @@ $user_type = $_SESSION['user_type'] ?? '';
     body {
         margin: 0;
         font-size: 16px;
+    }
+
+
+    .sidebar-text {
+        padding-left: 10px;
     }
 
     .sidebar {
@@ -60,12 +81,16 @@ $user_type = $_SESSION['user_type'] ?? '';
         color: white;
         overflow-y: auto;
         width: 8.333%;
+        justify-content: center;
+        align-items: center;
     }
 
     .sidebar-menu {
         flex-grow: 1;
         display: flex;
         flex-direction: column;
+        justify-content: center;
+        align-items: center;
         width: 100%;
     }
 
@@ -77,7 +102,6 @@ $user_type = $_SESSION['user_type'] ?? '';
 
     .sidebar-item {
         padding-top: 20px;
-        padding-left: 10px;
         padding-bottom: 20px;
     }
 
@@ -87,11 +111,7 @@ $user_type = $_SESSION['user_type'] ?? '';
         font-weight: bold;
         display: flex;
         align-items: center;
-        font-size: 0.9rem;
-    }
-
-    .sidebar-link i {
-        margin-right: 10px;
+        font-size: 1rem;
     }
 
     .sidebar-link:hover,
@@ -105,29 +125,18 @@ $user_type = $_SESSION['user_type'] ?? '';
         border: none;
     }
 
-
     @media (max-width: 1200px) {
+
         .sidebar-link {
             justify-content: center;
         }
 
         .sidebar-link i {
-            font-size: 1.2rem;
+            font-size: 1rem;
         }
     }
 
-    @media (max-width: 992px) {
-        .sidebar-link {
-            justify-content: center;
-        }
-
-        .sidebar-link i {
-            font-size: 1.2rem;
-        }
-
-    }
-
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         .sidebar {
             width: 16.667%;
         }
@@ -138,17 +147,6 @@ $user_type = $_SESSION['user_type'] ?? '';
 
         .sidebar-link i {
             font-size: 1.2rem;
-        }
-    }
-
-    @media (max-width: 576px) {
-        .sidebar-link {
-            justify-content: center;
-        }
-
-        .sidebar-link i {
-            font-size: 1.2rem;
-
         }
     }
 </style>

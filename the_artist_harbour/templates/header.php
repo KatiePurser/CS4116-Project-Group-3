@@ -32,7 +32,7 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                     <!-- User Profile Dropdown -->
                     <div class="dropdown">
                         <button
-                            class="btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center dropdown-toggle"
+                            class="menu-dropdown btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center dropdown-toggle"
                             style="width: 40px; height: 40px;" type="button" id="userDropdown" data-bs-toggle="dropdown">
                             <i class="bi bi-person"></i>
                         </button>
@@ -42,7 +42,7 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                                     href="/CS4116-Project-Group-3/the_artist_harbour/features/messages/inbox.php">Messages</a>
                             </li>
                             <li><a class="dropdown-item"
-                                    href="/CS4116-Project-Group-3/the_artist_harbour/features/service_request/service_request.php">Requests</a>
+                                    href="/CS4116-Project-Group-3/the_artist_harbour/features/service_request/service_request_page.php">Requests</a>
                             </li>
                             <li><a class="dropdown-item"
                                     href="/CS4116-Project-Group-3/the_artist_harbour/features/user/user_profile.php">Account</a>
@@ -74,7 +74,7 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                 <!-- User Profile Dropdown -->
                 <div class="dropdown">
                     <button
-                        class="btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center dropdown-toggle"
+                        class="menu-dropdown btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center dropdown-toggle"
                         style="width: 40px; height: 40px;" type="button" id="userDropdown" data-bs-toggle="dropdown">
                         <i class="bi bi-person"></i>
                     </button>
@@ -87,13 +87,13 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                                 href="/CS4116-Project-Group-3/the_artist_harbour/features/messages/inbox.php">Messages</a>
                         </li>
                         <li><a class="dropdown-item"
-                                href="/CS4116-Project-Group-3/the_artist_harbour/features/service_request/service_request.php">Requests</a>
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/service_request/service_request_page.php">Requests</a>
                         </li>
                         <li><a class="dropdown-item"
-                                href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">Account</a>
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/user/user_profile.php">Account</a>
                         </li>
                         <li><a class="dropdown-item"
-                                href="/CS4116-Project-Group-3/the_artist_harbour/features/user/user_">Business</a>
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">Business</a>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
@@ -117,20 +117,23 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                 <img src="/CS4116-Project-Group-3/the_artist_harbour/public/images/boat_logo_small.png" alt="Boat"
                     class="img-fluid me-2" style="max-height: 40px;">
                 <a class="navbar-brand amarante-regular fs-4 fs-lg-2"
-                    href="/CS4116-Project-Group-3/the_artist_harbour/public/admin_page.php">The Artist Harbour</a>
+                    href="/CS4116-Project-Group-3/the_artist_harbour/features/administration/admin_panel.php">The Artist
+                    Harbour</a>
             </div>
 
             <div class="d-flex align-items-center ms-auto">
                 <!-- User Profile Dropdown -->
                 <div class="dropdown">
                     <button
-                        class="btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center dropdown-toggle"
+                        class="menu-dropdown btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center dropdown-toggle"
                         style="width: 40px; height: 40px;" type="button" id="userDropdown" data-bs-toggle="dropdown">
                         <i class="bi bi-person"></i>
                     </button>
 
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="admin_panel.php">Dashboard</a></li>
+                        <li><a class="dropdown-item"
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/administration/admin_panel.php">Dashboard</a>
+                        </li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -159,6 +162,10 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
 </div>
 
 <style>
+    .menu-dropdown {
+        margin-right: 5px;
+    }
+
     .navbar {
         position: fixed;
         top: 0;
@@ -214,19 +221,19 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
     }
 
     .dropdown-menu {
-        background-color: #E2D4F0 !important;
+        background-color: #ac8ebf !important;
         border: none;
     }
 
     .dropdown-item {
-        color: #49375a !important;
+        color: white !important;
     }
 
     .dropdown-item:hover {
         background-color: #c3b5d1 !important;
     }
 
-    color: white @media (max-width: 992px) {
+    @media (max-width: 992px) {
         .navbar-collapse {
             position: absolute;
             top: 73.6px;

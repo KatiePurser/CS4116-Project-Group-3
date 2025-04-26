@@ -1,0 +1,145 @@
+@media(max-width: 576px) {     /*small screen*/
+    .row {
+        width: 100%;
+        display: flex;
+        align-content: center;
+    }
+    
+    .service-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .keyword_desc {
+        margin-left: 1vw;
+    }
+
+    .business-button{
+        text-decoration: none;
+        background-color: #E2D4F0;
+        color: black;
+        padding: 0.25vw;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        border-radius: 0.25vw;
+    }
+    
+    .card_button {
+        width: 90vw;
+        padding-left: 1vw;
+        padding-right: 1vw;
+        border: none;
+        background-color: Transparent;
+        align-content: center;
+    }
+
+    .hovercard {
+        width:100%;
+        height:100%;
+        word-wrap: break-word;
+        border-color: #82689A;
+        border-radius: 1vw;
+        border-width: 0.2vw;
+    }
+
+    .card-title {
+        display: block;
+        word-wrap: break-word;
+        max-width:100%;
+    }
+
+    .service_price {
+        background-color: #82689A;
+        color: white;
+        border-radius: 0.5vw;
+        max-width: fit-content;
+        margin: auto;
+        padding-left: 0.5vw;
+        padding-right: 0.5vw;
+    }
+
+    .filter_buttons{
+        background-color: #82689A;
+        border-radius: 5px;
+    }
+
+    .image{
+        height: 30vh;
+        object-fit: cover;
+        
+    }
+}
+
+@media(min-width: 576px) {  	/*wide screen*/
+    .row {
+        width: 100%;
+        display: flex;
+        align-content: center;
+    }
+
+    .filter-title {
+        margin-top: 1%;
+    }
+
+    .keyword_desc {
+        margin-left: 1vw;
+    }
+
+    .business-button{
+        text-decoration: none;
+        background-color: #E2D4F0;
+        color: black;
+        padding: 0.25vw;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        border-radius: 0.25vw;
+    }
+
+    .card-group{
+        align-content: center;
+        margin-bottom: 1vw;
+    }
+
+    .card_button {
+        width: 24vw;
+        border: none;
+        background-color: Transparent;
+    }
+
+    .hovercard {
+        width:100%;
+        height:100%;
+        word-wrap: break-word;
+        border-color: #82689A;
+        border-radius: 1vw;
+        border-width: 0.2vw;
+    }
+
+    .card-title {
+        display: block;
+        word-wrap: break-word;
+        max-width:100%;
+    }
+
+    .service_price {
+        background-color: #82689A;
+        color: white;
+        border-radius: 0.5vw;
+        max-width: fit-content;
+        margin: auto;
+        padding-left: 0.5vw;
+        padding-right: 0.5vw;
+    }
+
+    .filter_buttons{
+        background-color: #82689A;
+        border-radius: 5px;
+    }
+
+    .image{
+        height: 30vh;
+        object-fit: cover;
+        border-radius: 1vw;
+    }
+}

@@ -8,7 +8,7 @@ if (isset($_SESSION["user_id"])) {
     } elseif ($_SESSION["user_type"] === "business") {
         header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/business/profile.php");
     } elseif ($_SESSION["user_type"] === "admin") {
-        header("Location: #");
+        header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/administration/admin_panel.php");
     }
     exit();
 }
