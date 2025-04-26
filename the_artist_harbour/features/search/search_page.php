@@ -23,7 +23,7 @@ if ($_SESSION['user_type'] != 'customer') {
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-        <script src="./../service/js/handle_service_request.js"></script>
+        <!-- <script src="./../service/js/handle_service_request.js"></script> -->
         
         <style>
             
@@ -52,6 +52,21 @@ if ($_SESSION['user_type'] != 'customer') {
                 border-radius: 5px;
             }
 
+            .price-range {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-top: auto;
+            }
+            
+            .min-price {
+                padding: 1vw;
+            }
+
+            .max-price {
+                padding: 1vw;
+            }
+
             .tags-title {
                 font-size: 20px;
                 padding-top: 2vh;
@@ -75,16 +90,23 @@ if ($_SESSION['user_type'] != 'customer') {
                 margin-bottom: 2vh;
             }
 
+            .keyword-desc {
+                padding: 0;
+                padding-left: 1vw;
+            }
+
             .center-container {
                 max-width: 1200px;
                 margin: 0 auto;
-                padding: 40px;
+                padding:40px;
+                padding-top: 10px;
             }
 
             /* Medium screens */
-            @media (min-width: 768px) {
+            @media (min-width: 576px) {
                 .center-container {
                     padding: 80px;
+                    padding-top: 10px;
                 }
             }
 
@@ -92,6 +114,7 @@ if ($_SESSION['user_type'] != 'customer') {
             @media (min-width: 992px) {
                 .center-container {
                     padding: 100px;
+                    padding-top: 10px;
                 }
             }
 
@@ -100,6 +123,7 @@ if ($_SESSION['user_type'] != 'customer') {
                 .center-container {
                     max-width: 1320px;
                     padding: 100px;
+                    padding-top: 10px;
                 }
             }
 
@@ -107,6 +131,15 @@ if ($_SESSION['user_type'] != 'customer') {
             @media (max-width: 576px) {
                 .center-container {
                     padding: 40px;
+                    padding-top: 10px;
+                }
+
+                .service-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .content-wrapper {
+                    padding: 15px;
                 }
             }
 
@@ -233,16 +266,6 @@ if ($_SESSION['user_type'] != 'customer') {
                 color: inherit;
             }
 
-            @media (max-width: 576px) {
-                .service-grid {
-                    grid-template-columns: 1fr;
-                }
-
-                .content-wrapper {
-                    padding: 15px;
-                }
-            }
-
             .pagination-container {
                 display: flex;
                 justify-content: center;
@@ -281,6 +304,33 @@ if ($_SESSION['user_type'] != 'customer') {
                 border-color: #70578c;
             }
 
+            .businesses-title {
+                text-align: center;
+                padding-top: 20px;
+            }
+
+            .modal-header,
+            .submit-btn {
+                background-color: #82689A;
+            }
+
+            .submit-btn:hover {
+                background-color: #5b496d;
+            }
+
+            .modal-title {
+                padding: 10px;
+            }
+
+            .modal-header,
+            .close-btn {
+                background-color: #82689A;
+            }
+
+            .close-btn:hover {
+                background-color: #5b496d;
+            }
+
         </style>
     </head>
 
@@ -289,7 +339,7 @@ if ($_SESSION['user_type'] != 'customer') {
 
         <?php 
             require_once __DIR__ . '/../../utilities/InputValidationHelper.php';
-            require_once __DIR__ . '/../service/service_request_modal.php';
+            // require_once __DIR__ . '/../service/service_request_modal.php';
 
             try{
                 if(!isset($_GET['search'])){
@@ -338,12 +388,18 @@ if ($_SESSION['user_type'] != 'customer') {
                 <form action="search_page.php" method="get">
                     <input type="hidden" id="search" name="search" value=<?php echo $keyword?>>
                     <!-- apply a price range -->
-                    <label for="min_price">Minimum Price:</label>
-                    <input type="number" name="min_price" id="min_price" value="<?php if (isset($_GET['min_price'])) echo "{$_GET['min_price']}";?>">
-                    <label for="max_price">Maximum Price:</label>
-                    <input type="number" name="max_price" id="max_price" value="<?php if (isset($_GET['max_price'])) echo "{$_GET['max_price']}";?>">
+                    <div class="price-range">
+                        <div class="min-price">
+                            <label for="min_price">Minimum Price:</label>
+                            <input type="number" name="min_price" id="min_price" value="<?php if (isset($_GET['min_price'])) echo "{$_GET['min_price']}";?>">
+                        </div>
+                        <div class="max-price">
+                            <label for="max_price">Maximum Price:</label>
+                            <input type="number" name="max_price" id="max_price" value="<?php if (isset($_GET['max_price'])) echo "{$_GET['max_price']}";?>">
+                        </div>
+                    </div>
                     <!-- apply a desired rating -->
-                    <select name="rating" id="rating">
+                    <select class="rating" name="rating" id="rating">
                         <option value="" disabled <?php if ((!isset($_GET['rating'])) || ((isset($_GET['rating']) && $_GET['rating']=="6"))) echo "selected";?> hidden>Filter By Reviews</option>
                         <option value="0" <?php if (isset($_GET['rating']) && $_GET['rating']=="0") echo "selected";?>>0 Stars</option>
                         <option value="1" <?php if (isset($_GET['rating']) && $_GET['rating']=="1") echo "selected";?>>1 Star</option>
@@ -354,7 +410,7 @@ if ($_SESSION['user_type'] != 'customer') {
                         <option value="6">Remove Selection</option>
                     </select>
                     <!-- apply an ordering method -->
-                    <select name="filter" id="filter">
+                    <select class="filter" name="filter" id="filter">
                         <option value="" disabled <?php if ((!isset($_GET['filter'])) || ((isset($_GET['filter']) && $_GET['filter']=="5"))) echo "selected";?> hidden>Sort Services</option>
                         <option value="1" <?php if (isset($_GET['filter']) && $_GET['filter']=="1") echo "selected";?>>By Reviews (High to Low)</option>
                         <option value="2" <?php if (isset($_GET['filter']) && $_GET['filter']=="2") echo "selected";?>>By Reviews (Low to High)</option>
@@ -481,9 +537,8 @@ if ($_SESSION['user_type'] != 'customer') {
             } 
             ?>
 
-            <div class="keyword_desc">
+            <div class="keyword-desc">
                 <p>Searching by keyword: <i><?php echo "\"".$keyword."\""?></i></p>
-                <br>
             </div>
 
             <?php
@@ -576,8 +631,8 @@ if ($_SESSION['user_type'] != 'customer') {
                                             $max_price = $service['max_price'];
                                             ?>
                                             <button type="button" class="btn request-btn p-0" data-bs-toggle="modal" data-bs-target="#serviceRequestModal"
-                                                data-price-min="<?php echo $min_price;?>" data-price-max="<?php echo $max_price;?>"
-                                                data-service-id="<?php echo $service_id?>" onclick="event.preventDefault(); event.stopPropagation();">
+                                                data-price-min="<?php echo $min_price ?>" data-price-max="<?php echo $service['max_price'] ?>" 
+                                                data-service-id="<?php echo $service_id ?>" onclick="event.preventDefault(); event.stopPropagation();">
                                                 Request 
                                             </button> 
                                         <?php } ?>
@@ -620,7 +675,7 @@ if ($_SESSION['user_type'] != 'customer') {
                 $users = DatabaseHandler::make_select_query("SELECT id, profile_picture FROM users");
                 $i=0; ?>
                 <div class="services-section">
-                    <h1 style="text-align: center;"> BUSINESSES </h1>
+                    <h1 class="businesses-title"> BUSINESSES </h1>
                     <?php
                     if($result==NULL){
                         ?> <h3 style="text-align: center;">NO BUSINESSES MATCH THE KEYWORD</h3> <?php
@@ -649,5 +704,63 @@ if ($_SESSION['user_type'] != 'customer') {
                 </div>
                 <?php } ?>
             </div>
+
+            <!-- Service Request Modal -->
+            <div id="serviceRequestModal" class="modal fade" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content shadow-lg rounded-4">
+                        <div class="modal-header text-white rounded-top-4">
+                            <h5 class="modal-title" id="serviceRequestModalLabel">Request Service</h5>
+                            <button class="btn-close btn-close-white me-2" data-bs-dismiss="modal" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <div class="modal-body px-5 py-4">
+                            <form action="/CS4116-Project-Group-3/the_artist_harbour/features/service/submit_service_request.php" method="get">
+                                <!-- hidden inputs -->
+                                <input type="hidden" name="sender_id" id="sender_id" value="<?php echo $_SESSION['user_id'];?>">
+                                <input type="hidden" name="price_min" id="priceMin">
+                                <input type="hidden" name="price_max" id="priceMax">
+                                <input type="hidden" name="service_id" id="serviceId">
+
+                                <div class="mb-4">
+                                    <label for="message" class="form-label fw-semibold">Message</label>
+                                    <textarea class="form-control rounded-3 border" id="message" name="message" rows="4"
+                                        placeholder="Please add any extra details or requests here..." required></textarea>
+                                </div>
+
+                                <div class="modal-footer d-flex justify-content-between border-0 px-0">
+                                    <button type="button" class="btn btn-outline-secondary px-4"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="submit-btn btn px-4">Send Service Request</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Service Request Script -->
+            <script>
+                var serviceRequestModal = document.getElementById('serviceRequestModal')
+
+                serviceRequestModal.addEventListener('show.bs.modal', function (event) {
+                    // Get the button that triggered the modal
+                    var button = event.relatedTarget;
+
+                    // Extract data attributes from the button (message ID and reported user ID)
+                    var priceMin = button.getAttribute('data-price-min');
+                    var priceMax = button.getAttribute('data-price-max');
+                    var serviceId = button.getAttribute('data-service-id');
+
+                    var modalPriceMin = serviceRequestModal.querySelector('#priceMin');
+                    var modalPriceMax = serviceRequestModal.querySelector('#priceMax');
+                    var modalServiceId = serviceRequestModal.querySelector('#serviceId');
+                    
+                    modalPriceMin.value = priceMin;
+                    modalPriceMax.value = priceMax;
+                    modalServiceId.value = serviceId;
+                    
+                });
+            </script>
     </body>
 </html>
