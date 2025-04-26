@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }else if(action == '1'){
         const insightRequestOutcomeModal = new bootstrap.Modal(document.getElementById('insightRequestOutcomeModal'));
         if (actionStatus) {
-            const actionAlert = document.getElementById('actionFeedback');
+            const actionAlert = document.getElementById('actionFeedbackInsight');
             actionAlert.classList.remove('d-none');
             actionAlert.classList.add(actionStatus === 'success' ? 'alert-success' : 'alert-danger');
             actionAlert.textContent = actionStatus === 'success'
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }else if(action == '2'){
         const serviceRequestOutcomeModal = new bootstrap.Modal(document.getElementById('serviceRequestOutcomeModal'));
         if(actionStatus) {
-            const actionAlert = document.getElementById('actionFeedback');
+            const actionAlert = document.getElementById('actionFeedbackService');
             actionAlert.classList.remove('d-none');
             actionAlert.classList.add(actionStatus === 'success' ? 'alert-success' : 'alert-danger');
             actionAlert.textContent = actionStatus === 'success'

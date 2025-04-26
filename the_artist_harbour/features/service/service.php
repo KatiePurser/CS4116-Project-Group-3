@@ -38,27 +38,33 @@ require_once(__DIR__ . "/review_report_modal.php");
         <script src="js/handle_insight_request.js"></script>
         <script src="js/handle_service_request.js"></script>
         <script src="js/handle_review_report.js"></script>
-        <script src="js/outcome_handling.js"></script>
+        <!-- <script src="js/outcome_handling.js"></script> -->
 
         <style>
             .information {
-                max-height: 60%;
                 margin-top: 2vh;
                 margin-left: 2vw;
                 margin-right:2vw;
                 margin-bottom: 3vh;
+                height: fit-content;
+                max-height: fit-content;
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-top: auto;
             }
 
             .info-container {
-                max-height: fit-content;
+                height:fit-content;
                 border-radius: 2%;
                 padding: 1%;
                 padding-bottom: 3%;
                 text-align:center;
+                width: 55%;
             }
 
             .margin {
-                max-height: fit-content;
+                height: 0;
             }
 
             .name-container {
@@ -85,48 +91,56 @@ require_once(__DIR__ . "/review_report_modal.php");
                 background-color: #E2D4F0;
                 border-width: 0.5%;
                 padding-top: 1vh;
-                padding-bottom: 0.2vh;
+            }
+
+            .tags {
+                color: #777;
+                padding-bottom: 0.25vh;
             }
 
             .description-container {
                 margin: auto;
                 padding: 0.5%;
-                min-height: 10%;
+                min-height: 10vw;
             }
 
             .image-container {
+                margin-top: 3vh;
                 padding:1%;
                 border: 10px solid #E2D4F0;
-                max-height: fit-content;
+                width: 40%;
+                height: fit-content;
+                max-height: 50%;
                 border-radius: 2%;
                 justify-content: center;
             }
 
             .image {
                 height: fit-content;
-                max-height: 60%;
+                max-height: 50vw;
             } 
+
+            .price-container {
+                width: 50%;
+            }
 
             .price {
                 margin: auto;
-                margin-top: 2vh;
-                float: left;
-                padding-left: 5vw;
-                padding-right: 5vw;
                 background-color: #E2D4F0;
                 border-radius: 1vw;
             }
 
+            .service_request {
+                width: 40%;
+            }
+
             .service-request-btn {
-                float: right;
                 margin-top: 2vh;
                 color: white;
                 background-color: #82689A; 
-                border-width: 2%; 
+                border-width: 5px; 
                 border-color: #82689A;
                 border-radius: 1vw;
-                font-size: 24;
-                width: 30%;
             }
 
             /* Center container with responsive padding */
@@ -136,10 +150,18 @@ require_once(__DIR__ . "/review_report_modal.php");
                 padding: 40px;
             }
 
+
             /* Medium screens */
             @media (min-width: 768px) {
                 .center-container {
                     padding: 80px;
+                }
+
+                .price-and-request {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-top: auto;
                 }
             }
 
@@ -147,6 +169,17 @@ require_once(__DIR__ . "/review_report_modal.php");
             @media (min-width: 992px) {
                 .center-container {
                     padding: 100px;
+                }
+
+                .service-request-btn {
+                    font-size: 1.75vw;
+                }
+
+                .price-and-request {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-top: auto;
                 }
             }
 
@@ -156,12 +189,47 @@ require_once(__DIR__ . "/review_report_modal.php");
                     max-width: 1320px;
                     padding: 100px;
                 }
+                .service-request-btn {
+                    font-size: 1.75vw;
+                }
+
+                .price-and-request {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-top: auto;
+                }
             }
 
             /* Small screens */
-            @media (max-width: 576px) {
+            @media (max-width: 768px) {
                 .center-container {
                     padding: 40px;
+                }
+
+                .service_request {
+                    width: 100%;
+                }
+
+                .service-request-btn {
+                    width: 100%;
+                    font-size: 3.5vw;
+                }
+
+                .info-container {
+                    width: 40%;
+                }
+
+                .image-container {
+                    width: 55%;
+                }
+
+                .price-container {
+                    width: 100%;
+                }
+
+                .price {
+                    width: 100%;
                 }
             }
             
@@ -331,17 +399,28 @@ require_once(__DIR__ . "/review_report_modal.php");
                 color: white;
                 border-color: #70578c;
             }
+
+            .modal-header,
+            .submit-btn {
+                background-color: #82689A;
+            }
+
+            .submit-btn:hover {
+                background-color: #5b496d;
+            }
+
+            .modal-title {
+                padding: 10px;
+            }
         </style>
     </head>
     <body style="padding-top: 73.6px;">
-        <div class="row g-0">
-            <div class="col-12">
-                <?php include __DIR__ . '/../../templates/header.php'; ?>
-            </div>
+        <div>
+            <?php include __DIR__ . '/../../templates/header.php'; ?>
         </div>
 
-        <div class="row information g-0">
-            <div class="col-6 g-0 info-container justify-content-center">
+        <div class="information">
+            <div class="info-container justify-content-center">
                 <div class="name-container">
                     <h1 class="name"><?php echo $service['name'] ?></h1>
                     <?php
@@ -370,10 +449,10 @@ require_once(__DIR__ . "/review_report_modal.php");
                         } else { 
                             $tags_string = "No Tags";
                         } ?>
-                        <p class="tags"><?php echo $tags_string ?></p>
+                        <p class="tags"><?php echo "Tags: ".$tags_string ?></p>
                     </div>
                 </div>
-                <div>
+                <div class="price-and-request">
                     <div class="price-container">
                         <?php 
                         if($service['min_price']==NULL){ ?>
@@ -399,8 +478,7 @@ require_once(__DIR__ . "/review_report_modal.php");
                     </div>
                 </div>
             </div>
-            <div class="col-1 margin"></div>
-            <div class="col-5 image-container">
+            <div class="image-container">
                 <?php
                 if(!empty($service['image'])){ ?>
                     <img src="../business/get_serviceImage.php?id=<?= $service['id'] ?>" class="card-img-top image" alt="Service Image">
@@ -410,7 +488,6 @@ require_once(__DIR__ . "/review_report_modal.php");
                 ?>
             </div>
         </div>
-        <br>
 
         <!-- Reviews -->
          <?php 
@@ -433,16 +510,15 @@ require_once(__DIR__ . "/review_report_modal.php");
                     $sql.=" ORDER BY rating ASC";
                 }
                 $sql.=" LIMIT $review_offset, $reviews_per_page";
-                $reviews = DatabaseHandler::make_select_query($sql);
             }
+            $reviews = DatabaseHandler::make_select_query($sql);
          ?>
 
         <div class="center-container">
             <div class="reviews-section">
                 <div class="reviews-header">
-                    <h2> REVIEWS </h2>
-
-                    <?php if ($num_reviews > 0): ?>
+                    <?php if ($num_reviews > 0){ ?>
+                        <h2> REVIEWS </h2>
                         <div class="sort-options">
                             <a href="?service_id=<?php echo $service_id; ?>&sort=newest"
                                 class="sort-btn <?php echo $sort_by === 'newest' ? 'active' : ''; ?>">
@@ -457,11 +533,17 @@ require_once(__DIR__ . "/review_report_modal.php");
                                 Lowest Rating
                             </a>
                         </div>
-                    <?php endif; ?>
+                    <?php } else { ?>
+                        <h2>NOT YET REVIEWED</h2>
+                    <?php } ?>
                 </div>
 
-                <?php if($reviews && count($reviews) > 0){ 
-                    foreach ($reviews as $review){ ?>
+                <?php if(count($reviews) > 0){ 
+                    foreach ($reviews as $review){ 
+                        $id = $review['id'];
+                        $sql = "SELECT id FROM review_replies WHERE review_id=$id";
+                        $reply_exists = DatabaseHandler::make_select_query($sql);
+                        ?>
                         <div class="review-item">
                             <div class="service-reviewed-header">
                                 <div class="reviewer-info">
@@ -478,14 +560,14 @@ require_once(__DIR__ . "/review_report_modal.php");
                                     </button>
 
                                     <!-- Insight Request button for customers only -->
-                                    <?php if ($_SESSION['user_type'] === 'customer'): ?>
+                                    <?php if ($_SESSION['user_type'] === 'customer'){ ?>
                                         <button type="button" class="btn btn-sm btn-outline-purple insight-request-btn"
                                             data-bs-toggle="modal" data-bs-target="#insightRequestModal"
                                             data-service-id="<?php echo $review['service_id']; ?>"
                                             data-receiver-id="<?php echo $review['reviewer_id'];; ?>">
                                             <i class="bi bi-lightbulb"></i> Request Insight
                                         </button>
-                                    <?php endif; ?>
+                                    <?php } ?>
                                 </div>
                             </div>
 
@@ -510,6 +592,26 @@ require_once(__DIR__ . "/review_report_modal.php");
                             </div>
                             <div class="review-date">
                                 <em>Reviewed on: <?php echo date("F j, Y", strtotime($review['created_at'])); ?></em>
+                            </div>
+                            <div class="review-reply">
+                                <!-- Review Reply Button for Businesses only -->
+                                <?php if ($_SESSION['user_type'] === 'business' && $reply_exists == NULL) { ?>
+                                    <form id="responseForm" method="POST" action="../review/submit_review_reply.php">
+                                        <input type="hidden" name="review_id" id="reviewId" value="<?php echo $review['id']?>">
+                                        <input type="hidden" name="page" id="page" value="service">
+                                        <input type="hidden" name="service_id" id="service_id" value="<?php echo $service_id ?>">
+                                    
+                                        <div class="mb-4">
+                                            <label for="reviewResponseText" class="form-label fw-semibold">Your Response</label>
+                                            <textarea class="form-control rounded-3 border" id="reviewResponseText" name="review_response_text" rows="4"
+                                                placeholder="Type your response here..." required></textarea>
+                                        </div>
+                                    
+                                        <div class="modal-footer d-flex justify-content-between border-0 px-0">
+                                            <button type="submit" class="submit-btn btn text-white px-4">Submit Response</button>
+                                        </div>
+                                    </form>
+                                <?php } ?>
                             </div>
                         </div>
                     <?php } ?>
@@ -544,5 +646,48 @@ require_once(__DIR__ . "/review_report_modal.php");
                 <?php } ?>
             </div>
         </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                const actionStatus = urlParams.get('outcome');
+                const action = urlParams.get('action')
+                
+                if(action == '0'){
+                    const reviewReportOutcomeModal = new bootstrap.Modal(document.getElementById('reviewReportOutcomeModal'));
+                    if (actionStatus) {
+                        const actionAlert = document.getElementById('actionFeedbackReview');
+                        actionAlert.classList.remove('d-none');
+                        actionAlert.classList.add(actionStatus === 'success' ? 'alert-success' : 'alert-danger');
+                        actionAlert.textContent = actionStatus === 'success'
+                            ? 'Report submitted successfully!'
+                            : 'Failed to submit report. Please try again.';
+                        reviewReportOutcomeModal.show();
+                    }
+                }else if(action == '1'){
+                    const insightRequestOutcomeModal = new bootstrap.Modal(document.getElementById('insightRequestOutcomeModal'));
+                    if (actionStatus) {
+                        const actionAlert = document.getElementById('actionFeedbackInsight');
+                        actionAlert.classList.remove('d-none');
+                        actionAlert.classList.add(actionStatus === 'success' ? 'alert-success' : 'alert-danger');
+                        actionAlert.textContent = actionStatus === 'success'
+                            ? 'Insight request sent successfully!'
+                            : 'Failed to send insight request. Please try again.';
+                        insightRequestOutcomeModal.show();
+                    }
+                }else if(action == '2'){
+                    const serviceRequestOutcomeModal = new bootstrap.Modal(document.getElementById('serviceRequestOutcomeModal'));
+                    if(actionStatus) {
+                        const actionAlert = document.getElementById('actionFeedbackService');
+                        actionAlert.classList.remove('d-none');
+                        actionAlert.classList.add(actionStatus === 'success' ? 'alert-success' : 'alert-danger');
+                        actionAlert.textContent = actionStatus === 'success'
+                            ? 'Service request sent successfully!'
+                            : 'Failed to send service request. Please try again.';
+                        serviceRequestOutcomeModal.show();
+                    }
+                }
+            });
+        </script>
     </body>
 </html>

@@ -24,16 +24,39 @@ if ($_SESSION['user_type'] !== 'customer') {
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         
-        <script src="/../features/service/js/handle_service_request.js"></script>
+        <script src="./../features/service/js/handle_service_request.js"></script>
         
         <style>
 
             body {
-                font-family: sans-serif;
+                /* font-family: sans-serif; */
                 margin: 0;
                 padding: 0;
                 background-color: #fff;
                 overflow-x: hidden;
+            }
+
+            .home-heading {
+                text-align: center;
+                max-width: fit-content;
+                margin: 20px;
+                margin-top: 10vh;
+                margin-bottom: 0;
+                padding-left: 2.5vw;
+                padding-right: 2.5vw;
+                background-color:#82689A;
+                color: white;
+                border: 2px dashed #E2D4F0;
+                border-radius: 15px
+            }
+
+            .home-title {
+                font-family: "Amarante", cursive;
+                padding: 4vh;
+            }
+
+            .home-description {
+                padding-bottom: 2vh;
             }
 
             .center-container {
@@ -43,7 +66,7 @@ if ($_SESSION['user_type'] !== 'customer') {
             }
 
             /* Medium screens */
-            @media (min-width: 768px) {
+            @media (min-width: 576px) {
                 .center-container {
                     padding: 80px;
                 }
@@ -73,6 +96,11 @@ if ($_SESSION['user_type'] !== 'customer') {
 
             .services-section {
                 margin-bottom: 30px;
+            }
+
+            .services-title {
+                text-align: center;
+                margin-bottom: 4vh;
             }
 
             .service-grid {
@@ -241,6 +269,28 @@ if ($_SESSION['user_type'] !== 'customer') {
                 color: white;
                 border-color: #70578c;
             }
+
+            .modal-header,
+            .submit-btn {
+                background-color: #82689A;
+            }
+
+            .submit-btn:hover {
+                background-color: #5b496d;
+            }
+
+            .modal-title {
+                padding: 10px;
+            }
+
+            .modal-header,
+            .close-btn {
+                background-color: #82689A;
+            }
+
+            .close-btn:hover {
+                background-color: #5b496d;
+            }
         </style>
     </head>
     <body style="padding-top: 73.6px;">
@@ -259,18 +309,11 @@ if ($_SESSION['user_type'] !== 'customer') {
             </div>
 
             <div class="row g-0">
-                <div class="col-12 text-center">
+                <div class="home-heading">
                     <h1 class="home-title">WELCOME TO THE ARTIST HARBOUR</h1>
                     <h3 class="home-description">We are a collective working to make a safe and community-based space for artists to market their bespoke services</h3>
                 </div>
             </div>
-            <br><br>
-            <div class="row g-0">
-                <div class="col-12 text-center">
-                    <h2 class="services-title">OUR TOP-RATED SERVICES</h2>
-                </div>
-            </div>
-            <br>
         </div>
 
         <?php
@@ -286,6 +329,7 @@ if ($_SESSION['user_type'] !== 'customer') {
             $businesses = DatabaseHandler::make_select_query("SELECT id, display_name FROM businesses "); ?>
             <div class="center-container">
                 <div class="services-section">
+                    <h2 class="services-title">OUR TOP-RATED SERVICES</h2>
                     <div class="service-grid">
                         <?php foreach ($services as $service){ ?>
                         <a href="../features/service/service.php?service_id=<?= $service['id'] ?>" class="service-card-link">
@@ -363,8 +407,64 @@ if ($_SESSION['user_type'] !== 'customer') {
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <?php //include __DIR__ . '/../templates/footer.php'; ?>
-            </div>        
+
+            <!-- Service Request Modal -->
+            <div id="serviceRequestModal" class="modal fade" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content shadow-lg rounded-4">
+                        <div class="modal-header text-white rounded-top-4">
+                            <h5 class="modal-title" id="serviceRequestModalLabel">Request Service</h5>
+                            <button class="btn-close btn-close-white me-2" data-bs-dismiss="modal" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <div class="modal-body px-5 py-4">
+                            <form action="/CS4116-Project-Group-3/the_artist_harbour/features/service/submit_service_request.php" method="get">
+                                <!-- hidden inputs -->
+                                <input type="hidden" name="sender_id" id="sender_id" value="<?php echo $_SESSION['user_id'];?>">
+                                <input type="hidden" name="price_min" id="priceMin">
+                                <input type="hidden" name="price_max" id="priceMax">
+                                <input type="hidden" name="service_id" id="serviceId">
+
+                                <div class="mb-4">
+                                    <label for="message" class="form-label fw-semibold">Message</label>
+                                    <textarea class="form-control rounded-3 border" id="message" name="message" rows="4"
+                                        placeholder="Please add any extra details or requests here..." required></textarea>
+                                </div>
+
+                                <div class="modal-footer d-flex justify-content-between border-0 px-0">
+                                    <button type="button" class="btn btn-outline-secondary px-4"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="submit-btn btn px-4">Send Service Request</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Service Request Script -->
+            <script>
+                var serviceRequestModal = document.getElementById('serviceRequestModal')
+
+                serviceRequestModal.addEventListener('show.bs.modal', function (event) {
+                    // Get the button that triggered the modal
+                    var button = event.relatedTarget;
+
+                    // Extract data attributes from the button (message ID and reported user ID)
+                    var priceMin = button.getAttribute('data-price-min');
+                    var priceMax = button.getAttribute('data-price-max');
+                    var serviceId = button.getAttribute('data-service-id');
+
+                    var modalPriceMin = serviceRequestModal.querySelector('#priceMin');
+                    var modalPriceMax = serviceRequestModal.querySelector('#priceMax');
+                    var modalServiceId = serviceRequestModal.querySelector('#serviceId');
+                    
+                    modalPriceMin.value = priceMin;
+                    modalPriceMax.value = priceMax;
+                    modalServiceId.value = serviceId;
+                    
+                });
+            </script>   
+               
     </body>
 </html>
