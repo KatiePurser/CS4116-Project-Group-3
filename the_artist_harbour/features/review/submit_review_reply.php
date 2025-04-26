@@ -10,7 +10,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $result = DatabaseHandler::make_modify_query($sql);
 
-    header("Location: profile.php");
-    exit();
+    $page = $_POST['page'];
+    if($page === "service") {
+        $service_id = $_POST['service_id'];
+        header("Location: ../service/service.php?service_id=$service_id");
+        exit();
+    } else if ($page === "profile") {
+        $business_id = $_POST['business_id'];
+        header("Location: ../business/profile.php?business_id=$business_id");
+        exit();
+    };
 }
 ?>
