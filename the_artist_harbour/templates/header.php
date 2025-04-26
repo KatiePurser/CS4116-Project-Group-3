@@ -45,7 +45,8 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
                                     href="/CS4116-Project-Group-3/the_artist_harbour/features/service_request/service_request_page.php">Requests</a>
                             </li>
                             <li><a class="dropdown-item"
-                                    href="/CS4116-Project-Group-3/the_artist_harbour/features/user/user_profile.php">Account</a>
+                                    href="/CS4116-Project-Group-3/the_artist_harbour/features/user/user_profile.php">Account
+                                    Details</a>
                             </li>
                             <li>
                                 <hr class="dropdown-divider">
@@ -81,19 +82,24 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
 
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item"
-                                href="/CS4116-Project-Group-3/the_artist_harbour/features/business/profile.php">Profile</a>
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/user/user_profile.php">Account
+                                Details</a>
                         </li>
                         <li><a class="dropdown-item"
-                                href="/CS4116-Project-Group-3/the_artist_harbour/features/messages/inbox.php">Messages</a>
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/business/profile.php">Business
+                                Profile</a>
+                        </li>
+
+
+                        <li><a class="dropdown-item"
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">Business
+                                Details</a>
                         </li>
                         <li><a class="dropdown-item"
                                 href="/CS4116-Project-Group-3/the_artist_harbour/features/service_request/service_request_page.php">Requests</a>
                         </li>
                         <li><a class="dropdown-item"
-                                href="/CS4116-Project-Group-3/the_artist_harbour/features/user/user_profile.php">Account</a>
-                        </li>
-                        <li><a class="dropdown-item"
-                                href="/CS4116-Project-Group-3/the_artist_harbour/features/business/account.php">Business</a>
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/messages/inbox.php">Messages</a>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
@@ -132,7 +138,10 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
 
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item"
-                                href="/CS4116-Project-Group-3/the_artist_harbour/features/administration/admin_panel.php">Dashboard</a>
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/administration/admin_panel.php">Report Logs</a>
+                        </li>
+                        <li><a class="dropdown-item"
+                               href="/CS4116-Project-Group-3/the_artist_harbour/features/administration/banned_users.php">Banned Users</a>
                         </li>
                         <li>
                             <hr class="dropdown-divider">

@@ -12,6 +12,7 @@ try {
 
 } catch (InvalidArgumentException $exception) {
     $_SESSION["error"] = $exception->getMessage();
+    saveInputFieldsValues();
     header("Location: login.php");
     exit();
 }
@@ -19,12 +20,14 @@ try {
 $user_data = getUserByEmail($email);
 if ($user_data === null) {
     $_SESSION["error"] = "Email is not registered.";
+    saveInputFieldsValues();
     header("Location: login.php");
     exit();
 }
 
 if (!verifyPassword($password, $user_data["password"])) {
     $_SESSION["error"] = "Incorrect password.";
+    saveInputFieldsValues();
     header("Location: login.php");
     exit();
 }
@@ -59,4 +62,9 @@ function isUserBanned(int $userId): bool {
     $query = "SELECT * FROM banned_users WHERE banned_user_id = $userId";
     $result = DatabaseHandler::make_select_query($query);
     return !empty($result);
+}
+
+function saveInputFieldsValues(): void {
+    $_SESSION["email_address"] = $_POST["email"] ?? "";
+    $_SESSION["password"] = $_POST["password"] ?? "";
 }

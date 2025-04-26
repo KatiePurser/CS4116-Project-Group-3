@@ -6,7 +6,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require_once __DIR__ . '\serviceRequestHandler.php';
+require_once __DIR__ . '/serviceRequestHandler.php';
 ?>
 
 <!DOCTYPE html>
