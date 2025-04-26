@@ -170,33 +170,104 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 1.5rem;
             color: #49375a;
         }
-        .profile-picture-container {
-            width: 150px;          
-            height: 150px;        
-            border-radius: 50%;   
-            overflow: hidden;     
+        .sub-sidebar {
+            background-color: #E2D4F0; 
+            min-height: calc(100vh - 73.6px);
+            padding: 10px;
+            border-right: #B3AABA 2px solid;
+            display: flex;
+            flex-direction: column;
+        }
+        .profile-system-container {
+            display: flex;
+            flex-grow: 1;
+            height: calc(100vh - 73.6px);
+        }
+        .profile-content-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 73.6px);
+            overflow: auto;
+        }
+        .profile-title-container {
             display: flex;
             justify-content: center;
             align-items: center;
-}
-
-        .profile-picture {
-           width: 100%;
-           height: 100%;
-           object-fit: cover;     
-}
-
-.sub-sidebar {
-    background-color: #ddd2f1; 
-    min-height: calc(100vh - 56px - 53px);
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
-    
-}
-        
-
+            background-color: #E2D4F0;
+            border-bottom: #B3AABA 2px solid;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .profile-title {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #49375a;
+            margin: 20px;
+        }
+        .content-padding {
+            padding: 20px !important; /* Add padding to the content container only */
+        }
+        .input-group-text {
+            background-color: #ac8ebf;
+            border-color: #ac8ebf;
+            color: white;
+            cursor: pointer;
+        }
+        .image-preview {
+            max-width: 150px;
+            max-height: 150px;
+            margin-top: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .profile-picture-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .profile-picture-container {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto;
+            border: 3px solid #9074a8;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            background-color: #f8f9fa;
+        }
+        .profile-picture-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .profile-picture-icon {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ac8ebf;
+        }
+        .user-info-container {
+            text-align: center;
+            padding: 20px;
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        .user-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #49375a;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+        .user-email {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
         div {
             padding: 0 !important;
         }
@@ -219,17 +290,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             
             <!-- Sub-sidebar with user info -->
-            <div class="col-2 sub-sidebar">
-                <div class="text-center">
-                <?php if ($profile_picture): ?>
-    <div class="profile-picture-container">
-        <img src="get_image.php?id=<?= $user_id ?>" class="profile-picture">
-    </div>
-<?php else: ?>
-    <div class="profile-picture-container bg-secondary text-white d-flex align-items-center justify-content-center-right">
-        <i class="bi bi-person fs-1"></i>
-    </div>
-<?php endif; ?>
+            <div class="col-4 col-md-2 sub-sidebar">
+                <div class="profile-title-container">
+                    <h5 class="profile-title">User Info</h5>
+                </div>
+                <div class="user-info-container">
+                    <div class="profile-picture-container">
+                        <?php if ($profile_picture): ?>
+                            <img src="get_image.php?id=<?= $user_id ?>" alt="Profile Picture">
+                        <?php else: ?>
+                            <div class="profile-picture-icon text-white">
+                                <i class="bi bi-person-fill" style="font-size: 3rem;"></i>
+                            </div>
+                        <?php endif; ?>
+                    </div>
 
                     <h4 class="user-name"><?php echo htmlspecialchars($first_name . " " . $last_name); ?></h4>
                     <p class="user-email"><?php echo htmlspecialchars($email); ?></p>
