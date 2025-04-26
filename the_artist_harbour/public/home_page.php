@@ -338,7 +338,7 @@ if ($_SESSION['user_type'] !== 'customer') {
                                     <?php if (!empty($service['image'])){ ?>
                                         <img src="../features/business/get_serviceImage.php?id=<?= $service['id'] ?>" alt="<?php echo htmlspecialchars($service['name']); ?>">
                                     <?php }else{ ?>
-                                        <img src="images/default-service.png" alt="Default Service Image">
+                                        <img src="images/default.png" alt="Default Service Image">
                                     <?php } ?>
                                 </div>
                                 <div class="service-details" style="padding: 15px;">
