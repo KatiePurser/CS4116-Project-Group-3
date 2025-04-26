@@ -95,7 +95,7 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
 
 <style>
     .time-stamp {
-        min-width: 550px;
+        min-width: 300px;
     }
 
     .requests-container {
