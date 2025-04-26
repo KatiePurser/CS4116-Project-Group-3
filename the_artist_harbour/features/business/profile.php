@@ -1013,7 +1013,10 @@ if ($serviceIds && count($serviceIds) > 0) {
             </div>
 
             <?php if ($reviews && count($reviews) > 0): ?>
-                <?php foreach ($reviews as $review): ?>
+                <?php foreach ($reviews as $review): 
+                    $id = $review['id'];
+                    $sql = "SELECT * FROM review_replies WHERE review_id=$id";
+                    $reply_exists = DatabaseHandler::make_select_query($sql);?>
                     <div class="review-item">
                         <!-- Service name at the top in bigger text -->
                         <div class="service-reviewed-header">
@@ -1063,6 +1066,38 @@ if ($serviceIds && count($serviceIds) > 0) {
                         </div>
                         <div class="review-date">
                             <em>Reviewed on: <?php echo date("F j, Y", strtotime($review['created_at'])); ?></em>
+                        </div>
+                        <div class="review-reply">
+                            <!-- Review Reply Button for Businesses only -->
+                            <?php if ($_SESSION['user_type'] === 'business' && $reply_exists == NULL) { ?>
+                                <form id="responseForm" method="POST" action="../review/submit_review_reply.php">
+                                    <input type="hidden" name="review_id" id="reviewId" value="<?php echo $review['id']?>">
+                                    <input type="hidden" name="page" id="page" value="service">
+                                    <input type="hidden" name="service_id" id="service_id" value="<?php echo $service_id ?>">
+                                
+                                    <div class="mb-4">
+                                        <label for="reviewResponseText" class="form-label fw-semibold">Your Response</label>
+                                        <textarea class="form-control rounded-3 border" id="reviewResponseText" name="review_response_text" rows="4"
+                                            placeholder="Type your response here..." required></textarea>
+                                    </div>
+                                
+                                    <div class="modal-footer d-flex justify-content-between border-0 px-0">
+                                        <button type="submit" class="submit-btn btn text-white px-4">Submit Response</button>
+                                    </div>
+                                </form>
+                            <?php } else if ($reply_exists) { ?>
+                                <div class="review-reply-content">
+                                    <div class="replied">
+                                        <?php echo htmlspecialchars("Reply from Business:"); ?>
+                                    </div>
+                                    <div class="reply-text">
+                                        <?php echo htmlspecialchars($reply_exists[0]['text']); ?>
+                                    </div>
+                                    <div class="review-date">
+                                        <em>Replied on: <?php echo date("F j, Y", strtotime($reply_exists[0]['created_at'])); ?></em>
+                                    </div>
+                                </div>
+                            <?php } ?>
                         </div>
                     </div>
                 <?php endforeach; ?>

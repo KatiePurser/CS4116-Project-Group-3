@@ -523,16 +523,16 @@ if ($_SESSION['user_type'] != 'customer') {
             if(isset($_GET['filter'])){
                 if($_GET['filter']==1){
                     //By Reviews (High to Low)
-                    $sql.=" ORDER BY reviews DESC;";
+                    $sql.=" ORDER BY reviews DESC";
                 }else if($_GET['filter']==2){
                     //By Reviews (Low to High)
-                    $sql.=" ORDER BY reviews ASC;";
+                    $sql.=" ORDER BY reviews ASC";
                 }else if($_GET['filter']==3){
                     //By Price (High to Low)
-                    $sql.=" ORDER BY max_price DESC;";
+                    $sql.=" ORDER BY max_price DESC";
                 }else if($_GET['filter']==4){
                     //By Price (Low to High)
-                    $sql.=" ORDER BY max_price ASC;";
+                    $sql.=" ORDER BY max_price ASC";
                 }
             } 
             ?>
