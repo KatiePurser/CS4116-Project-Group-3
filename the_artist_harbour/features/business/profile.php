@@ -3,6 +3,7 @@ session_start();
 // Include the necessary files (for database connection, etc.)
 include_once __DIR__ . '/../../utilities/databaseHandler.php';
 
+
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/registration-login/login.php");
@@ -164,16 +165,18 @@ if ($serviceIds && count($serviceIds) > 0) {
 
     // Fetch reviews with service names
     if ($total_reviews > 0) {
-        $query = "SELECT r.id, r.text, r.rating, r.created_at, r.service_id, u.first_name, u.last_name, s.name as service_name
-            FROM reviews r
-            JOIN users u ON r.reviewer_id = u.id
-            JOIN services s ON r.service_id = s.id
-            WHERE r.service_id IN ($serviceIdString)
-            $sort_clause
-            LIMIT $review_offset, $reviews_per_page";
-        $reviews = DatabaseHandler::make_select_query($query);
+        $query = "SELECT r.id, r.text, r.rating, r.created_at, r.service_id, r.reviewer_id, u.first_name, u.last_name, s.name as service_name
+        FROM reviews r
+        JOIN users u ON r.reviewer_id = u.id
+        JOIN services s ON r.service_id = s.id
+        WHERE r.service_id IN ($serviceIdString)
+        $sort_clause
+        LIMIT $review_offset, $reviews_per_page";
+    $reviews = DatabaseHandler::make_select_query($query);
     }
 }
+require_once(__DIR__ . "/../service/insight_request_modal.php");
+require_once(__DIR__ . "/../service/review_report_modal.php");
 ?>
 
 
@@ -188,6 +191,10 @@ if ($serviceIds && count($serviceIds) > 0) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../service/js/handle_insight_request.js"></script>
+    <script src="../service/js/handle_review_report.js"></script>
+    <script src="../service/js/outcome_handling.js"></script>
+</head>
     <style>
         body {
             font-family: sans-serif;
@@ -411,6 +418,7 @@ if ($serviceIds && count($serviceIds) > 0) {
             margin-bottom: 30px;
         }
 
+        /* Service Cards Styling */
         .service-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -434,16 +442,25 @@ if ($serviceIds && count($serviceIds) > 0) {
         }
 
         .service-image {
-            height: 180px;
-            background-color: #f0f0f0;
+            width: 100%;
+            height: 0;
+            padding-bottom: 66.67%;
+            position: relative;
             overflow: hidden;
+            border-radius: 12px 12px 0 0;
+            background-color: #f0f0f0;
         }
 
         .service-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill; /* Changed from 'contain' to 'fill' */
+    object-position: center;
+}
+
 
         .service-details {
             padding: 15px;
@@ -519,6 +536,68 @@ if ($serviceIds && count($serviceIds) > 0) {
         .service-card-link:hover {
             text-decoration: none;
             color: inherit;
+        }
+
+        /* Responsive adjustments for service cards */
+        @media (max-width: 992px) {
+            .service-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .service-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 15px;
+            }
+
+            .service-details {
+                padding: 12px;
+            }
+
+            .service-details h4 {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .service-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .service-details {
+                padding: 10px;
+            }
+
+            .service-details h4 {
+                font-size: 1rem;
+                margin-bottom: 5px;
+            }
+
+            .service-details p {
+                font-size: 0.85rem;
+                margin-bottom: 10px;
+            }
+
+            .service-tags {
+                margin-bottom: 10px;
+            }
+
+            .tag {
+                padding: 2px 6px;
+                font-size: 0.7rem;
+            }
+
+            .service-price {
+                font-size: 0.9rem;
+            }
+
+            .request-btn {
+                padding: 5px 10px;
+                font-size: 0.8em;
+            }
         }
 
         /* Reviews Section */
@@ -787,6 +866,7 @@ if ($serviceIds && count($serviceIds) > 0) {
             border-color: #5f4a7b;
         }
     </style>
+
 </head>
 
 <body>
@@ -816,7 +896,8 @@ if ($serviceIds && count($serviceIds) > 0) {
                     <div class="col-md-9">
                         <h2 class="card-title text-purple"><?php echo htmlspecialchars($business_name); ?></h2>
                         <p class="text-muted mb-2">Owned by
-                            <?php echo htmlspecialchars($owner_first_name . ' ' . $owner_last_name); ?></p>
+                            <?php echo htmlspecialchars($owner_first_name . ' ' . $owner_last_name); ?>
+                        </p>
 
                         <!-- Business Description -->
                         <div class="mb-3">
@@ -894,6 +975,9 @@ if ($serviceIds && count($serviceIds) > 0) {
         <!-- Services Section -->
         <?php include __DIR__ . '/../service/service_request_modal.php'; ?>
         <script src="../../features/service/js/handle_service_request.js"></script>
+        <script src="../../features/service/js/outcome_handling.js"></script>
+
+
         <div class="services-section">
             <h3 class="section-title">Services</h3>
 
@@ -908,7 +992,7 @@ if ($serviceIds && count($serviceIds) > 0) {
                                         <img src="./get_serviceImage.php?id=<?= $service['id'] ?>"
                                             alt="<?php echo htmlspecialchars($service['name']); ?>">
                                     <?php else: ?>
-                                        <img src="../../public/images/default-service.png" alt="Default Service Image">
+                                        <img src="../../public/images/default.png" alt="Default Service Image">
                                     <?php endif; ?>
                                 </div>
                                 <div class="service-details">
@@ -943,16 +1027,20 @@ if ($serviceIds && count($serviceIds) > 0) {
                                             }
                                             ?>
                                         </div>
-                                        <?php if (!$is_own_profile): // Only show request button if not the owner ?>
-    <button type="button" class="button" 
-            data-bs-toggle="modal" 
-            data-bs-target="#serviceRequestModal" 
-            data-service-id="<?= $service['id'] ?>" 
-            data-price-final="<?= isset($service['max_price']) ? $service['max_price'] : '' ?>"
-            onclick="event.preventDefault(); event.stopPropagation();">
-        Request
-    </button>
+                                        <?php if (!isset($is_own_profile) || !$is_own_profile): // Only show request button if not the owner ?>
+  <button type="button" 
+          class="button" 
+          data-bs-toggle="modal" 
+          data-bs-target="#serviceRequestModal"
+          data-service-id="<?= $service['id'] ?>" 
+          data-price-final="<?= isset($service['max_price']) ? $service['max_price'] : '0' ?>"
+          data-business-user-id="<?= $business['user_id'] ?>"
+          onclick="event.preventDefault(); event.stopPropagation();">
+    Request
+  </button>
 <?php endif; ?>
+
+
                                     </div>
                                 </div>
                             </div>
@@ -989,6 +1077,7 @@ if ($serviceIds && count($serviceIds) > 0) {
         </div>
 
 
+
         <!-- Reviews Section -->
         <div class="reviews-section">
             <div class="reviews-header">
@@ -1013,59 +1102,63 @@ if ($serviceIds && count($serviceIds) > 0) {
             </div>
 
             <?php if ($reviews && count($reviews) > 0): ?>
-                <?php foreach ($reviews as $review): ?>
-                    <div class="review-item">
-                        <!-- Service name at the top in bigger text -->
-                        <div class="service-reviewed-header">
-                            <h4><?php echo htmlspecialchars($review['service_name']); ?></h4>
+<?php foreach ($reviews as $review): ?>
+    <div class="review-item">
+        <!-- Service name at the top in bigger text -->
+        <div class="service-reviewed-header">
+            <h4><?php echo htmlspecialchars($review['service_name']); ?></h4>
 
-                            <div class="review-actions">
-                                <!-- Flag button for inappropriate reviews -->
-                                <button type="button" class="btn btn-sm btn-outline-danger flag-review-btn"
-                                    data-bs-toggle="modal" data-bs-target="#flagReviewModal"
-                                    data-review-id="<?php echo $review['id']; ?>">
-                                    <i class="bi bi-flag"></i> Flag
-                                </button>
+            <div class="review-actions">
+                <!-- Flag button for inappropriate reviews -->
+                <button type="button" class="btn btn-sm btn-outline-danger flag-review-btn"
+                    data-bs-toggle="modal" data-bs-target="#reviewReportModal"
+                    data-review-id="<?php echo $review['id']; ?>"
+                    data-reported-id="<?php echo $review['reviewer_id']; ?>"
+                    data-service-id="<?php echo $review['service_id']; ?>"
+                    data-review-content="<?php echo htmlspecialchars($review['text']); ?>">
+                    <i class="bi bi-flag"></i> Flag
+                </button>
 
-                                <!-- Insight Request button for customers only -->
-                                <?php if ($_SESSION['user_type'] === 'customer'): ?>
-                                    <button type="button" class="btn btn-sm btn-outline-purple insight-request-btn"
-                                        data-bs-toggle="modal" data-bs-target="#insightRequestModal"
-                                        data-service-id="<?php echo $review['service_id']; ?>"
-                                        data-business-id="<?php echo $business_id; ?>">
-                                        <i class="bi bi-lightbulb"></i> Request Insight
-                                    </button>
-                                <?php endif; ?>
-                            </div>
-                        </div>
+                <!-- Insight Request button for customers only -->
+                <?php if ($_SESSION['user_type'] === 'customer'): ?>
+                    <button type="button" class="btn btn-sm btn-outline-purple insight-request-btn"
+                        data-bs-toggle="modal" data-bs-target="#insightRequestModal"
+                        data-service-id="<?php echo $review['service_id']; ?>"
+                        data-receiver-id="<?php echo $review['reviewer_id']; ?>">
+                        <i class="bi bi-lightbulb"></i> Request Insight
+                    </button>
+                <?php endif; ?>
+            </div>
+        </div>
 
-                        <div class="review-header">
-                            <div class="reviewer-info">
-                                <?php echo htmlspecialchars($review['first_name'] . " " . $review['last_name']); ?>
-                            </div>
-                            <div class="review-rating">
-                                <?php
-                                $rating = $review['rating'];
-                                for ($i = 1; $i <= 5; $i++) {
-                                    if ($i <= $rating) {
-                                        echo '<i class="bi bi-star-fill"></i>';
-                                    } elseif ($i - 0.5 <= $rating) {
-                                        echo '<i class="bi bi-star-half"></i>';
-                                    } else {
-                                        echo '<i class="bi bi-star"></i>';
-                                    }
-                                }
-                                ?>
-                            </div>
-                        </div>
-                        <div class="review-content">
-                            <?php echo htmlspecialchars($review['text']); ?>
-                        </div>
-                        <div class="review-date">
-                            <em>Reviewed on: <?php echo date("F j, Y", strtotime($review['created_at'])); ?></em>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+        <div class="review-header">
+            <div class="reviewer-info">
+                <?php echo htmlspecialchars($review['first_name'] . " " . $review['last_name']); ?>
+            </div>
+            <div class="review-rating">
+                <?php
+                $rating = $review['rating'];
+                for ($i = 1; $i <= 5; $i++) {
+                    if ($i <= $rating) {
+                        echo '<i class="bi bi-star-fill"></i>';
+                    } elseif ($i - 0.5 <= $rating) {
+                        echo '<i class="bi bi-star-half"></i>';
+                    } else {
+                        echo '<i class="bi bi-star"></i>';
+                    }
+                }
+                ?>
+            </div>
+        </div>
+        <div class="review-content">
+            <?php echo htmlspecialchars($review['text']); ?>
+        </div>
+        <div class="review-date">
+            <em>Reviewed on: <?php echo date("F j, Y", strtotime($review['created_at'])); ?></em>
+        </div>
+    </div>
+<?php endforeach; ?>
+
 
 
                 <!-- Pagination for Reviews -->
@@ -1100,102 +1193,37 @@ if ($serviceIds && count($serviceIds) > 0) {
                 <p>No reviews yet.</p>
             <?php endif; ?>
         </div>
+<!-- Add just before the closing </body> tag -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Fix the form action in the insight request modal
+    const insightRequestForm = document.querySelector('#insightRequestModal form');
+    if (insightRequestForm) {
+        insightRequestForm.action = "/CS4116-Project-Group-3/the_artist_harbour/features/service/submit_insight_request.php";
+    }
+    
+    // Fix the form action in the review report modal
+    const reviewReportForm = document.querySelector('#reviewReportModal form');
+    if (reviewReportForm) {
+        reviewReportForm.action = "/CS4116-Project-Group-3/the_artist_harbour/features/service/submit_review_report.php";
+    }
+});
+</script>
 
-        <!-- Flag Review Modal -->
-        <div class="modal fade" id="flagReviewModal" tabindex="-1" aria-labelledby="flagReviewModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="flagReviewModalLabel">Flag Inappropriate Review</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form id="flagReviewForm" action="../reviews/flag_review.php" method="post">
-                        <div class="modal-body">
-                            <input type="hidden" id="review_id" name="review_id">
-                            <div class="mb-3">
-                                <label for="flag_reason" class="form-label">Reason for flagging:</label>
-                                <select class="form-select" id="flag_reason" name="flag_reason" required>
-                                    <option value="">Select a reason</option>
-                                    <option value="inappropriate">Inappropriate content</option>
-                                    <option value="spam">Spam</option>
-                                    <option value="offensive">Offensive language</option>
-                                    <option value="false">False information</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="flag_details" class="form-label">Additional details (optional):</label>
-                                <textarea class="form-control" id="flag_details" name="flag_details"
-                                    rows="3"></textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-danger">Flag Review</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Insight Request Modal -->
-        <?php if ($_SESSION['user_type'] === 'customer'): ?>
-            <div class="modal fade" id="insightRequestModal" tabindex="-1" aria-labelledby="insightRequestModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="insightRequestModalLabel">Request Insight</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <form id="insightRequestForm" action="../messages/scripts/insight_request.php" method="post">
-                            <div class="modal-body">
-                                <input type="hidden" id="service_id" name="service_id">
-                                <input type="hidden" id="business_id" name="business_id">
-                                <p>Request more information about this service from the business owner.</p>
-                                <div class="mb-3">
-                                    <label for="message" class="form-label">Your message:</label>
-                                    <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary">Send Request</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        <?php endif; ?>
-
-        <!-- JavaScript for handling modals -->
+        <script src="../../features/service/js/handle_service_request.js"></script>
         <script>
-            // Handle passing data to the flag review modal
+            // Prevent service card navigation when clicking the request button
             document.addEventListener('DOMContentLoaded', function () {
-                const flagReviewModal = document.getElementById('flagReviewModal');
-                if (flagReviewModal) {
-                    flagReviewModal.addEventListener('show.bs.modal', function (event) {
-                        const button = event.relatedTarget;
-                        const reviewId = button.getAttribute('data-review-id');
-                        document.getElementById('review_id').value = reviewId;
-                    });
-                }
+                const requestButtons = document.querySelectorAll('[data-bs-target="#serviceRequestModal"]');
 
-                // Handle passing data to the insight request modal
-                const insightRequestModal = document.getElementById('insightRequestModal');
-                if (insightRequestModal) {
-                    insightRequestModal.addEventListener('show.bs.modal', function (event) {
-                        const button = event.relatedTarget;
-                        const serviceId = button.getAttribute('data-service-id');
-                        const businessId = button.getAttribute('data-business-id');
-                        document.getElementById('service_id').value = serviceId;
-                        document.getElementById('business_id').value = businessId;
+                requestButtons.forEach(button => {
+                    button.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
                     });
-                }
+                });
             });
         </script>
-
 
         <!-- JavaScript for handling pagination and sorting -->
         <script>
