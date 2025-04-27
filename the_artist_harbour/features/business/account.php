@@ -2,11 +2,8 @@
 session_start();
 include_once __DIR__ . '/../../utilities/DatabaseHandler.php';
 include_once __DIR__ . '/../../utilities/ImageHandler.php';
-// Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/registration-login/login.php");
-    exit();
-}
+
+require_once __DIR__ . '/../../utilities/validateUser.php';
 
 // Check if the user is a business account
 if ($_SESSION['user_type'] !== 'business') {
