@@ -170,7 +170,8 @@ if ($_SESSION['user_type'] != 'customer') {
             }
 
             .service-image {
-                height: 180px;
+                /* height: 180px; */
+                height: fit-content;
                 background-color: #f0f0f0;
                 overflow: hidden;
             }
@@ -236,11 +237,11 @@ if ($_SESSION['user_type'] != 'customer') {
                 font-size: 0.8rem;
             }
 
-            .request-btn {
+            .request-button {
                 background-color: #82689A;
                 color: white;
                 border: none;
-                padding: 8px 15px;
+                padding:  8px 15px;
                 text-align: center;
                 text-decoration: none;
                 display: inline-block;
@@ -250,7 +251,7 @@ if ($_SESSION['user_type'] != 'customer') {
                 transition: background-color 0.3s ease;
             }
 
-            .request-btn:hover {
+            .request-button:hover {
                 background-color: #70578c;
                 color: white;
             }
@@ -382,9 +383,6 @@ if ($_SESSION['user_type'] != 'customer') {
             <!-- form for applying filters -->
             <div class="row g-0 filter-container" style="background-color: #E2D4F0; text-align: center;">
                 <h3 class="filter-title">Filter Services</h3>
-                <form action="search_page.php" method="post">
-                    <input type="hidden" id="search" name="search" value=<?php echo $keyword?>>
-                </form>
                 <form action="search_page.php" method="get">
                     <input type="hidden" id="search" name="search" value=<?php echo $keyword?>>
                     <!-- apply a price range -->
@@ -449,18 +447,17 @@ if ($_SESSION['user_type'] != 'customer') {
                     <input class="filter_buttons" type="submit" value="Set Filters">
                 </form>
                 <br>
-                <form action="search_page.php" method="post">
+                <form action="search_page.php" method="get">
                     <input type="hidden" id="search" name="search" value=<?php echo $keyword?>>
-                    <input type="hidden" id="page" name="page" value="1">
-                    <input class="filter_buttons" type="submit" name="clear" value="Clear Filters">
+                    <!-- <input type="hidden" id="page" name="page" value="1"> -->
+                    <button class="filter_buttons" type="submit" name="clear">Clear Filters</button>
                 </form>
             </div>
 
             <?php
             //SEARCH SERVICES BY KEYWORD
-
             $sql = "SELECT * FROM services WHERE name LIKE '%{$keyword}%'";
-            $description = "Keyword=\"{$keyword}\"; ";
+            echo $sql;
 
             //add a price min, max or range to the query
             if(isset($_GET['min_price'])){               
@@ -548,7 +545,12 @@ if ($_SESSION['user_type'] != 'customer') {
             $offset = ($page - 1) * $cards_per_page;
 
             // Retrieve the necessary information from the DB
-            $numServices = count(DatabaseHandler::make_select_query($sql));
+            $numServicesArray = DatabaseHandler::make_select_query($sql);
+            if($numServicesArray){
+                $numServices = count($numServicesArray);
+            } else{
+                $numServices = 0;
+            }
 
             $sql.=" LIMIT $offset, $cards_per_page";
 
@@ -573,14 +575,14 @@ if ($_SESSION['user_type'] != 'customer') {
                             <div class="service-item">
                                 <div class="service-image">
                                     <?php if (!empty($service['image'])){ ?>
-                                        <img src="../business/get_serviceImage.php?id=<?= $service['id'] ?>" alt="<?php echo htmlspecialchars($service['name']); ?>">
+                                        <img src="../business/get_serviceImage.php?id=<?= $service['id'] ?>" alt="<?php echo ($service['name']); ?>">
                                     <?php }else{ ?>
                                         <img src="../../public/images/default.png" alt="Default Service Image">
                                     <?php } ?>
                                 </div>
                                 <div class="service-details">
-                                    <h4><?php echo htmlspecialchars($service['name']); ?></h4>
-                                    <p><?php echo htmlspecialchars(searchMethods::getBusinessName($businesses, $service['business_id'])); ?></p>
+                                    <h4><?php echo ($service['name']); ?></h4>
+                                    <p><?php echo (searchMethods::getBusinessName($businesses, $service['business_id'])); ?></p>
                                     <?php if (!empty($service['tags'])){ ?>
                                         <div class="service-tags">
                                             <?php
@@ -588,7 +590,7 @@ if ($_SESSION['user_type'] != 'customer') {
                                             foreach ($tags as $tag){
                                                 if (trim($tag) !== ''){
                                                     ?>
-                                                    <span class="tag"><?php echo htmlspecialchars(trim($tag)); ?></span>
+                                                    <span class="tag"><?php echo trim($tag); ?></span>
                                                     <?php
                                                 };
                                             };
@@ -613,9 +615,9 @@ if ($_SESSION['user_type'] != 'customer') {
                                         <div class="service-price">
                                             <?php
                                             if ($service['min_price'] !== null && $service['max_price'] !== null) {
-                                                echo '€' . htmlspecialchars($service['min_price']) . " - €" . htmlspecialchars($service['max_price']);
+                                                echo '€' . $service['min_price'] . " - €" . htmlspecialchars($service['max_price']);
                                             } elseif ($service['max_price'] !== null) {
-                                                echo '€' . htmlspecialchars($service['max_price']);
+                                                echo '€' . $service['max_price'];
                                             } else {
                                                 echo "Contact for price";
                                             }
@@ -630,7 +632,7 @@ if ($_SESSION['user_type'] != 'customer') {
                                             $service_id = $service['id'];
                                             $max_price = $service['max_price'];
                                             ?>
-                                            <button type="button" class="btn request-btn p-0" data-bs-toggle="modal" data-bs-target="#serviceRequestModal"
+                                            <button type="button" class="btn request-button" data-bs-toggle="modal" data-bs-target="#serviceRequestModal"
                                                 data-price-min="<?php echo $min_price ?>" data-price-max="<?php echo $service['max_price'] ?>" 
                                                 data-service-id="<?php echo $service_id ?>" onclick="event.preventDefault(); event.stopPropagation();">
                                                 Request 
@@ -687,13 +689,13 @@ if ($_SESSION['user_type'] != 'customer') {
                                 <div class="service-item">
                                     <div class="service-image">
                                         <?php if(searchMethods::getProfileImage($users, $business['user_id'])==true){?>
-                                            <img src="../user/get_image.php?id=<?= $business['user_id'] ?>" class="card-img-top image" style="height: 200px; object-fit: cover;">
+                                            <img src="../user/get_image.php?id=<?= $business['user_id'] ?>" class="card-img-top image"">
                                         <?php }else{ ?>
-                                            <img src="../../public/images/default.png" class="card-img-top image" alt="Default Image" style="max-height: 200px; object-fit: cover;">
+                                            <img src="../../public/images/default.png" class="card-img-top image" alt="Default Image"">
                                         <?php } ?>
                                     </div>
                                     <div class="service-details">
-                                        <h4><?php echo htmlspecialchars($business['display_name']); ?></h4>
+                                        <h4><?php echo $business['display_name']; ?></h4>
                                         <p><?php echo ServiceDetails::getRating($business["reviews"]); ?></p>
                                     </div>
                                 </div>
