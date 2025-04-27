@@ -3,7 +3,7 @@
 session_start();
 
 require_once __DIR__ . '/../../utilities/BannedAndDeletedUsersHandler.php';
-require_once __DIR__ . '/../../utilities/DatabaseHandler.php';
+require_once __DIR__ . '/../../utilities/databaseHandler.php';
 require_once __DIR__ . '/../../utilities/InputValidationHelper.php';
 
 try {
@@ -56,10 +56,10 @@ if ($new_user_data !== null) {
 }
 
 if ($user_type === "customer") {
-    header("Location: /CS4116-Project-Group-3/the_artist_harbour/public/home_page.php");
+    header("Location: /the_artist_harbour/public/home_page.php");
 } elseif ($user_type === "business") {
     createNewBusiness($_SESSION["user_id"], $business_name);
-    header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/business/account.php");
+    header("Location: /the_artist_harbour/features/business/account.php");
 }
 
 function getUserByEmail(string $email)

@@ -1,9 +1,10 @@
 <?php
 
-require_once __DIR__ . '/../../utilities/DatabaseHandler.php';
+require_once __DIR__ . '/../../utilities/databaseHandler.php';
 
 
-function getUserByEmail(string $email) {
+function getUserByEmail(string $email)
+{
     $query = "SELECT * FROM users WHERE email = '$email'";
     $result = DatabaseHandler::make_select_query($query);
     return empty($result) ? null : $result[0];

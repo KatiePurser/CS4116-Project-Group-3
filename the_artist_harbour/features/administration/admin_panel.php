@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION["user_id"])) {
-    header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/registration-login/login.php");
+    header("Location: /the_artist_harbour/features/registration-login/login.php");
     exit();
 }
 
@@ -11,10 +11,11 @@ if ($_SESSION["user_type"] !== "admin") {
     exit();
 }
 
-//?>
+// ?>
 
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -50,34 +51,36 @@ if ($_SESSION["user_type"] !== "admin") {
         }
     </style>
 </head>
+
 <body>
-<div class="container-fluid">
-    <div class="row g-0">
-        <div class="col-12">
-            <?php include __DIR__ . '/../../templates/header.php'; ?>
-        </div>
-    </div>
-
-    <div class="row g-0">
-        <div class="col-2 col-md-1">
-            <?php include __DIR__ . '/../../templates/sidebar.php'; ?>
-        </div>
-
-        <div class="col-10 col-md-11">
-            <div class="report-title-container">
-                <p>Report Logs</p>
-            </div>
-
-            <div class="reports">
-                <?php require 'reports_list.php'; ?>
-                <?php require 'modals/report_details_modal.php'; ?>
+    <div class="container-fluid">
+        <div class="row g-0">
+            <div class="col-12">
+                <?php include __DIR__ . '/../../templates/header.php'; ?>
             </div>
         </div>
 
-    </div>
-</div>
+        <div class="row g-0">
+            <div class="col-2 col-md-1">
+                <?php include __DIR__ . '/../../templates/sidebar.php'; ?>
+            </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="actions.js"></script>
+            <div class="col-10 col-md-11">
+                <div class="report-title-container">
+                    <p>Report Logs</p>
+                </div>
+
+                <div class="reports">
+                    <?php require 'reports_list.php'; ?>
+                    <?php require 'modals/report_details_modal.php'; ?>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="actions.js"></script>
 </body>
+
 </html>

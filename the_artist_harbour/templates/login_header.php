@@ -2,8 +2,8 @@
     <div class="container position-relative d-flex align-items-center">
         <!-- Centered Logo and Brand -->
         <div class="position-absolute start-50 translate-middle-x d-flex align-items-center">
-            <img src="/CS4116-Project-Group-3/the_artist_harbour/public/images/boat_logo_small.png"
-                 alt="Boat" class="img-fluid me-2" style="max-height: 40px;">
+            <img src="/the_artist_harbour/public/images/boat_logo_small.png" alt="Boat" class="img-fluid me-2"
+                style="max-height: 40px;">
             <span class="navbar-brand amarante-regular fs-4 fs-lg-2">The Artist Harbour</span>
         </div>
     </div>
@@ -18,11 +18,13 @@
         height: 73.6px;
         border-bottom: #B3AABA 2px solid;
     }
+
     .navbar-brand {
         font-weight: bold;
         font-size: 1.5rem;
         color: white;
     }
+
     .navbar-brand:hover {
         color: #49375a;
     }

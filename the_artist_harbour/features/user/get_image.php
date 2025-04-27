@@ -21,7 +21,7 @@ if ($userData && count($userData) > 0 && !empty($userData[0]['profile_picture'])
 } else {
     // If no image is found, return a placeholder
     header("Content-Type: image/png");
-    readfile("/CS4116-Project-Group-3/the_artist_harbour/public/images/user_icon.svg"); // Make sure this file exists
+    readfile("/the_artist_harbour/public/images/user_icon.svg"); // Make sure this file exists
     exit;
 }
 ?>

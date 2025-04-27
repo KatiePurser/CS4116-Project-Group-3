@@ -2,7 +2,7 @@
 
 session_start();
 
-require_once __DIR__ . '/../../utilities/DatabaseHandler.php';
+require_once __DIR__ . '/../../utilities/databaseHandler.php';
 require_once __DIR__ . '/../../utilities/InputValidationHelper.php';
 require_once __DIR__ . '/../../utilities/BannedAndDeletedUsersHandler.php';
 
@@ -34,7 +34,7 @@ if (!verifyPassword($password, $user_data["password"])) {
 }
 
 if (BannedAndDeletedUsersHandler::isUserBanned($user_data["id"])) {
-    print("Sorry, you are currently banned from using the platform.");
+    print ("Sorry, you are currently banned from using the platform.");
     exit();
 }
 
@@ -43,24 +43,27 @@ $_SESSION["user_type"] = $user_data["user_type"];
 $_SESSION["email"] = $user_data["email"];
 
 if ($_SESSION["user_type"] === "customer") {
-    header("Location: /CS4116-Project-Group-3/the_artist_harbour/public/home_page.php");
+    header("Location: /the_artist_harbour/public/home_page.php");
 } elseif ($_SESSION["user_type"] === "business") {
-    header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/business/profile.php");
+    header("Location: /the_artist_harbour/features/business/profile.php");
 } elseif ($_SESSION["user_type"] === "admin") {
-    header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/administration/admin_panel.php");
+    header("Location: /the_artist_harbour/features/administration/admin_panel.php");
 }
 
-function getUserByEmail(string $email) {
+function getUserByEmail(string $email)
+{
     $query = "SELECT * FROM users WHERE email = '$email'";
     $result = DatabaseHandler::make_select_query($query);
     return empty($result) ? null : $result[0];
 }
 
-function verifyPassword(string $password, string $hashedPassword): bool {
+function verifyPassword(string $password, string $hashedPassword): bool
+{
     return password_verify($password, $hashedPassword);
 }
 
-function saveInputFieldsValues(): void {
+function saveInputFieldsValues(): void
+{
     $_SESSION["email_address"] = $_POST["email"] ?? "";
     $_SESSION["password"] = $_POST["password"] ?? "";
 }

@@ -6,7 +6,7 @@ include_once __DIR__ . '/../../utilities/databaseHandler.php';
 
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/registration-login/login.php");
+    header("Location: /the_artist_harbour/features/registration-login/login.php");
     exit();
 }
 
@@ -45,7 +45,7 @@ if (isset($_GET['business_id'])) {
 } else {
     // Case 3: Non-business user accessing profile.php without an ID parameter
     // Redirect to home page
-    header("Location: /CS4116-Project-Group-3/the_artist_harbour/public/home_page.php");
+    header("Location: /the_artist_harbour/public/home_page.php");
     exit();
 }
 
@@ -867,23 +867,23 @@ require_once(__DIR__ . "/../service/review_report_modal.php");
         border-color: #5f4a7b;
     }
 
-.modal .btn-primary:hover {
-background-color: #70578c;
-border-color: #5f4a7b;
-}
+    .modal .btn-primary:hover {
+        background-color: #70578c;
+        border-color: #5f4a7b;
+    }
 
-.modal-header,
-.submit-btn {
-background-color: #82689A;
-}
+    .modal-header,
+    .submit-btn {
+        background-color: #82689A;
+    }
 
-.submit-btn:hover {
-background-color: #5b496d;
-}
+    .submit-btn:hover {
+        background-color: #5b496d;
+    }
 
-.modal-title {
-padding: 10px;
-}
+    .modal-title {
+        padding: 10px;
+    }
 </style>
 
 </head>
@@ -1003,7 +1003,7 @@ padding: 10px;
             <?php if ($services && count($services) > 0): ?>
                 <div class="service-grid">
                     <?php foreach ($services as $service): ?>
-                        <a href="/CS4116-Project-Group-3/the_artist_harbour/features/service/service.php?service_id=<?= $service['id'] ?>"
+                        <a href="/the_artist_harbour/features/service/service.php?service_id=<?= $service['id'] ?>"
                             class="service-card-link">
                             <div class="service-item">
                                 <div class="service-image">
@@ -1182,9 +1182,9 @@ padding: 10px;
                                     <input type="hidden" name="review_id" id="reviewId" value="<?php echo $review['id'] ?>">
                                     <input type="hidden" name="page" id="page" value="profile">
                                     <input type="hidden" name="business_id" id="business_id" value="<?php echo $business_id ?>">
-                                    <input type="hidden" name="review_page" id="review_page" value="<?php echo $review_page?>">
-                                    <input type="hidden" name="sort" id="sort" value="<?php echo $sort_by?>">
-                                
+                                    <input type="hidden" name="review_page" id="review_page" value="<?php echo $review_page ?>">
+                                    <input type="hidden" name="sort" id="sort" value="<?php echo $sort_by ?>">
+
                                     <div class="mb-4">
                                         <label for="reviewResponseText" class="form-label fw-semibold">Your Response</label>
                                         <textarea class="form-control rounded-3 border" id="reviewResponseText"
@@ -1254,13 +1254,13 @@ padding: 10px;
                 // Fix the form action in the insight request modal
                 const insightRequestForm = document.querySelector('#insightRequestModal form');
                 if (insightRequestForm) {
-                    insightRequestForm.action = "/CS4116-Project-Group-3/the_artist_harbour/features/service/submit_insight_request.php";
+                    insightRequestForm.action = "/the_artist_harbour/features/service/submit_insight_request.php";
                 }
 
                 // Fix the form action in the review report modal
                 const reviewReportForm = document.querySelector('#reviewReportModal form');
                 if (reviewReportForm) {
-                    reviewReportForm.action = "/CS4116-Project-Group-3/the_artist_harbour/features/service/submit_review_report.php";
+                    reviewReportForm.action = "/the_artist_harbour/features/service/submit_review_report.php";
                 }
             });
         </script>

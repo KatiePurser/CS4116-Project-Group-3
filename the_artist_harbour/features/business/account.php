@@ -1,7 +1,7 @@
 <?php
 session_start();
-include_once __DIR__ . '/../../utilities/DatabaseHandler.php';
-include_once __DIR__ . '/../../utilities/ImageHandler.php';
+include_once __DIR__ . '/../../utilities/databaseHandler.php';
+include_once __DIR__ . '/../../utilities/imageHandler.php';
 
 require_once __DIR__ . '/../../utilities/validateUser.php';
 

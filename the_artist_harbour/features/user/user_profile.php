@@ -10,7 +10,7 @@ include_once __DIR__ . '/../../utilities/InputValidationHelper.php';
 $messages = [];
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/registration-login/login.php");
+    header("Location: /the_artist_harbour/features/registration-login/login.php");
     exit();
 }
 
@@ -41,7 +41,7 @@ if ($userData && count($userData) > 0) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Determine which form was submitted
     $update_type = $_POST['update_type'] ?? '';
-    
+
     // Handle user details update
     if ($update_type === 'user_details' && isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['email'])) {
         $first_name = filter_input(INPUT_POST, 'first_name', FILTER_SANITIZE_STRING);
@@ -415,77 +415,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </ul>
                         </div>
                     <?php endif; ?>
-<!-- User Details Card -->
-<div class="card p-3 mb-3">
-    <h5>User Details</h5>
-    <form method="POST" action="user_profile.php" id="userDetailsForm">
-        <input type="hidden" name="update_type" value="user_details">
-        <input type="text" class="form-control mb-2" name="first_name"
-            value="<?php echo ($first_name); ?>" placeholder="First Name">
-        <input type="text" class="form-control mb-2" name="last_name"
-            value="<?php echo ($last_name); ?>" placeholder="Last Name">
-        <input type="email" class="form-control mb-2" name="email"
-            value="<?php echo ($email); ?>" placeholder="Email">
-        <button class="btn btn-secondary" type="submit">Update User Details</button>
-    </form>
-</div>
+                    <!-- User Details Card -->
+                    <div class="card p-3 mb-3">
+                        <h5>User Details</h5>
+                        <form method="POST" action="user_profile.php" id="userDetailsForm">
+                            <input type="hidden" name="update_type" value="user_details">
+                            <input type="text" class="form-control mb-2" name="first_name"
+                                value="<?php echo ($first_name); ?>" placeholder="First Name">
+                            <input type="text" class="form-control mb-2" name="last_name"
+                                value="<?php echo ($last_name); ?>" placeholder="Last Name">
+                            <input type="email" class="form-control mb-2" name="email" value="<?php echo ($email); ?>"
+                                placeholder="Email">
+                            <button class="btn btn-secondary" type="submit">Update User Details</button>
+                        </form>
+                    </div>
 
-<!-- Change Password Card -->
-<div class="card p-3 mb-3">
-    <h5>Change Password</h5>
-    <form method="POST" action="user_profile.php" id="passwordForm">
-        <input type="hidden" name="update_type" value="password">
-        <div class="input-group mb-2">
-            <input type="password" class="form-control" id="new_password" name="new_password"
-                placeholder="New Password" required>
-            <span class="input-group-text" onclick="togglePasswordVisibility('new_password')">
-                <i class="bi bi-eye-slash" id="new_password_toggle"></i>
-            </span>
-        </div>
-        <div class="input-group mb-2">
-            <input type="password" class="form-control" id="confirm_password"
-                name="confirm_password" placeholder="Confirm Password" required>
-            <span class="input-group-text" onclick="togglePasswordVisibility('confirm_password')">
-                <i class="bi bi-eye-slash" id="confirm_password_toggle"></i>
-            </span>
-        </div>
-        <div class="password-requirements mb-3 small text-muted">
-            <p class="mb-1">Password requirements:</p>
-            <ul>
-                <li>At least 8 characters long</li>
-                <li>Must include at least one uppercase letter</li>
-                <li>Must include at least one lowercase letter</li>
-                <li>Must include at least one number</li>
-                <li>Must include at least one special character (#?!@$%^&*-)</li>
-            </ul>
-        </div>
-        <button class="btn btn-secondary" type="submit">Update Password</button>
-    </form>
-</div>
+                    <!-- Change Password Card -->
+                    <div class="card p-3 mb-3">
+                        <h5>Change Password</h5>
+                        <form method="POST" action="user_profile.php" id="passwordForm">
+                            <input type="hidden" name="update_type" value="password">
+                            <div class="input-group mb-2">
+                                <input type="password" class="form-control" id="new_password" name="new_password"
+                                    placeholder="New Password" required>
+                                <span class="input-group-text" onclick="togglePasswordVisibility('new_password')">
+                                    <i class="bi bi-eye-slash" id="new_password_toggle"></i>
+                                </span>
+                            </div>
+                            <div class="input-group mb-2">
+                                <input type="password" class="form-control" id="confirm_password"
+                                    name="confirm_password" placeholder="Confirm Password" required>
+                                <span class="input-group-text" onclick="togglePasswordVisibility('confirm_password')">
+                                    <i class="bi bi-eye-slash" id="confirm_password_toggle"></i>
+                                </span>
+                            </div>
+                            <div class="password-requirements mb-3 small text-muted">
+                                <p class="mb-1">Password requirements:</p>
+                                <ul>
+                                    <li>At least 8 characters long</li>
+                                    <li>Must include at least one uppercase letter</li>
+                                    <li>Must include at least one lowercase letter</li>
+                                    <li>Must include at least one number</li>
+                                    <li>Must include at least one special character (#?!@$%^&*-)</li>
+                                </ul>
+                            </div>
+                            <button class="btn btn-secondary" type="submit">Update Password</button>
+                        </form>
+                    </div>
 
-<!-- Profile Picture Card -->
-<div class="card p-3 mb-3">
-    <h5>Profile Picture</h5>
-    <form method="POST" enctype="multipart/form-data" id="profilePictureForm">
-        <input type="hidden" name="update_type" value="profile_picture">
-        <div class="mb-2">
-            <input type="file" class="form-control" id="profile_picture" name="profile_picture"
-                accept="image/*" onchange="previewImage()">
-            <div id="image_error" class="text-danger mt-2" style="display: none;"></div>
-            <small class="form-text text-muted">
-                Maximum file size: 2MB. Maximum dimensions: 1200x1200 pixels.
-            </small>
-            <img id="image_preview" class="image-preview" src="#" alt="Image Preview">
-        </div>
-        <div class="profile-picture-actions">
-            <button type="submit" class="btn btn-secondary">Upload Picture</button>
-            <?php if ($profile_picture): ?>
-                <button type="submit" name="delete_profile_picture" class="btn btn-danger">Delete
-                    Picture</button>
-            <?php endif; ?>
-        </div>
-    </form>
-</div>
+                    <!-- Profile Picture Card -->
+                    <div class="card p-3 mb-3">
+                        <h5>Profile Picture</h5>
+                        <form method="POST" enctype="multipart/form-data" id="profilePictureForm">
+                            <input type="hidden" name="update_type" value="profile_picture">
+                            <div class="mb-2">
+                                <input type="file" class="form-control" id="profile_picture" name="profile_picture"
+                                    accept="image/*" onchange="previewImage()">
+                                <div id="image_error" class="text-danger mt-2" style="display: none;"></div>
+                                <small class="form-text text-muted">
+                                    Maximum file size: 2MB. Maximum dimensions: 1200x1200 pixels.
+                                </small>
+                                <img id="image_preview" class="image-preview" src="#" alt="Image Preview">
+                            </div>
+                            <div class="profile-picture-actions">
+                                <button type="submit" class="btn btn-secondary">Upload Picture</button>
+                                <?php if ($profile_picture): ?>
+                                    <button type="submit" name="delete_profile_picture" class="btn btn-danger">Delete
+                                        Picture</button>
+                                <?php endif; ?>
+                            </div>
+                        </form>
+                    </div>
 
                 </div>
             </div>
@@ -497,7 +497,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         function togglePasswordVisibility(inputId) {
             const passwordInput = document.getElementById(inputId);
             const toggleIcon = document.getElementById(inputId + '_toggle');
-            
+
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
                 toggleIcon.classList.remove('bi-eye-slash');
@@ -514,13 +514,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             const fileInput = document.getElementById('profile_picture');
             const imagePreview = document.getElementById('image_preview');
             const errorMessage = document.getElementById('image_error');
-            
+
             // Reset error message
             if (errorMessage) {
                 errorMessage.textContent = '';
                 errorMessage.style.display = 'none';
             }
-            
+
             if (fileInput.files && fileInput.files[0]) {
                 // Check file size - limit to 2MB
                 const maxSize = 2 * 1024 * 1024; // 2MB
@@ -535,16 +535,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     imagePreview.style.display = 'none';
                     return;
                 }
-                
+
                 // Check image dimensions
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     const img = new Image();
-                    img.onload = function() {
+                    img.onload = function () {
                         const width = this.width;
                         const height = this.height;
                         const maxDimension = 1200; // Maximum width or height in pixels
-                        
+
                         if (width > maxDimension || height > maxDimension) {
                             if (errorMessage) {
                                 errorMessage.textContent = `Image dimensions are too large. Maximum allowed dimension is ${maxDimension}px.`;
@@ -569,23 +569,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Client-side password validation - ONLY for the password form
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const passwordForm = document.getElementById('passwordForm');
-            
+
             if (passwordForm) {
                 const newPassword = document.getElementById('new_password');
                 const confirmPassword = document.getElementById('confirm_password');
-                
-                passwordForm.addEventListener('submit', function(event) {
+
+                passwordForm.addEventListener('submit', function (event) {
                     // Password pattern: at least 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char
                     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#?!@$%^&*-])[a-zA-Z\d#?!@$%^&*-]{8,64}$/;
-                    
+
                     if (!passwordPattern.test(newPassword.value)) {
                         event.preventDefault();
                         alert('Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character (#?!@$%^&*-)');
                         return;
                     }
-                    
+
                     if (newPassword.value !== confirmPassword.value) {
                         event.preventDefault();
                         alert('Passwords do not match!');
@@ -598,4 +598,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </body>
 
 </html>
-

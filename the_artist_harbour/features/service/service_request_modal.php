@@ -7,9 +7,9 @@
             </div>
 
             <div class="modal-body px-5 py-4">
-                <form action="/CS4116-Project-Group-3/the_artist_harbour/features/service/submit_service_request.php" method="get">
+                <form action="/the_artist_harbour/features/service/submit_service_request.php" method="get">
                     <!-- hidden inputs -->
-                    <input type="hidden" name="sender_id" id="sender_id" value="<?php echo $_SESSION['user_id'];?>">
+                    <input type="hidden" name="sender_id" id="sender_id" value="<?php echo $_SESSION['user_id']; ?>">
                     <input type="hidden" name="price_min" id="priceMin">
                     <input type="hidden" name="price_max" id="priceMax">
                     <input type="hidden" name="service_id" id="serviceId">
