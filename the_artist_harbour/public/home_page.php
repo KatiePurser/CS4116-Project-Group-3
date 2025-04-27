@@ -6,6 +6,9 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+require_once(__DIR__ . "/../utilities/databaseHandler.php");
+require_once(__DIR__ . '/../utilities/validateUser.php');
+
 if ($_SESSION['user_type'] !== 'customer') {
     exit();
 }
@@ -317,7 +320,6 @@ if ($_SESSION['user_type'] !== 'customer') {
         </div>
 
         <?php
-            require_once(__DIR__ . "/../utilities/databaseHandler.php");
             require_once(__DIR__ . "/../features/service/serviceDetails.php");
             require_once(__DIR__ . "/../utilities/imageHandler.php");
             require_once(__DIR__ . "/../features/search/searchMethods.php");

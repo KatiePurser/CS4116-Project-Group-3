@@ -6,12 +6,14 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+require_once(__DIR__ . "/../../utilities/databaseHandler.php");
+require_once(__DIR__ . '/../../utilities/validateUser.php');
+
 if ($_SESSION['user_type'] == 'admin') {
     exit();
 }
 
 
-require_once(__DIR__ . "/../../utilities/databaseHandler.php");
 require_once(__DIR__ . "/serviceDetails.php"); 
 require_once(__DIR__ . "/insight_request_modal.php");
 require_once(__DIR__ . "/service_request_modal.php");
