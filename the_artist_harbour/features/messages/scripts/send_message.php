@@ -5,7 +5,7 @@ session_start();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $current_user_id = $_SESSION['user_id'];
     $conversation_id = $_POST['conversation_id'];
-    $message_text = $_POST['message_text'];
+    $message_text = htmlspecialchars($_POST['message_text']);
 
     $sql = "SELECT user1_id, user2_id FROM conversations WHERE id = $conversation_id";
     $result = DatabaseHandler::make_select_query($sql);

@@ -5,7 +5,7 @@ session_start();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $service_id = $_POST['service_id'];
     $reviewer_id = $_SESSION['user_id'];
-    $text = $_POST['review'];
+    $text = htmlspecialchars($_POST['review']);
     $rating = $_POST['rating'];
     $request_id = $_POST['request_id'];
 

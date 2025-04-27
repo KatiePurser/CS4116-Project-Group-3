@@ -1055,11 +1055,11 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
                         <?php endif; ?>
                     </div>
 
-                    <h4 class="user-name"><?php echo htmlspecialchars($first_name . " " . $last_name); ?></h4>
-                    <p class="user-email"><?php echo htmlspecialchars($email); ?></p>
+                    <h4 class="user-name"><?php echo ($first_name . " " . $last_name); ?></h4>
+                    <p class="user-email"><?php echo ($email); ?></p>
 
-                    <h5 class="mt-4"><?php echo htmlspecialchars($business_name); ?></h5>
-                    <p class="text-muted small"><?php echo htmlspecialchars($business_description); ?></p>
+                    <h5 class="mt-4"><?php echo ($business_name); ?></h5>
+                    <p class="text-muted small"><?php echo ($business_description); ?></p>
 
                     <div class="mt-4">
                         <a href="profile.php?business_id=<?php echo $business_id; ?>"
@@ -1157,7 +1157,7 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
                                 <form method="POST" action="account.php" id="businessDetailsForm">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="business_name" name="business_name"
-                                            value="<?php echo htmlspecialchars($business_name); ?>"
+                                            value="<?php echo ($business_name); ?>"
                                             placeholder="Business Name" required>
                                         <label for="business_name">Business Name</label>
                                     </div>
@@ -1165,7 +1165,7 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
                                         <textarea class="form-control" id="business_description"
                                             name="business_description" style="height: 120px"
                                             placeholder="Business Description"
-                                            required><?php echo htmlspecialchars($business_description); ?></textarea>
+                                            required><?php echo ($business_description); ?></textarea>
                                         <label for="business_description">Business Description</label>
                                         <div class="form-text">Describe your business, services, and what makes you
                                             unique.</div>
@@ -1313,13 +1313,13 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
                                                 <div class="service-image">
                                                     <?php if (!empty($service['image'])): ?>
                                                             <img src="./get_serviceImage.php?id=<?= $service['id'] ?>"
-                                                                alt="<?php echo htmlspecialchars($service['name']); ?>">
+                                                                alt="<?php echo ($service['name']); ?>">
                                                     <?php else: ?>
                                                             <img src="../../public/images/default.png" alt="Default Service Image">
                                                     <?php endif; ?>
                                                 </div>
                                                 <div class="service-details">
-                                                    <h4><?php echo htmlspecialchars($service['name']); ?></h4>
+                                                    <h4><?php echo ($service['name']); ?></h4>
 
                                                     <?php if (!empty($service['tags'])): ?>
                                                             <div class="service-tags">
@@ -1328,7 +1328,7 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
                                                                 foreach ($tagArray as $tag):
                                                                     if (trim($tag) !== ''):
                                                                         ?>
-                                                                                <span class="tag"><?php echo htmlspecialchars(trim($tag)); ?></span>
+                                                                                <span class="tag"><?php echo (trim($tag)); ?></span>
                                                                                 <?php
                                                                     endif;
                                                                 endforeach;
@@ -1336,15 +1336,15 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
                                                             </div>
                                                     <?php endif; ?>
 
-                                                    <p><?php echo htmlspecialchars($service['description']); ?></p>
+                                                    <p><?php echo ($service['description']); ?></p>
 
                                                     <div class="service-meta">
                                                         <div class="service-price">
                                                             <?php
                                                             if (isset($service['min_price']) && $service['min_price'] !== null) {
-                                                                echo '€' . htmlspecialchars($service['min_price']) . " - €" . htmlspecialchars($service['max_price']);
+                                                                echo '€' . ($service['min_price']) . " - €" . ($service['max_price']);
                                                             } else {
-                                                                echo '€' . htmlspecialchars($service['max_price']);
+                                                                echo '€' . ($service['max_price']);
                                                             }
                                                             ?>
                                                         </div>
@@ -1384,7 +1384,7 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
                                                 <div class="form-floating mb-3">
                                                     <input type="text" class="form-control" id="edit_service_name"
                                                         name="service_name"
-                                                        value="<?php echo htmlspecialchars($edit_service['name']); ?>"
+                                                        value="<?php echo ($edit_service['name']); ?>"
                                                         placeholder="Service Name" required>
                                                     <label for="edit_service_name">Service Name</label>
                                                 </div>
@@ -1416,7 +1416,7 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
                                             <textarea class="form-control" id="edit_service_description"
                                                 name="service_description" style="height: 100px"
                                                 placeholder="Service Description"
-                                                required><?php echo htmlspecialchars($edit_service['description']); ?></textarea>
+                                                required><?php echo ($edit_service['description']); ?></textarea>
                                             <label for="edit_service_description">Service Description</label>
                                         </div>
 <!-- Tags Selection for Edit Service Form -->
@@ -1509,7 +1509,7 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
                                             <div class="form-floating">
                                                 <input type="url" class="form-control" id="instagram" name="instagram"
                                                     placeholder="Instagram Link"
-                                                    value="<?php echo htmlspecialchars($instagram); ?>">
+                                                    value="<?php echo ($instagram); ?>">
                                                 <label for="instagram">Instagram Link</label>
                                             </div>
                                         </div>
@@ -1522,7 +1522,7 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
                                             <div class="form-floating">
                                                 <input type="url" class="form-control" id="facebook" name="facebook"
                                                     placeholder="Facebook Link"
-                                                    value="<?php echo htmlspecialchars($facebook); ?>">
+                                                    value="<?php echo ($facebook); ?>">
                                                 <label for="facebook">Facebook Link</label>
                                             </div>
                                         </div>
@@ -1535,7 +1535,7 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
                                             <div class="form-floating">
                                                 <input type="url" class="form-control" id="tiktok" name="tiktok"
                                                     placeholder="TikTok Link"
-                                                    value="<?php echo htmlspecialchars($tiktok); ?>">
+                                                    value="<?php echo ($tiktok); ?>">
                                                 <label for="tiktok">TikTok Link</label>
                                             </div>
                                         </div>
@@ -1548,7 +1548,7 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
                                             <div class="form-floating">
                                                 <input type="url" class="form-control" id="pinterest" name="pinterest"
                                                     placeholder="Pinterest Link"
-                                                    value="<?php echo htmlspecialchars($pinterest); ?>">
+                                                    value="<?php echo ($pinterest); ?>">
                                                 <label for="pinterest">Pinterest Link</label>
                                             </div>
                                         </div>
@@ -1561,7 +1561,7 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
                                             <div class="form-floating">
                                                 <input type="url" class="form-control" id="website" name="website"
                                                     placeholder="Website Link"
-                                                    value="<?php echo htmlspecialchars($website); ?>">
+                                                    value="<?php echo ($website); ?>">
                                                 <label for="website">Website Link</label>
                                             </div>
                                         </div>
@@ -1591,11 +1591,11 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
                                             <?php endif; ?>
                                         </div>
                                         <div>
-                                            <h5 class="mb-0"><?php echo htmlspecialchars($business_name); ?></h5>
+                                            <h5 class="mb-0"><?php echo ($business_name); ?></h5>
                                             <p class="text-muted mb-0">Business · Art & Design</p>
                                         </div>
                                     </div>
-                                    <p><?php echo htmlspecialchars($business_description); ?></p>
+                                    <p><?php echo ($business_description); ?></p>
                                     <div class="d-flex gap-2 mt-3">
                                         <button class="btn btn-sm btn-outline-primary" disabled>
                                             <i class="bi bi-share"></i> Share

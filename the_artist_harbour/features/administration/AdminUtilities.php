@@ -50,7 +50,7 @@ class AdminUtilities {
     }
 
     public static function dismissAllOtherReportsAimingTarget(string $target_type, int $target_id): void {
-        $query = "UPDATE reports SET status = 'dismissed' WHERE target_type = '$target_type' AND target_id = $target_id";
+        $query = "UPDATE reports SET status = 'dismissed' WHERE status = 'pending' AND target_type = '$target_type' AND target_id = $target_id";
         DatabaseHandler::make_modify_query($query);
     }
 
@@ -61,7 +61,13 @@ class AdminUtilities {
     }
 
     public static function resolveAllOtherReportsAimingTarget(string $target_type, int $target_id): void {
-        $query = "UPDATE reports SET status = 'resolved' WHERE target_type = '$target_type' AND target_id = $target_id";
+        $query = "UPDATE reports SET status = 'resolved' WHERE status = 'pending' AND target_type = '$target_type' AND target_id = $target_id";
+        DatabaseHandler::make_modify_query($query);
+    }
+
+
+    private static function resolveAllReportsWhereReportedMessagesBelongToConversation(int $conversation_id): void {
+        $query = "UPDATE reports SET status = 'resolved' WHERE status = 'pending' AND target_type = 'message' AND target_id IN (SELECT id FROM messages WHERE conversation_id = $conversation_id)";
         DatabaseHandler::make_modify_query($query);
     }
 
@@ -82,6 +88,7 @@ class AdminUtilities {
 
         if ($target_type === "message") {
             $conversation_id = self::fetchConversationIdFromMessageData($target_id);
+            self::resolveAllReportsWhereReportedMessagesBelongToConversation($conversation_id);
             $result = self::deleteConversation($conversation_id);;
         } elseif ($target_type === "review") {
             $result = self::deleteReview($target_id);
@@ -116,16 +123,19 @@ class AdminUtilities {
 
     public static function deleteTargetAction(string $target_type, int $target_id, int $report_id): bool {
         $target_deleted = self::deleteTarget($target_type, $target_id);
-        $report_resolved = self::resolveReport($report_id);
-        self::resolveAllOtherReportsAimingTarget($target_type, $target_id);
-        return $target_deleted && $report_resolved;
+        if ($target_type === "review") {
+            $report_resolved = self::resolveReport($report_id);
+            self::resolveAllOtherReportsAimingTarget($target_type, $target_id);
+            return $target_deleted && $report_resolved;
+        }
+        return $target_deleted;
     }
 
     public static function banUserAction(int $user_id, int $banned_by, string $ban_reason, int $report_id, string $target_type, int $target_id): bool {
         $user_banned = self::banUser($user_id, $banned_by, $ban_reason);
-        $report_resolved = self::resolveReport($report_id);
-        self::resolveAllOtherReportsAimingTarget($target_type, $target_id);
-        return $user_banned && $report_resolved;
+        $target_deleted = self::deleteTargetAction($target_type, $target_id, $report_id);;
+        return $user_banned && $target_deleted;
+
     }
 
     public static function unbanUserAction(int $user_id): bool {

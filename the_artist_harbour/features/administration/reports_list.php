@@ -12,7 +12,7 @@ $reports = AdminUtilities::getAllReports();
                  style="background-color: #E2D4F0">
 
                 <div class="d-flex flex-wrap align-items-center">
-                    <button class="report-info-btn btn me-4" onClick='openReportDetailsModal(<?= json_encode($report); ?>, <?= json_encode($_SESSION["user_id"]); ?>)'>
+                    <button class="report-info-btn btn me-4" onClick='openReportDetailsModal(<?= htmlspecialchars(json_encode($report)); ?>, <?= json_encode($_SESSION["user_id"]); ?>)'>
                         <i class="bi bi-info-circle"></i>
                     </button>
                     <span class="report-info">Report ID: <?= $report['id'] ?></span>

@@ -186,7 +186,7 @@ require_once(__DIR__ . "/../service/review_report_modal.php");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php echo htmlspecialchars($business_name); ?> - The Artist Harbour</title>
+    <title><?php echo ($business_name); ?> - The Artist Harbour</title>
     <link rel="stylesheet" href="../../public/css/styles.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
@@ -913,14 +913,14 @@ padding: 10px;
 
                     <!-- Profile Info Column -->
                     <div class="col-md-9">
-                        <h2 class="card-title text-purple"><?php echo htmlspecialchars($business_name); ?></h2>
+                        <h2 class="card-title text-purple"><?php echo ($business_name); ?></h2>
                         <p class="text-muted mb-2">Owned by
-                            <?php echo htmlspecialchars($owner_first_name . ' ' . $owner_last_name); ?>
+                            <?php echo ($owner_first_name . ' ' . $owner_last_name); ?>
                         </p>
 
                         <!-- Business Description -->
                         <div class="mb-3">
-                            <p><?php echo htmlspecialchars($business_description); ?></p>
+                            <p><?php echo ($business_description); ?></p>
                         </div>
 
                         <!-- Rating Summary -->
@@ -957,31 +957,31 @@ padding: 10px;
                         <!-- Social Media Links -->
                         <div class="social-links">
                             <?php if (!empty($instagram) && $instagram !== '#'): ?>
-                                <a href="<?php echo htmlspecialchars($instagram); ?>" target="_blank" title="Instagram">
+                                <a href="<?php echo ($instagram); ?>" target="_blank" title="Instagram">
                                     <i class="bi bi-instagram"></i>
                                 </a>
                             <?php endif; ?>
 
                             <?php if (!empty($facebook) && $facebook !== '#'): ?>
-                                <a href="<?php echo htmlspecialchars($facebook); ?>" target="_blank" title="Facebook">
+                                <a href="<?php echo ($facebook); ?>" target="_blank" title="Facebook">
                                     <i class="bi bi-facebook"></i>
                                 </a>
                             <?php endif; ?>
 
                             <?php if (!empty($tiktok) && $tiktok !== '#'): ?>
-                                <a href="<?php echo htmlspecialchars($tiktok); ?>" target="_blank" title="TikTok">
+                                <a href="<?php echo ($tiktok); ?>" target="_blank" title="TikTok">
                                     <i class="bi bi-tiktok"></i>
                                 </a>
                             <?php endif; ?>
 
                             <?php if (!empty($pinterest) && $pinterest !== '#'): ?>
-                                <a href="<?php echo htmlspecialchars($pinterest); ?>" target="_blank" title="Pinterest">
+                                <a href="<?php echo ($pinterest); ?>" target="_blank" title="Pinterest">
                                     <i class="bi bi-pinterest"></i>
                                 </a>
                             <?php endif; ?>
 
                             <?php if (!empty($website) && $website !== '#'): ?>
-                                <a href="<?php echo htmlspecialchars($website); ?>" target="_blank" title="Website">
+                                <a href="<?php echo ($website); ?>" target="_blank" title="Website">
                                     <i class="bi bi-globe"></i>
                                 </a>
                             <?php endif; ?>
@@ -1009,13 +1009,13 @@ padding: 10px;
                                 <div class="service-image">
                                     <?php if (!empty($service['image'])): ?>
                                         <img src="./get_serviceImage.php?id=<?= $service['id'] ?>"
-                                            alt="<?php echo htmlspecialchars($service['name']); ?>">
+                                            alt="<?php echo ($service['name']); ?>">
                                     <?php else: ?>
                                         <img src="../../public/images/default.png" alt="Default Service Image">
                                     <?php endif; ?>
                                 </div>
                                 <div class="service-details">
-                                    <h4><?php echo htmlspecialchars($service['name']); ?></h4>
+                                    <h4><?php echo ($service['name']); ?></h4>
 
                                     <?php if (!empty($service['tags'])): ?>
                                         <div class="service-tags">
@@ -1024,7 +1024,7 @@ padding: 10px;
                                             foreach ($tags as $tag):
                                                 if (trim($tag) !== ''):
                                                     ?>
-                                                    <span class="tag"><?php echo htmlspecialchars(trim($tag)); ?></span>
+                                                    <span class="tag"><?php echo (trim($tag)); ?></span>
                                                     <?php
                                                 endif;
                                             endforeach;
@@ -1032,16 +1032,16 @@ padding: 10px;
                                         </div>
                                     <?php endif; ?>
 
-                                    <p><?php echo htmlspecialchars($service['description']); ?></p>
+                                    <p><?php echo ($service['description']); ?></p>
 
                                     <!-- Find this section in the code -->
                                     <div class="service-meta">
                                         <div class="service-price">
                                             <?php
                                             if (isset($service['min_price']) && $service['min_price'] !== null && isset($service['max_price']) && $service['max_price'] !== null) {
-                                                echo '€' . htmlspecialchars($service['min_price']) . " - €" . htmlspecialchars($service['max_price']);
+                                                echo '€' . ($service['min_price']) . " - €" . ($service['max_price']);
                                             } elseif (isset($service['max_price']) && $service['max_price'] !== null) {
-                                                echo '€' . htmlspecialchars($service['max_price']);
+                                                echo '€' . ($service['max_price']);
                                             } else {
                                                 echo "Contact for price";
                                             }
@@ -1125,7 +1125,7 @@ padding: 10px;
                     <div class="review-item">
                         <!-- Service name at the top in bigger text -->
                         <div class="service-reviewed-header">
-                            <h4><?php echo htmlspecialchars($review['service_name']); ?></h4>
+                            <h4><?php echo ($review['service_name']); ?></h4>
 
                             <div class="review-actions">
                                 <!-- Flag button for inappropriate reviews -->
@@ -1134,7 +1134,7 @@ padding: 10px;
                                     data-review-id="<?php echo $review['id']; ?>"
                                     data-reported-id="<?php echo $review['reviewer_id']; ?>"
                                     data-service-id="<?php echo $review['service_id']; ?>"
-                                    data-review-content="<?php echo htmlspecialchars($review['text']); ?>">
+                                    data-review-content="<?php echo ($review['text']); ?>">
                                     <i class="bi bi-flag"></i> Flag
                                 </button>
 
@@ -1152,7 +1152,7 @@ padding: 10px;
 
                         <div class="review-header">
                             <div class="reviewer-info">
-                                <?php echo htmlspecialchars($review['first_name'] . " " . $review['last_name']); ?>
+                                <?php echo ($review['first_name'] . " " . $review['last_name']); ?>
                             </div>
                             <div class="review-rating">
                                 <?php
@@ -1170,7 +1170,7 @@ padding: 10px;
                             </div>
                         </div>
                         <div class="review-content">
-                            <?php echo htmlspecialchars($review['text']); ?>
+                            <?php echo ($review['text']); ?>
                         </div>
                         <div class="review-date">
                             <em>Reviewed on: <?php echo date("F j, Y", strtotime($review['created_at'])); ?></em>
@@ -1199,10 +1199,10 @@ padding: 10px;
                             <?php } else if ($reply_exists) { ?>
                                     <div class="review-reply-content">
                                         <div class="replied">
-                                        <?php echo htmlspecialchars("Reply from Business:"); ?>
+                                        <?php echo ("Reply from Business:"); ?>
                                         </div>
                                         <div class="reply-text">
-                                        <?php echo htmlspecialchars($reply_exists[0]['text']); ?>
+                                        <?php echo ($reply_exists[0]['text']); ?>
                                         </div>
                                         <div class="review-date">
                                             <em>Replied on:

@@ -201,7 +201,7 @@ function openReportDetailsModal(report, adminId) {
 
                 let banUserButton = "";
                 if (!data.user_is_banned) {
-                    banUserButton = `<button class="btn btn-secondary" onclick="banUser(${report.reported_id}, ${adminId}, '${report.reason}', ${report.id}, '${report.target_type}', ${report.target_id})">Ban user</button>`;
+                    banUserButton = `<button class="btn btn-secondary" onclick="banUser(${report.reported_id}, ${adminId}, '${report.reason}', ${report.id}, '${report.target_type}', ${report.target_id})">Ban user and delete ${report.target_type === 'message' ? 'conversation' : 'review'}</button>`;
                 }
                 const deleteTargetButton = `<button class="btn btn-secondary" onclick="deleteTarget('${report.target_type}', ${report.target_id}, ${report.id})">Delete ${report.target_type === 'message' ? 'conversation' : 'review'}</button>`;
                 const dismissButton = `<button class="btn btn-secondary" onclick="dismissReport(${report.id}, '${report.target_type}', ${report.target_id})">Dismiss</button>`;

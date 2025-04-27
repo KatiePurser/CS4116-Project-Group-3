@@ -6,9 +6,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $reported_id = $_POST['reported_user_id'];
     $target_type = $_POST['target_type'];
     $target_id = $_POST['message_id'];
-    $reason = $_POST['reason'];
+    $reason = htmlspecialchars($_POST['reason']);
     $status = 'pending';
-    $message_content = $_POST['message_content'];
+    $message_content = htmlspecialchars($_POST['message_content']);
     $conversation_id = $_POST['conversation_id'];
 
     $sql = "INSERT INTO reports (reporter_id, reported_id, target_type, target_id, target_content, reason, status, created_at) 
