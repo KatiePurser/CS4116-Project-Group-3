@@ -1,9 +1,13 @@
 <?php
 session_start();
-include_once __DIR__ . '/../../utilities/DatabaseHandler.php';
-include_once __DIR__ . '/../../utilities/ImageHandler.php';
-
+include_once __DIR__ . '/../../utilities/databaseHandler.php';
+include_once __DIR__ . '/../../utilities/imageHandler.php';
 require_once __DIR__ . '/../../utilities/validateUser.php';
+
+// Add tab tracking
+if (isset($_GET['tab'])) {
+    $_SESSION['active_tab'] = $_GET['tab'];
+}
 
 // Check if the user is a business account
 if ($_SESSION['user_type'] !== 'business') {
@@ -23,22 +27,22 @@ if (empty($businessData)) {
     die("No business found for this user. Please ensure your business profile is set up.");
 }
 
-// Use null coalescing operator to assign values 
+
 $business_id = $businessData[0]['id'];
-$business_name = $businessData[0]['display_name'] ?? "Please fill in Business name";
-$business_description = $businessData[0]['description'] ?? "Please fill in Business bio..";
-$instagram = $businessData[0]['instagram'] ?? "#";
-$facebook = $businessData[0]['facebook'] ?? "#";
-$tiktok = $businessData[0]['tiktok'] ?? "#";
-$pinterest = $businessData[0]['pinterest'] ?? "#";
-$website = $businessData[0]['website'] ?? "#";
+$business_name = $businessData[0]['display_name'] ?? "";
+$business_description = $businessData[0]['description'] ?? "";
+$instagram = $businessData[0]['instagram'] ?? "";
+$facebook = $businessData[0]['facebook'] ?? "";
+$tiktok = $businessData[0]['tiktok'] ?? "";
+$pinterest = $businessData[0]['pinterest'] ?? "";
+$website = $businessData[0]['website'] ?? "";
 
 // Handle form submission for updating business details
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Collect form data for business details
     if ($business_id && isset($_POST['business_name'], $_POST['business_description'])) {
-        $business_name = filter_input(INPUT_POST, 'business_name', FILTER_SANITIZE_STRING);
-        $business_description = filter_input(INPUT_POST, 'business_description', FILTER_SANITIZE_STRING);
+        $business_name = htmlspecialchars($_POST['business_name'] ?? '', ENT_QUOTES, 'UTF-8');
+        $business_description = htmlspecialchars($_POST['business_description'] ?? '', ENT_QUOTES, 'UTF-8');
 
         $query = sprintf(
             "UPDATE businesses SET display_name = '%s', description = '%s' WHERE id = %d",
@@ -91,8 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $service_id = intval($_POST['service_id']);  // This should match the service you're updating
 
         // Sanitize and validate input
-        $service_name = filter_input(INPUT_POST, 'service_name', FILTER_SANITIZE_STRING);
-        $service_description = filter_input(INPUT_POST, 'service_description', FILTER_SANITIZE_STRING);
+        $service_name = htmlspecialchars($_POST['service_name'] ?? '', ENT_QUOTES, 'UTF-8');
+        $service_description = htmlspecialchars($_POST['service_description'] ?? '', ENT_QUOTES, 'UTF-8');
 
         // Process tags
         $service_tags = [];
@@ -104,9 +108,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $service_tags_str = implode(',', $service_tags);
 
         // Check if service is negotiable
-        $negotiable = isset($_POST['service_negotiable']) ? 1 : 0;
-        $min_price = $negotiable ? filter_input(INPUT_POST, 'service_min_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
-        $max_price = filter_input(INPUT_POST, 'service_max_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+$negotiable = isset($_POST['service_negotiable']) ? 1 : 0;
+$min_price = $negotiable ? filter_input(INPUT_POST, 'service_min_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : null;
+$max_price = filter_input(INPUT_POST, 'service_max_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+
+// Add validation for minimum price value
+if ($negotiable && ($min_price === null || $min_price < 1)) {
+    $_SESSION['message'] = 'Minimum possible price is 1 euro.';
+    $_SESSION['message_type'] = 'warning';
+    header("Location: account.php?service_id=" . intval($_POST['service_id']) . "#services");
+    exit();
+}
 
         // Update the service in the database
         $query = "UPDATE services SET 
@@ -127,43 +139,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($result !== null) {
             $_SESSION['message'] = 'Service updated successfully!';
             $_SESSION['message_type'] = 'success';
-            header("Location: account.php");
+            header("Location: account.php#services");
             exit();
         } else {
             $_SESSION['message'] = 'Error updating service. Please try again.';
             $_SESSION['message_type'] = 'danger';
-            header("Location: account.php");
+            header("Location: account.php#services");
             exit();
-        }
+        }        
     }
     // Otherwise, check if we're adding a new service
     else if (isset($_POST['service_name'])) {
         // Collect form data for the new service
-        $service_name = filter_input(INPUT_POST, 'service_name', FILTER_SANITIZE_STRING);
-        $service_description = filter_input(INPUT_POST, 'service_description', FILTER_SANITIZE_STRING);
+        $service_name = htmlspecialchars($_POST['service_name'] ?? '', ENT_QUOTES, 'UTF-8');
+        $service_description = htmlspecialchars($_POST['service_description'] ?? '', ENT_QUOTES, 'UTF-8');
+
         // Check if negotiable is true or false
         $negotiable = isset($_POST['service_negotiable']) ? 1 : 0;
 
-        // Get min_price and max_price based on negotiable
-        $min_price = null;
-        if ($negotiable && isset($_POST['service_min_price']) && !empty($_POST['service_min_price'])) {
-            $min_price = filter_input(INPUT_POST, 'service_min_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-        }
+       // Get min_price and max_price based on negotiable
+$min_price = null;
+if ($negotiable && isset($_POST['service_min_price']) && !empty($_POST['service_min_price'])) {
+    $min_price = filter_input(INPUT_POST, 'service_min_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+}
 
-        $max_price = filter_input(INPUT_POST, 'service_max_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+$max_price = filter_input(INPUT_POST, 'service_max_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
-        // Validate prices based on negotiable flag
-        if ($negotiable && (!$min_price || !$max_price)) {
-            $_SESSION['message'] = 'Both min and max prices are required when negotiable is true.';
-            $_SESSION['message_type'] = 'warning';
-            header("Location: account.php");
-            exit();
-        } elseif (!$negotiable && !$max_price) {
-            $_SESSION['message'] = 'Max price is required when negotiable is false.';
-            $_SESSION['message_type'] = 'warning';
-            header("Location: account.php");
-            exit();
-        }
+// Validate prices based on negotiable flag
+if ($negotiable && (!$min_price || !$max_price)) {
+    $_SESSION['message'] = 'Both min and max prices are required when negotiable is true.';
+    $_SESSION['message_type'] = 'warning';
+    header("Location: account.php#services");
+    exit();
+} elseif (!$negotiable && !$max_price) {
+    $_SESSION['message'] = 'Max price is required when negotiable is false.';
+    $_SESSION['message_type'] = 'warning';
+    header("Location: account.php#services");
+    exit();
+}
+
+// New validation for minimum price value
+if ($negotiable && $min_price < 1) {
+    $_SESSION['message'] = 'Minimum possible price is 1 euro.';
+    $_SESSION['message_type'] = 'warning';
+    header("Location: account.php#services");
+    exit();
+}
+
 
         $service_tags = isset($_POST['tags']) ? $_POST['tags'] : [];
         $service_tags = array_map('trim', $service_tags);
@@ -189,22 +211,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $query = "SELECT MAX(id) as last_id FROM services WHERE business_id = $business_id";
             $last_id_result = DatabaseHandler::make_select_query($query);
             $service_id = $last_id_result[0]['last_id'];
-
+        
             // Now handle the image upload with the correct service ID
             if (isset($_FILES['service_image']) && $_FILES['service_image']['error'] === UPLOAD_ERR_OK) {
                 $image_uploaded = ImageHandler::uploadAndStoreImage('service_image', 'services', 'image', 'id', $service_id);
             }
-
+        
             $_SESSION['message'] = 'New service added successfully!';
             $_SESSION['message_type'] = 'success';
-            header("Location: account.php");
+            header("Location: account.php#services");
             exit();
         } else {
             $_SESSION['message'] = 'Error adding service. Please try again.';
             $_SESSION['message_type'] = 'danger';
-            header("Location: account.php");
+            header("Location: account.php#services");
             exit();
-        }
+        }        
     }
 }
 
@@ -232,9 +254,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_service'])) {
         $_SESSION['message'] = 'Error deleting service.';
         $_SESSION['message_type'] = 'danger';
     }
-
-    header("Location: account.php");
+    
+    header("Location: account.php#services");
     exit();
+    
 }
 
 // If we are in edit mode, load the service to edit
@@ -249,7 +272,7 @@ if (isset($_GET['service_id']) && is_numeric($_GET['service_id'])) {
     if (!$edit_service) {
         $_SESSION['message'] = 'Service not found or access denied.';
         $_SESSION['message_type'] = 'danger';
-        header("Location: account.php");
+        header("Location: account.php#services");
         exit();
     }
 }
@@ -455,7 +478,7 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
         .service-image img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: fill;
             transition: transform 0.5s ease;
         }
 
@@ -648,7 +671,13 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
             margin-top: 5px;
         }
 
-
+        .pricing-switch .form-check-input {
+        margin-left: 0.5em;
+    }
+    
+    .pricing-switch .form-check-label {
+        margin-left: 0.5em;
+    }
        
 
 
@@ -1151,7 +1180,7 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
                             aria-labelledby="details-tab">
                             <div class="card p-3 mb-3">
                                 <h5 class="mb-3">Business Details</h5>
-                                <form method="POST" action="account.php" id="businessDetailsForm">
+                                <form method="POST" action="account.php#details" id="businessDetailsForm">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="business_name" name="business_name"
                                             value="<?php echo ($business_name); ?>"
@@ -1191,8 +1220,7 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
 
                                 <div class="collapse" id="addServiceForm">
                                     <div class="card p-3 mb-3">
-                                        <form method="POST" action="account.php" enctype="multipart/form-data"
-                                            id="newServiceForm">
+                                    <form method="POST" action="account.php#services" enctype="multipart/form-data" id="newServiceForm">
                                             <!-- Service Name and Image Row -->
                                             <div class="row mb-3">
                                                 <div class="col-md-6">
@@ -1233,50 +1261,51 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
 
                                             <!-- Tags Selection -->
                                             <div class="form-group mb-3">
-                                                <label class="form-label">Tags</label>
-                                                <div class="p-3 border rounded bg-white"
-                                                    style="max-height: 150px; overflow-y: auto;">
-                                                    <div class="row">
-                                                        <?php
-                                                        $i = 0;
-                                                        while ($i < count($tags)) {
-                                                            $tag = $tags[$i][0];
-                                                            if (!empty($tag)) {
-                                                                ?>
-                                                                <div class="col-md-4 col-sm-6 mb-2">
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            name="tags[<?php echo $i ?>]"
-                                                                            id="tag_<?php echo $i ?>"
-                                                                            value="<?php echo $tag ?>">
-                                                                        <label class="form-check-label"
-                                                                            for="tag_<?php echo $i ?>"><?php echo $tag ?></label>
-                                                                    </div>
-                                                                </div>
-                                                                <?php
-                                                            }
-                                                            $i++;
-                                                        }
-                                                        ?>
-                                                    </div>
-                                                </div>
-                                                <div class="form-text">Select tags that best describe your service.
-                                                </div>
-                                            </div>
+    <label class="form-label">Tags</label>
+    <div class="p-3 border rounded bg-white" 
+         style="max-height: 150px; overflow-y: auto; display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start;">
+        <div class="row w-100">
+            <?php
+            $i = 0;
+            while ($i < count($tags)) {
+                $tag = $tags[$i][0];
+                if (!empty($tag)) {
+                    ?>
+                    <div class="col-md-4 col-sm-6 mb-2 text-center">
+                        <div class="form-check d-inline-block">
+                            <input class="form-check-input" type="checkbox"
+                                name="tags[<?php echo $i ?>]"
+                                id="tag_<?php echo $i ?>"
+                                value="<?php echo $tag ?>">
+                            <label class="form-check-label"
+                                for="tag_<?php echo $i ?>"><?php echo $tag ?></label>
+                        </div>
+                    </div>
+                    <?php
+                }
+                $i++;
+            }
+            ?>
+        </div>
+    </div>
+    <div class="form-text">Select tags that best describe your service.
+    </div>
+</div>
+
 
                 <!-- Pricing Options -->
 <div class="form-group mb-3">
     <label class="form-label">Pricing</label>
     <div class="mb-3">
-        <div class="form-check form-switch">
+    <div class="form-check form-switch pricing-switch">
             <input class="form-check-input" type="checkbox" id="service_negotiable" name="service_negotiable">
             <label class="form-check-label" for="service_negotiable">Negotiable Pricing</label>
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
-            <input type="number" step="0.01" class="form-control" id="service_min_price" name="service_min_price" placeholder="Min Price (€)" disabled>
-            <div class="form-text">Minimum price (only for negotiable pricing)</div>
+        <input type="number" step="0.01" min="1" class="form-control" id="service_min_price" name="service_min_price" placeholder="Min Price (€)" disabled>
+        <div class="form-text">Minimum price must be at least 1 euro (only for negotiable pricing)</div>
         </div>
         <div class="col-md-6">
             <input type="number" step="0.01" class="form-control" id="service_max_price" name="service_max_price" placeholder="Max Price (€)" required>
@@ -1373,7 +1402,7 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
                             <?php if ($edit_service): ?>
                                 <div class="card p-3 mb-3">
                                     <h5 class="mb-3">Edit Service</h5>
-                                    <form method="POST" action="account.php" enctype="multipart/form-data">
+                                    <form method="POST" action="account.php#services" enctype="multipart/form-data">
                                         <input type="hidden" name="service_id" value="<?php echo $edit_service['id']; ?>">
 
                                         <div class="row">
@@ -1419,8 +1448,9 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
 <!-- Tags Selection for Edit Service Form -->
 <div class="form-group mb-3">
     <label class="form-label">Tags</label>
-    <div class="p-3 border rounded bg-white" style="max-height: 150px; overflow-y: auto;">
-        <div class="row">
+    <div class="p-3 border rounded bg-white" 
+         style="max-height: 150px; overflow-y: auto; display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start;">
+        <div class="row w-100">
             <?php
             $i = 0;
             // Parse existing tags from the service
@@ -1432,8 +1462,8 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
                 $is_checked = in_array($tag, $existing_tags) ? 'checked' : '';
                 if (!empty($tag)) {
                     ?>
-                    <div class="col-md-4 col-sm-6 mb-2">
-                        <div class="form-check">
+                    <div class="col-md-4 col-sm-6 mb-2 text-center">
+                        <div class="form-check d-inline-block">
                             <input class="form-check-input" type="checkbox"
                                 name="tags[<?php echo $i ?>]"
                                 id="edit_tag_<?php echo $i ?>"
@@ -1454,20 +1484,19 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
 <div class="form-group mb-3">
     <label class="form-label">Pricing</label>
     <div class="mb-3">
-        <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="service_negotiable" name="service_negotiable" <?php echo $edit_service['min_price'] ? 'checked' : ''; ?>>
-            <label class="form-check-label" for="service_negotiable">Negotiable Pricing</label>
+    <div class="form-check form-switch pricing-switch">
+            <input class="form-check-input" type="checkbox" id="edit_service_negotiable" name="service_negotiable" <?php echo $edit_service['min_price'] ? 'checked' : ''; ?>>
+            <label class="form-check-label" for="edit_service_negotiable">Negotiable Pricing</label>
         </div>
     </div>
 
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        id="edit_service_min_price" name="service_min_price"
-                                                        value="<?php echo $edit_service['min_price']; ?>"
-                                                        placeholder="Min Price" <?php echo $edit_service['min_price'] ? "" : "disabled"; ?>>
-                                                    <label for="edit_service_min_price">Min Price (€)</label>
+                                                <input type="number" step="0.01" min="1" class="form-control" id="edit_service_min_price" name="service_min_price" 
+    value="<?php echo $edit_service['min_price']; ?>" 
+    placeholder="Min Price (€)" <?php echo $edit_service['min_price'] ? "" : "disabled"; ?>>
+<div class="form-text">Minimum price must be at least 1 euro (only for negotiable pricing)</div>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -1482,9 +1511,9 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
                                         </div>
 
                                         <div class="d-flex justify-content-between">
-                                            <a href="account.php" class="btn btn-outline-secondary">
-                                                <i class="bi bi-x-lg me-1"></i> Cancel
-                                            </a>
+                                        <a href="account.php#services" class="btn btn-outline-secondary">
+    <i class="bi bi-x-lg me-1"></i> Cancel
+</a>
                                             <button type="submit" class="btn btn-primary">
                                                 <i class="bi bi-check-lg me-1"></i> Update Service
                                             </button>
@@ -1498,7 +1527,7 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
                         <div class="tab-pane fade" id="social" role="tabpanel" aria-labelledby="social-tab">
                             <div class="card p-3 mb-3">
                                 <h5 class="mb-3">Social Media Links</h5>
-                                <form method="POST" action="account.php">
+                                <form method="POST" action="account.php#social">
                                     <div class="mb-3">
                                         <div class="input-group">
                                             <span class="input-group-text bg-light"><i
@@ -1683,22 +1712,30 @@ $total_reviews = $ratings[0]['total_reviews'] ?? 0;
             }
 
             // Show active tab based on URL hash or if editing a service
-            const urlHash = window.location.hash;
-            if (urlHash) {
-                const tab = document.querySelector(`a[href="${urlHash}"]`);
-                if (tab) {
-                    tab.click();
-                }
-            } else if (<?php echo isset($_GET['service_id']) ? 'true' : 'false'; ?>) {
-                // If editing a service, show the services tab
-                document.getElementById('services-tab').click();
-            }
+        
+const urlHash = window.location.hash;
+if (urlHash) {
+    const tab = document.querySelector(`button[data-bs-target="${urlHash}"]`);
+    if (tab) {
+        const tabInstance = new bootstrap.Tab(tab);
+        tabInstance.show();
+    }
+} else if (<?php echo isset($_GET['service_id']) ? 'true' : 'false'; ?>) {
+    // If editing a service, show the services tab
+    const servicesTab = document.getElementById('services-tab');
+    const tabInstance = new bootstrap.Tab(servicesTab);
+    tabInstance.show();
+}
 
-            // Initialize tooltips
-            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
+// Store the active tab in the URL hash when switching tabs
+const tabLinks = document.querySelectorAll('button[data-bs-toggle="tab"]');
+tabLinks.forEach(function(tabLink) {
+    tabLink.addEventListener('shown.bs.tab', function (e) {
+        const targetId = e.target.getAttribute('data-bs-target').substring(1);
+        window.location.hash = targetId;
+    });
+});
+
 
             // Show toast notification if there's a message
             <?php if (isset($_SESSION['message'])): ?>

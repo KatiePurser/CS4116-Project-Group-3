@@ -2,8 +2,9 @@
 session_start();
 // Include the necessary files (for database connection, image handling, etc.)
 include_once __DIR__ . '/../../utilities/databaseHandler.php';
-include_once __DIR__ . '/../../utilities/imageHandler.php';  // Include the ImageHandler class
+include_once __DIR__ . '/../../utilities/imageHandler.php';  
 include_once __DIR__ . '/../../utilities/InputValidationHelper.php';
+require_once __DIR__ . '/../../utilities/validateUser.php';
 
 
 // Initialise error/success messages array
