@@ -126,7 +126,7 @@ if ($_SESSION['user_type'] !== 'customer') {
             }
 
             .service-image {
-                height: 180px;
+                height: fit-content;;
                 background-color: #f0f0f0;
                 overflow: hidden;
             }
@@ -192,7 +192,7 @@ if ($_SESSION['user_type'] !== 'customer') {
                 font-size: 0.8rem;
             }
 
-            .request-btn {
+            .service-request-btn {
                 background-color: #82689A;
                 color: white;
                 border: none;
@@ -206,7 +206,7 @@ if ($_SESSION['user_type'] !== 'customer') {
                 transition: background-color 0.3s ease;
             }
 
-            .request-btn:hover {
+            .service-request-btn:hover {
                 background-color: #70578c;
                 color: white;
             }
@@ -341,7 +341,7 @@ if ($_SESSION['user_type'] !== 'customer') {
                                         <img src="images/default.png" alt="Default Service Image">
                                     <?php } ?>
                                 </div>
-                                <div class="service-details" style="padding: 15px;">
+                                <div class="service-details">
                                     <h4><?php echo htmlspecialchars($service['name']); ?></h4>
                                     <p><?php echo htmlspecialchars(searchMethods::getBusinessName($businesses, $service['business_id'])); ?></p>
                                     <?php if (!empty($service['tags'])){ ?>
@@ -393,7 +393,7 @@ if ($_SESSION['user_type'] !== 'customer') {
                                             $service_id = $service['id'];
                                             $max_price = $service['max_price'];
                                             ?>
-                                            <button type="button" class="btn service-request-btn p-0" data-bs-toggle="modal" data-bs-target="#serviceRequestModal"
+                                            <button type="button" class="btn service-request-btn" data-bs-toggle="modal" data-bs-target="#serviceRequestModal"
                                                 data-price-min="<?php echo $min_price;?>" data-price-max="<?php echo $max_price;?>" 
                                                 data-service-id="<?php echo $service_id;?>" onclick="event.preventDefault(); event.stopPropagation();">
                                                 Request
