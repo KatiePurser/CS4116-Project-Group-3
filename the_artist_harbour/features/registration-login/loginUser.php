@@ -4,6 +4,7 @@ session_start();
 
 require_once __DIR__ . '/../../utilities/DatabaseHandler.php';
 require_once __DIR__ . '/../../utilities/InputValidationHelper.php';
+require_once __DIR__ . '/../../utilities/BannedAndDeletedUsersHandler.php';
 
 try {
     $email = htmlspecialchars(InputValidationHelper::validateEmail($_POST["email"] ?? null));
@@ -32,13 +33,14 @@ if (!verifyPassword($password, $user_data["password"])) {
     exit();
 }
 
-if (isUserBanned($user_data["id"])) {
+if (BannedAndDeletedUsersHandler::isUserBanned($user_data["id"])) {
     print("Sorry, you are currently banned from using the platform.");
     exit();
 }
 
 $_SESSION["user_id"] = $user_data["id"];
 $_SESSION["user_type"] = $user_data["user_type"];
+$_SESSION["email"] = $user_data["email"];
 
 if ($_SESSION["user_type"] === "customer") {
     header("Location: /CS4116-Project-Group-3/the_artist_harbour/public/home_page.php");
@@ -56,12 +58,6 @@ function getUserByEmail(string $email) {
 
 function verifyPassword(string $password, string $hashedPassword): bool {
     return password_verify($password, $hashedPassword);
-}
-
-function isUserBanned(int $userId): bool {
-    $query = "SELECT * FROM banned_users WHERE banned_user_id = $userId";
-    $result = DatabaseHandler::make_select_query($query);
-    return !empty($result);
 }
 
 function saveInputFieldsValues(): void {

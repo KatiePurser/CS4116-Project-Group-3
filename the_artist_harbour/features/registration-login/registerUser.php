@@ -25,6 +25,13 @@ try {
     exit();
 }
 
+if (BannedAndDeletedUsersHandler::hasUserWithEmailBeenDeleted($email)) {
+    $_SESSION['error'] = "You cannot use this email to register on our platform.";
+    saveInputFieldsValues();
+    header("Location: registration.php");
+    exit();
+}
+
 if ($password !== $confirm_password) {
     $_SESSION['error'] = "Passwords do not match.";
     saveInputFieldsValues();
@@ -44,6 +51,7 @@ $new_user_data = createNewUser($email, $first_name, $last_name, $password, $user
 if ($new_user_data !== null) {
     $_SESSION["user_id"] = $new_user_data["id"];
     $_SESSION["user_type"] = $new_user_data["user_type"];
+    $_SESSION["email"] = $new_user_data["email"];
 }
 
 if ($user_type === "customer") {
