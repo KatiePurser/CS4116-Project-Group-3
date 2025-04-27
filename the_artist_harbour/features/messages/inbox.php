@@ -6,6 +6,8 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+require_once __DIR__ . '/../../utilities/validateUser.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -14,7 +16,7 @@ if (!isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MyApp</title>
+    <title>The Artist Harbour</title>
     <link rel="stylesheet" href="../../public/css/styles.css">
     <link rel="stylesheet" href="../../public/scss/style.scss">
     <link rel="stylesheet" href="css/messaging-style.css">
