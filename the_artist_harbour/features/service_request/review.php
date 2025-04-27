@@ -11,9 +11,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $sql = "INSERT INTO reviews (service_id, reviewer_id, text, rating, created_at)
             VALUES ($service_id, $reviewer_id, '$text', $rating, NOW())";
+
     $result = DatabaseHandler::make_modify_query($sql);
 
+    // Query to mark the service request as reviewed
     $sql = "UPDATE service_requests SET reviewed = 1 WHERE id = $request_id";
+
     $result = DatabaseHandler::make_modify_query($sql);
 
     if ($result) {
