@@ -27,9 +27,9 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
                         <!-- Display request creation date and service name -->
                         <span class="request-info time-stamp"> <?= $formattedDate ?> </span>
                         <?php if ($request['user_type'] === 'business'): ?>
-                            <span class="request-info"> <?= htmlspecialchars($request['customer']) ?> </span>
+                            <span class="request-info"> <?= ($request['customer']) ?> </span>
                         <?php else: ?>
-                            <span class="request-info"> <?= htmlspecialchars($request['service_name']) ?> </span>
+                            <span class="request-info"> <?= ($request['service_name']) ?> </span>
                         <?php endif; ?>
 
                     </div>

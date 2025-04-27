@@ -6,13 +6,13 @@ require_once __DIR__ . '/../../utilities/DatabaseHandler.php';
 require_once __DIR__ . '/../../utilities/InputValidationHelper.php';
 
 try {
-    $email = InputValidationHelper::validateEmail($_POST["email"] ?? null);
-    $first_name = InputValidationHelper::validateName("First Name", $_POST["first_name"] ?? null, 2,50);
-    $last_name = InputValidationHelper::validateName("Last Name", $_POST["last_name"] ?? null, 2, 50);
+    $email = htmlspecialchars(InputValidationHelper::validateEmail($_POST["email"] ?? null));
+    $first_name = htmlspecialchars(InputValidationHelper::validateName("First Name", $_POST["first_name"] ?? null, 2,50));
+    $last_name = htmlspecialchars(InputValidationHelper::validateName("Last Name", $_POST["last_name"] ?? null, 2, 50));
 
     $user_type = $_POST["user_type"]; // always comes from a hidden input field, so always has a value
     if ($user_type === "business") {
-        $business_name = InputValidationHelper::validateName("Business Name", $_POST["business_name"] ?? null, 2, 100);
+        $business_name = htmlspecialchars(InputValidationHelper::validateName("Business Name", $_POST["business_name"] ?? null, 2, 100));
     }
 
     $password = InputValidationHelper::validatePassword("Password", $_POST["password"] ?? null);

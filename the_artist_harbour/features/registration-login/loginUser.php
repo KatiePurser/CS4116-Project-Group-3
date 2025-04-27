@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../utilities/DatabaseHandler.php';
 require_once __DIR__ . '/../../utilities/InputValidationHelper.php';
 
 try {
-    $email = InputValidationHelper::validateEmail($_POST["email"] ?? null);
+    $email = htmlspecialchars(InputValidationHelper::validateEmail($_POST["email"] ?? null));
     $password = InputValidationHelper::validatePassword("Password", $_POST["password"] ?? null);
 
 

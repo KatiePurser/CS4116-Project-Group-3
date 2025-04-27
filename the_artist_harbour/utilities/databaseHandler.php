@@ -46,6 +46,13 @@ class DatabaseHandler {
         } finally {
             $conn->close();
         }
+        foreach ($data as &$row) {
+            foreach ($row as $key => $value) {
+                if (is_string($value)) {
+                    $row[$key] = htmlspecialchars_decode($value, ENT_QUOTES);
+                }
+            }
+        }
         return $data;
     }
 
