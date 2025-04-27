@@ -100,7 +100,9 @@ require_once(__DIR__ . "/review_report_modal.php");
 
             .description-container {
                 margin: auto;
-                padding: 0.5%;
+                padding: 0.5vh;
+                padding-left: 2vw;
+                padding-right: 2vw;
                 min-height: 10vw;
             }
 
@@ -561,13 +563,14 @@ require_once(__DIR__ . "/review_report_modal.php");
                                 </div>
 
                                 <div class="review-actions">
-                                    <!-- Flag button for inappropriate reviews -->
-                                    <button type="button" class="btn btn-sm btn-outline-danger flag-review-btn"
-                                        data-bs-toggle="modal" data-bs-target="#reviewReportModal"
-                                        data-review-id="<?php echo $review['id']; ?>" data-reported-id="<?php echo $review['reviewer_id']; ?>"
-                                        data-service-id="<?php echo $service_id; ?>" data-review-content="<?php echo $review['text']; ?>"> 
-                                        <i class="bi bi-flag"></i> Flag
-                                    </button>
+                                    <?php if($_SESSION['user_id']!=$review['reviewer_id']) { ?>
+                                        <button type="button" class="btn btn-sm btn-outline-danger flag-review-btn"
+                                            data-bs-toggle="modal" data-bs-target="#reviewReportModal"
+                                            data-review-id="<?php echo $review['id']; ?>" data-reported-id="<?php echo $review['reviewer_id']; ?>"
+                                            data-service-id="<?php echo $service_id; ?>" data-review-content="<?php echo htmlspecialchars($review['text']); ?>"> 
+                                            <i class="bi bi-flag"></i> Flag
+                                        </button>
+                                    <?php } ?>
 
                                     <!-- Insight Request button for customers only -->
                                     <?php if ($_SESSION['user_type'] === 'customer' && $_SESSION['user_id']!=$review['reviewer_id']){ ?>
