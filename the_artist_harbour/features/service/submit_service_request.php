@@ -6,7 +6,7 @@
     $service_name = DatabaseHandler::make_select_query("SELECT name FROM services WHERE id=$service_id");
     $sender_id = $_GET['sender_id'];
     $message = $_GET['message'];
-    $final_message = "Service Request (".$service_name[0]['name']."): ".$message;
+    $final_message = htmlspecialchars("Service Request (".$service_name[0]['name']."): ".$message)  ;
     $price_min = $_GET['price_min'];
     $price_max = $_GET['price_max'];
 

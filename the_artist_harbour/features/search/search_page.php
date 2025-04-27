@@ -686,8 +686,8 @@ if ($_SESSION['user_type'] != 'customer') {
                             <a href="../business/profile.php?business_id=<?= $business['id']?>" class="service-card-link">
                                 <div class="service-item">
                                     <div class="service-image">
-                                        <?php if(searchMethods::getProfileImage($users, $business['id'])==true){?>
-                                            <img src="../user/get_image.php?id=<?= $business['id'] ?>" class="card-img-top image" style="height: 200px; object-fit: cover;">
+                                        <?php if(searchMethods::getProfileImage($users, $business['user_id'])==true){?>
+                                            <img src="../user/get_image.php?id=<?= $business['user_id'] ?>" class="card-img-top image" style="height: 200px; object-fit: cover;">
                                         <?php }else{ ?>
                                             <img src="../../public/images/default.png" class="card-img-top image" alt="Default Image" style="max-height: 200px; object-fit: cover;">
                                         <?php } ?>

@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sender_id = $_POST['sender_id'];
     $receiver_id = $_POST['receiver_id'];
     $message = $_POST['message'];
-    $final_message = "Insight Request (" . $service_name[0]['name'] . "): " . $message;
+    $final_message = htmlspecialchars("Insight Request (" . $service_name[0]['name'] . "): " . $message);
 
     $conversation = DatabaseHandler::make_select_query("SELECT id FROM conversations WHERE (user1_id=$sender_id AND user2_id=$receiver_id) OR (user1_id=$receiver_id AND user2_id=$sender_id)");
     if ($conversation == NULL) {

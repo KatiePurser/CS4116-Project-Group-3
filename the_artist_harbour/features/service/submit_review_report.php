@@ -8,7 +8,7 @@
         $reported_id=$_POST['reported_id'];
         $review_content=$_POST['review_content'];
         $review_id=$_POST['review_id'];
-        $reason=$_POST['reason'];
+        $reason=htmlspecialchars($_POST['reason']);
 
         $sql = "INSERT INTO reports (reporter_id, reported_id, target_type, target_id, reason, status, target_content)
                     VALUES ('$reporter_id', '$reported_id', 'review', '$review_id', '$reason', 'pending', '$review_content')";
