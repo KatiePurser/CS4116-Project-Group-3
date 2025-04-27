@@ -138,10 +138,12 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
 
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item"
-                                href="/CS4116-Project-Group-3/the_artist_harbour/features/administration/admin_panel.php">Report Logs</a>
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/administration/admin_panel.php">Report
+                                Logs</a>
                         </li>
                         <li><a class="dropdown-item"
-                               href="/CS4116-Project-Group-3/the_artist_harbour/features/administration/banned_users.php">Banned Users</a>
+                                href="/CS4116-Project-Group-3/the_artist_harbour/features/administration/banned_users.php">Banned
+                                Users</a>
                         </li>
                         <li>
                             <hr class="dropdown-divider">

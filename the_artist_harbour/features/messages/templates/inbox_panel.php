@@ -28,12 +28,14 @@
                                             <button type="submit" name="action" value="decline" class="decline-btn">DECLINE</button>
                                         </form>
                                     </div>
+                                    <!-- RENDERING PENDING FOR INSIGHT REQUEST -->
                                 <?php elseif ($conversation['latest_message']['status'] === 'pending' && $conversation['latest_message']['sender_id'] === $_SESSION['user_id']): ?>
                                     <div class="user-action-container">
                                         <span><?php echo $conversation['other_user']; ?></span>
                                         <span class="pending-badge badge me-2">REQUEST PENDING</span>
                                     </div>
 
+                                    <!-- RENDERING CONVERSATION USER NAME AND LATEST MESSAGE TIME -->
                                 <?php else: ?>
                                     <div
                                         style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
@@ -69,7 +71,7 @@
     }
 
     .pending-badge {
-        background-color: #e69419;
+        background-color: #9b9999;
         padding: 7px 10px;
         font-size: 0.8rem;
         border: none;

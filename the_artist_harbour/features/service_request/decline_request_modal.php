@@ -1,3 +1,4 @@
+<!-- Modal for declining a service request -->
 <div class="modal fade" id="declineRequestModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content shadow-lg rounded-4">
@@ -7,15 +8,17 @@
                 <button type="button" class="btn-close me-2" data-bs-dismiss="modal"></button>
             </div>
 
+            <!-- Form to submit the decline request -->
             <form method="post" action="decline_request.php">
                 <div class="modal-body px-5 py-4">
 
+                    <!-- Display request details -->
                     <p><strong>Request ID:</strong> <span id="decline-request-id-display"></span></p>
                     <p><strong>Service ID:</strong> <span id="decline-service-id-display"></span></p>
                     <p><strong>Created At:</strong> <span id="decline-created-at-display"></span></p>
                     <p><strong>Service Name:</strong> <span id="decline-service-name-display"></span></p>
 
-                    <!-- Hidden fields -->
+                    <!-- Hidden fields to pass information to the server -->
                     <input type="hidden" name="request_id" id="decline-request-id">
                     <input type="hidden" name="service_id" id="decline-service-id">
                     <input type="hidden" name="created_at" id="decline-created-at">

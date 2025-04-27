@@ -1,5 +1,5 @@
 <?php
-// Retrieve service requests for the logged-in user
+// Retrieve all service requests related to the logged-in user
 $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
 ?>
 
@@ -9,43 +9,46 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
     <div class="requests-container">
         <div class="request-container">
             <?php foreach ($requests as $request): ?>
-                <div class="request-card d-flex flex-wrap justify-content-between align-items-center p-3  mb-4">
+                <!-- Card representing a single request -->
+                <div class="request-card d-flex flex-wrap justify-content-between align-items-center p-3 mb-4">
 
                     <?php
-                    // Format the request creation date
                     $date = new DateTime($request['created_at']);
                     $formattedDate = $date->format('d/m/Y g:i');
                     ?>
 
                     <div class="d-flex flex-wrap">
-                        <!-- Info button to open request details modal -->
+                        <!-- Info button to open a modal with more request details -->
                         <button class="info-btn btn me-4" data-bs-toggle="modal"
                             data-bs-target="#requestModal<?= $request['request_id'] ?>">
                             <i class="bi bi-info-circle"></i>
                         </button>
 
-                        <!-- Display request creation date and service name -->
-                        <span class="request-info time-stamp"> <?= $formattedDate ?> </span>
+                        <!-- Display request date and service/customer depending on user type -->
+                        <span class="request-info time-stamp"><?= $formattedDate ?></span>
                         <?php if ($request['user_type'] === 'business'): ?>
-                            <span class="request-info"> <?= ($request['customer']) ?> </span>
+                            <span class="request-info"><?= htmlspecialchars($request['customer']) ?></span>
                         <?php else: ?>
-                            <span class="request-info"> <?= ($request['service_name']) ?> </span>
+                            <span class="request-info"><?= htmlspecialchars($request['service_name']) ?></span>
                         <?php endif; ?>
-
                     </div>
 
                     <div class="d-flex flex-wrap">
                         <?php if ($request['user_type'] === 'customer'): ?>
-                            <!-- Display status badges and action buttons for customers -->
+
+                            <!-- Customer view: show badges or review button depending on request status -->
                             <?php if ($request['status'] === 'pending'): ?>
                                 <span class="pending-badge badge me-2">PENDING</span>
                             <?php elseif ($request['status'] === 'completed'): ?>
 
                                 <?php if ($request['reviewed'] === 0): ?>
+
+                                    <!-- If completed but not reviewed yet -->
                                     <button class="review-btn btn btn-primary btn-sm me-2" data-bs-toggle="modal"
                                         data-bs-target="#reviewModal" data-service-id="<?= htmlspecialchars($request['service_id']) ?>"
-                                        data-request-id="<?= htmlspecialchars($request['request_id']) ?>">LEAVE A REVIEW</button>
-
+                                        data-request-id="<?= htmlspecialchars($request['request_id']) ?>">
+                                        LEAVE A REVIEW
+                                    </button>
                                     <span class="completed-badge badge me-2">COMPLETED</span>
                                 <?php else: ?>
                                     <span class="completed-badge badge me-2">COMPLETED</span>
@@ -56,7 +59,8 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
                             <?php endif; ?>
 
                         <?php elseif ($request['user_type'] === 'business'): ?>
-                            <!-- Display status badges and action buttons for businesses -->
+
+                            <!-- Business view: show accept/decline buttons if pending -->
                             <?php if ($request['status'] === 'pending'): ?>
                                 <button class="accept-btn btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#acceptRequestModal"
                                     data-request-id="<?= htmlspecialchars($request['request_id']) ?>"
@@ -83,15 +87,16 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
                             <?php endif; ?>
                         <?php endif; ?>
                     </div>
+
                 </div>
             <?php endforeach; ?>
         </div>
     </div>
-
 <?php endif; ?>
 
 <?php include_once 'accept_request_modal.php'; ?>
 <?php include_once 'decline_request_modal.php'; ?>
+
 
 <style>
     .time-stamp {
