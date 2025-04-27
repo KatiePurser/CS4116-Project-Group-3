@@ -58,8 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Create update query for user details
             $query = sprintf(
                 "UPDATE users SET first_name='%s', last_name='%s', email='%s' WHERE id='%d'",
-                $first_name,
-                $last_name,
+                htmlspecialchars($first_name, ENT_QUOTES, 'UTF-8'),
+                htmlspecialchars($last_name, ENT_QUOTES, 'UTF-8'),
                 $email,
                 $user_id
             );
@@ -392,8 +392,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php endif; ?>
                     </div>
 
-                    <h4 class="user-name"><?php echo htmlspecialchars($first_name . " " . $last_name); ?></h4>
-                    <p class="user-email"><?php echo htmlspecialchars($email); ?></p>
+                    <h4 class="user-name"><?php echo ($first_name . " " . $last_name); ?></h4>
+                    <p class="user-email"><?php echo ($email); ?></p>
                 </div>
             </div>
 
@@ -410,7 +410,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             class="alert <?= (strpos($messages[0], 'success') !== false) ? 'alert-success' : 'alert-danger' ?>">
                             <ul>
                                 <?php foreach ($messages as $message): ?>
-                                    <li><?php echo htmlspecialchars($message); ?></li>
+                                    <li><?php echo ($message); ?></li>
                                 <?php endforeach; ?>
                             </ul>
                         </div>
@@ -421,11 +421,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <form method="POST" action="user_profile.php" id="userDetailsForm">
         <input type="hidden" name="update_type" value="user_details">
         <input type="text" class="form-control mb-2" name="first_name"
-            value="<?php echo htmlspecialchars($first_name); ?>" placeholder="First Name">
+            value="<?php echo ($first_name); ?>" placeholder="First Name">
         <input type="text" class="form-control mb-2" name="last_name"
-            value="<?php echo htmlspecialchars($last_name); ?>" placeholder="Last Name">
+            value="<?php echo ($last_name); ?>" placeholder="Last Name">
         <input type="email" class="form-control mb-2" name="email"
-            value="<?php echo htmlspecialchars($email); ?>" placeholder="Email">
+            value="<?php echo ($email); ?>" placeholder="Email">
         <button class="btn btn-secondary" type="submit">Update User Details</button>
     </form>
 </div>

@@ -1,3 +1,4 @@
+<!-- Modal for submitting a service review -->
 <div class="modal fade" id="reviewModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content shadow-lg rounded-4">
@@ -10,11 +11,11 @@
             <form method="post" action="review.php">
                 <div class="modal-body px-5 py-4">
 
-                    <!-- Hidden fields -->
+                    <!-- Hidden inputs to pass service and request IDs -->
                     <input type="hidden" name="service_id" id="service-id">
                     <input type="hidden" name="request_id" id="request-id">
 
-                    <!-- Rating -->
+                    <!-- Star Rating Section -->
                     <div class="mb-3">
                         <label class="form-label d-block fw-semibold">Your Rating</label>
                         <div class="star-rating d-flex flex-row-reverse justify-content-center gap-1">
@@ -37,7 +38,7 @@
                         </div>
                     </div>
 
-                    <!-- Review Text -->
+                    <!-- Textarea for the review -->
                     <div class="mb-4">
                         <label for="review-text" class="form-label fw-semibold">Your Review</label>
                         <textarea class="form-control rounded-3 border" id="review-text" name="review" rows="4"

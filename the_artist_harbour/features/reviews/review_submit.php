@@ -1,1 +1,0 @@
-<!-- Submit a new review -->

@@ -16,38 +16,51 @@ class ServiceRequestHandler
     {
         // Cast to integer to avoid SQL injection
         $user_id = (int) $user_id;
-
         $sql = "
-                SELECT 
-                    sr.id AS request_id,
-                    sr.service_id,
-                    sr.created_at,
-                    sr.status,
-                    sr.min_price,
-                    sr.max_price,
-                    sr.reviewed,
-                    b.display_name,
-                    s.name AS service_name,
-                    u.user_type,
-                    cu.first_name AS customer_first_name,
-                    cu.last_name AS customer_last_name
-                FROM service_requests sr
-                LEFT JOIN businesses b ON sr.business_user_id = b.user_id
-                LEFT JOIN services s ON sr.service_id = s.id
-                LEFT JOIN users u ON u.id = $user_id
-                LEFT JOIN users cu ON sr.customer_user_id = cu.id
-                WHERE sr.customer_user_id = $user_id OR sr.business_user_id = $user_id
-                ORDER BY 
-                    CASE sr.status
-                        WHEN 'pending' THEN 0
-                        WHEN 'approved' THEN 1
-                        WHEN 'in progress' THEN 2
-                        WHEN 'completed' THEN 3
-                        WHEN 'declined' THEN 4
-                        ELSE 5 -- catch-all for unknown statuses
-                    END,
-                    sr.created_at DESC
-            ";
+        -- Select key fields related to a service request
+        SELECT 
+            sr.id AS request_id,
+            sr.service_id,
+            sr.created_at,
+            sr.status,
+            sr.min_price,
+            sr.max_price,
+            sr.reviewed,
+            b.display_name,
+            s.name AS service_name,
+            u.user_type,
+            cu.first_name AS customer_first_name,
+            cu.last_name AS customer_last_name
+            
+        FROM service_requests sr
+    
+        -- Join businesses table to get business display name
+        LEFT JOIN businesses b ON sr.business_user_id = b.user_id
+    
+        -- Join services table to get service name
+        LEFT JOIN services s ON sr.service_id = s.id
+    
+        -- Join users table to get the user type for the current user
+        LEFT JOIN users u ON u.id = $user_id
+    
+        -- Join users table again to get customer information
+        LEFT JOIN users cu ON sr.customer_user_id = cu.id
+    
+        -- Only select requests where the logged-in user is either the customer or business
+        WHERE sr.customer_user_id = $user_id OR sr.business_user_id = $user_id
+    
+        -- Order the results first by status priority (custom order), then by most recent
+        ORDER BY 
+            CASE sr.status
+                WHEN 'pending' THEN 0
+                WHEN 'approved' THEN 1
+                WHEN 'completed' THEN 2
+                WHEN 'declined' THEN 3
+                ELSE 4
+            END,
+            sr.created_at DESC
+    ";
+
 
 
 
@@ -99,6 +112,7 @@ class ServiceRequestHandler
         $business_id = $business_id_query[0]['business_id'];
         $business_user_id_query = DatabaseHandler::make_select_query("SELECT user_id FROM businesses WHERE id = $business_id ");
         $business_user_id = $business_user_id_query[0]['user_id'];
+        htmlspecialchars($message_text);
 
 
         // Inserting Service Request
@@ -129,6 +143,7 @@ class ServiceRequestHandler
      */
     private static function sendRequestMessage($sender_id, $receiver_id, $message_text): void
     {
+        htmlspecialchars($message_text);
         $sql = "CALL SendMessage($sender_id, $receiver_id, '$message_text', 'accepted')";
         $result = DatabaseHandler::make_modify_query($sql);
     }

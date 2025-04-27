@@ -5,15 +5,18 @@ session_start();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $service_id = $_POST['service_id'];
     $reviewer_id = $_SESSION['user_id'];
-    $text = $_POST['review'];
+    $text = htmlspecialchars($_POST['review']);
     $rating = $_POST['rating'];
     $request_id = $_POST['request_id'];
 
     $sql = "INSERT INTO reviews (service_id, reviewer_id, text, rating, created_at)
             VALUES ($service_id, $reviewer_id, '$text', $rating, NOW())";
+
     $result = DatabaseHandler::make_modify_query($sql);
 
+    // Query to mark the service request as reviewed
     $sql = "UPDATE service_requests SET reviewed = 1 WHERE id = $request_id";
+
     $result = DatabaseHandler::make_modify_query($sql);
 
     if ($result) {
