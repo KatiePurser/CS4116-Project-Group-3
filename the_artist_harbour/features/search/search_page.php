@@ -648,20 +648,91 @@ if ($_SESSION['user_type'] != 'customer') {
                     <?php if ($total_service_pages > 1){ ?>
                         <div class="pagination-container">
                             <ul class="pagination">
-                                <?php if ($page > 1){ ?>
-                                    <li><a href="?search=<?php echo $_GET['search']?>&page=<?php echo $page - 1; ?>">&laquo; Previous</a></li>
+                                <?php if ($page > 1){ 
+                                    $new_page = $page-1;
+                                    $search = $_GET['search'];
+                                    $url = "?search=$search&page=$new_page";
+                                    if(isset($_GET['min_price'])){
+                                        $min_price=$_GET['min_price'];
+                                        $url.="&min_price=$min_price";
+                                    };
+                                    if(isset($_GET['max_price'])){
+                                        $max_price=$_GET['max_price'];
+                                        $url.="&max_price=$max_price";
+                                    };
+                                    if(isset($_GET['rating'])){
+                                        $rating=$_GET['rating'];
+                                        $url.="&rating=$rating";
+                                    };
+                                    if(isset($_GET['filter'])){
+                                        $filter=$_GET['filter'];
+                                        $url.="&filter=$filter";
+                                    };
+                                    if(isset($_GET['tags'])){
+                                        $min_price=$_GET['tags'];
+                                        $url.="&tags=$tags";
+                                    }; ?>
+                                    <li><a href="<?php echo $url; ?>">&laquo; Previous</a></li>
                                 <?php } ?>
 
                                 <?php for ($i = 1; $i <= $total_service_pages; $i++){ ?>
                                     <li>
-                                        <a href="?search=<?php echo $_GET['search']?>&page=<?php echo $i; ?>" <?php echo $i === $page ? 'class="active"' : ''; ?>>
+                                        <?php 
+                                        $new_page = $i;
+                                        $search = $_GET['search'];
+                                        $url = "?search=$search&page=$new_page";
+                                        if(isset($_GET['min_price'])){
+                                            $min_price=$_GET['min_price'];
+                                            $url.="&min_price=$min_price";
+                                        };
+                                        if(isset($_GET['max_price'])){
+                                            $max_price=$_GET['max_price'];
+                                            $url.="&max_price=$max_price";
+                                        };
+                                        if(isset($_GET['rating'])){
+                                            $rating=$_GET['rating'];
+                                            $url.="&rating=$rating";
+                                        };
+                                        if(isset($_GET['filter'])){
+                                            $filter=$_GET['filter'];
+                                            $url.="&filter=$filter";
+                                        };
+                                        if(isset($_GET['tags'])){
+                                            $min_price=$_GET['tags'];
+                                            $url.="&tags=$tags";
+                                        };?>
+                                        <a href="<?php echo $url; ?>" <?php echo $i === $page ? 'class="active"' : ''; ?>>
                                             <?php echo $i; ?>
                                         </a>
                                     </li>
                                 <?php }; ?>
 
                                 <?php if ($page < $total_service_pages){ ?>
-                                    <li><a href="?search=<?php echo $_GET['search']?>&page=<?php echo $page + 1; ?>">Next &raquo;</a></li>
+                                    <?php 
+                                        $new_page = $page + 1;
+                                        $search = $_GET['search'];
+                                        $url = "?search=$search&page=$new_page";
+                                        if(isset($_GET['min_price'])){
+                                            $min_price=$_GET['min_price'];
+                                            $url.="&min_price=$min_price";
+                                        };
+                                        if(isset($_GET['max_price'])){
+                                            $max_price=$_GET['max_price'];
+                                            $url.="&max_price=$max_price";
+                                        };
+                                        if(isset($_GET['rating'])){
+                                            $rating=$_GET['rating'];
+                                            $url.="&rating=$rating";
+                                        };
+                                        if(isset($_GET['filter'])){
+                                            $filter=$_GET['filter'];
+                                            $url.="&filter=$filter";
+                                        };
+                                        if(isset($_GET['tags'])){
+                                            $min_price=$_GET['tags'];
+                                            $url.="&tags=$tags";
+                                        };?>
+                                    <li><a href="<?php echo $url; ?>">Next &raquo;</a></li>
                                 <?php }; ?>
                             </ul>
                         </div>
