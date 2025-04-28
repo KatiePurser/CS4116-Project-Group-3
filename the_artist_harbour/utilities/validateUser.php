@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) { // if a user is not logged in, bring them to
 if (BannedAndDeletedUsersHandler::hasUserWithEmailBeenDeleted($_SESSION['email'])) {
     $_SESSION = [];
     session_destroy();
-    print ("Sorry, your account have been deleted and cannot be used anymore.");
+    print ("Sorry, your account has been deleted and cannot be used anymore.");
     exit();
 }
 

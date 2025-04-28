@@ -1,29 +1,7 @@
 <?php
 
     class searchMethods{
-        public static function readCSV($csvFile){
-            $file_handle = fopen($csvFile, 'r');
-            while (!feof($file_handle) ) {
-                $line_of_text[] = fgetcsv($file_handle, 1024);
-            }
-            fclose($file_handle);
-            return $line_of_text;
-        }
-
-        public static function formatTags($tags){
-            $tags_array = explode("," , $tags);
-            $i=0;
-            $tags_return = "";
-            while($i<count($tags_array)){
-                $tags_return.=$tags_array[$i];
-                if($i<count($tags_array)-1){
-                    $tags_return.=", ";
-                }
-                $i++;
-            }
-            return $tags_return;
-        }
-
+        
         public static function getBusinessName($businesses, $business_id){
             $i=0;
             $cond=false;

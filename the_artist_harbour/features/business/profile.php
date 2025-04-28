@@ -2,13 +2,7 @@
 session_start();
 // Include the necessary files (for database connection, etc.)
 include_once __DIR__ . '/../../utilities/databaseHandler.php';
-
-
-// Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: /the_artist_harbour/features/registration-login/login.php");
-    exit();
-}
+require_once __DIR__ . '/../../utilities/validateUser.php';
 
 // Determine the business ID to display
 $business_id = null;
