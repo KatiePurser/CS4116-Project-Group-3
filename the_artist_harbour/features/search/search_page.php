@@ -173,8 +173,8 @@ if ($_SESSION['user_type'] != 'customer') {
             }
 
             .service-image {
-                /* height: 180px; */
                 height: fit-content;
+                max-height: 50vh;
                 background-color: #f0f0f0;
                 overflow: hidden;
             }
@@ -457,9 +457,10 @@ if ($_SESSION['user_type'] != 'customer') {
 
             <?php
             //SEARCH SERVICES BY KEYWORD
-            $sql = "SELECT * FROM services WHERE name LIKE '%{$keyword}%'";
-            echo $sql;
+            $safe_keyword = str_replace(['%', ''], ['\\%', '\\'], '%{$keyword}%');
 
+            $sql = "SELECT * FROM services WHERE name LIKE '$safe_keyword'";
+            
             //add a price min, max or range to the query
             if(isset($_GET['min_price'])){               
                 if($_GET['min_price']!="" && $_GET['max_price']!=""){
