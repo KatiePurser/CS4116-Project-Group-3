@@ -42,7 +42,7 @@ if ($_SESSION['user_type'] !== 'customer') {
             .home-heading {
                 text-align: center;
                 max-width: fit-content;
-                margin: 20px;
+                margin: auto;
                 margin-top: 10vh;
                 margin-bottom: 0;
                 padding-left: 2.5vw;
@@ -129,7 +129,8 @@ if ($_SESSION['user_type'] !== 'customer') {
             }
 
             .service-image {
-                height: fit-content;;
+                height: fit-content;
+                max-height: 50vh;
                 background-color: #f0f0f0;
                 overflow: hidden;
             }
@@ -344,8 +345,8 @@ if ($_SESSION['user_type'] !== 'customer') {
                                     <?php } ?>
                                 </div>
                                 <div class="service-details">
-                                    <h4><?php echo htmlspecialchars($service['name']); ?></h4>
-                                    <p><?php echo htmlspecialchars(searchMethods::getBusinessName($businesses, $service['business_id'])); ?></p>
+                                    <h4><?php echo ($service['name']); ?></h4>
+                                    <p><?php echo (searchMethods::getBusinessName($businesses, $service['business_id'])); ?></p>
                                     <?php if (!empty($service['tags'])){ ?>
                                         <div class="service-tags">
                                             <?php
