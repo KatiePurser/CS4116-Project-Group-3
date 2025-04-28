@@ -6,7 +6,7 @@
         $service_id=$_POST['service_id'];
         $reporter_id=$_POST['reporter_id'];
         $reported_id=$_POST['reported_id'];
-        $review_content=$_POST['review_content'];
+        $review_content=htmlspecialchars($_POST['review_content']);
         $review_id=$_POST['review_id'];
         $reason=htmlspecialchars($_POST['reason']);
 
