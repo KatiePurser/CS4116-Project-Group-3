@@ -457,9 +457,7 @@ if ($_SESSION['user_type'] != 'customer') {
 
             <?php
             //SEARCH SERVICES BY KEYWORD
-            $safe_keyword = str_replace(['%', ''], ['\\%', '\\'], '%{$keyword}%');
-
-            $sql = "SELECT * FROM services WHERE name LIKE '$safe_keyword'";
+            $sql = "SELECT * FROM services WHERE name LIKE '%{$keyword}%'";
             
             //add a price min, max or range to the query
             if(isset($_GET['min_price'])){               
