@@ -514,14 +514,19 @@ require_once(__DIR__ . "/review_report_modal.php");
                             </div>
 
                             <!-- Rating Summary -->
-                            <?php if ($num_reviews > 0): ?>
                                 <div class="mb-3">
                                     <div class="d-inline-block bg-light-purple rounded-pill px-3 py-2">
                                         <div class="d-flex align-items-center">
                                             <div class="stars me-2">
                                                 <?php
-                                                $full_stars = floor($service['reviews']);
-                                                $half_star = $service['reviews'] - $full_stars >= 0.5;
+                                                if ($num_reviews > 0){ 
+                                                    $reviews_stars = $service['reviews'];
+                                                } else{
+                                                    $reviews_stars = 0;
+                                                }
+
+                                                $full_stars = floor($reviews_stars);
+                                                $half_star = $reviews_stars - $full_stars >= 0.5;
                                                 $empty_stars = 5 - $full_stars - ($half_star ? 1 : 0);
 
                                                 for ($i = 0; $i < $full_stars; $i++) {
@@ -537,12 +542,16 @@ require_once(__DIR__ . "/review_report_modal.php");
                                                 }
                                                 ?>
                                             </div>
-                                            <span><?php echo number_format($service['reviews'], 1); ?> out of 5
-                                                (<?php echo $num_reviews; ?> reviews)</span>
+                                            <?php if($num_reviews > 0){ ?>
+                                                <span><?php echo number_format($reviews_stars, 1); ?> out of 5
+                                                    (<?php echo $num_reviews; ?> reviews)</span>
+                                            <?php } else {?>
+                                                <span><?php echo "Not yet reviewed" ?></span>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
-                            <?php endif; ?>
+                            
 
                             <div>
                                 <?php 
