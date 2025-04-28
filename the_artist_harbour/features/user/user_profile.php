@@ -2,8 +2,9 @@
 session_start();
 // Include the necessary files (for database connection, image handling, etc.)
 include_once __DIR__ . '/../../utilities/databaseHandler.php';
-include_once __DIR__ . '/../../utilities/imageHandler.php';  // Include the ImageHandler class
+include_once __DIR__ . '/../../utilities/imageHandler.php';  
 include_once __DIR__ . '/../../utilities/InputValidationHelper.php';
+require_once __DIR__ . '/../../utilities/validateUser.php';
 
 
 // Initialise error/success messages array
@@ -44,8 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Handle user details update
     if ($update_type === 'user_details' && isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['email'])) {
-        $first_name = filter_input(INPUT_POST, 'first_name', FILTER_SANITIZE_STRING);
-        $last_name = filter_input(INPUT_POST, 'last_name', FILTER_SANITIZE_STRING);
+        $first_name = htmlspecialchars(trim($_POST['first_name'] ?? ''), ENT_QUOTES, 'UTF-8');
+        $last_name = htmlspecialchars(trim($_POST['last_name'] ?? ''), ENT_QUOTES, 'UTF-8');
         $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
 
         // Check if any field is empty
@@ -56,13 +57,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $messages[] = "Please enter a valid email address!";
         } else {
             // Create update query for user details
-            $query = sprintf(
-                "UPDATE users SET first_name='%s', last_name='%s', email='%s' WHERE id='%d'",
-                htmlspecialchars($first_name, ENT_QUOTES, 'UTF-8'),
-                htmlspecialchars($last_name, ENT_QUOTES, 'UTF-8'),
-                $email,
-                $user_id
-            );
+           $query = sprintf(
+    "UPDATE users SET first_name='%s', last_name='%s', email='%s' WHERE id='%d'",
+    $first_name,
+    $last_name,
+    $email,
+    $user_id
+);
             if (DatabaseHandler::make_modify_query($query) === null) {
                 $messages[] = "Failed to update user details. Please try again.";
             } else {
@@ -493,6 +494,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script>
+  // check for slashes in input
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the name input fields
+    const firstNameInput = document.querySelector('input[name="first_name"]');
+    const lastNameInput = document.querySelector('input[name="last_name"]');
+    
+    // Function to check for backslashes
+    function checkForBackslashes(event) {
+        const input = event.target;
+        const value = input.value;
+        
+        if (value.includes('\\')) {
+            // Create or get the error message element
+            let errorMsg = input.nextElementSibling;
+            if (!errorMsg || !errorMsg.classList.contains('text-danger')) {
+                errorMsg = document.createElement('div');
+                errorMsg.className = 'text-danger small mt-1';
+                input.parentNode.insertBefore(errorMsg, input.nextSibling);
+            }
+            
+            // Set the error message
+            errorMsg.textContent = 'Backslashes (\\) are not allowed in names.';
+            
+            // Remove the backslash from the input
+            input.value = value.replace(/\\/g, '');
+        } else {
+            // Remove error message if it exists
+            const errorMsg = input.nextElementSibling;
+            if (errorMsg && errorMsg.classList.contains('text-danger')) {
+                errorMsg.remove();
+            }
+        }
+    }
+    
+    // Add event listeners to both name fields
+    if (firstNameInput) {
+        firstNameInput.addEventListener('input', checkForBackslashes);
+        firstNameInput.addEventListener('change', checkForBackslashes);
+    }
+    
+    if (lastNameInput) {
+        lastNameInput.addEventListener('input', checkForBackslashes);
+        lastNameInput.addEventListener('change', checkForBackslashes);
+    }
+});
+
+
         // Toggle password visibility
         function togglePasswordVisibility(inputId) {
             const passwordInput = document.getElementById(inputId);
