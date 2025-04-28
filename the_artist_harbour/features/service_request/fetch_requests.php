@@ -136,7 +136,7 @@ $requests = ServiceRequestHandler::retrieveRequests($_SESSION['user_id']);
     }
 
     .pending-badge {
-        background-color: #e69419;
+        background-color: #9b9999;
     }
 
     .completed-badge {
