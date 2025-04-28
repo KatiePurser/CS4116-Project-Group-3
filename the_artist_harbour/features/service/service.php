@@ -18,6 +18,8 @@ require_once(__DIR__ . "/serviceDetails.php");
 require_once(__DIR__ . "/insight_request_modal.php");
 require_once(__DIR__ . "/service_request_modal.php");
 require_once(__DIR__ . "/review_report_modal.php");
+
+    // Services data retrieval
     $service_id=$_GET["service_id"];
     $sql = "SELECT * FROM services WHERE id=$service_id";
     $result = DatabaseHandler::make_select_query($sql);
@@ -25,6 +27,30 @@ require_once(__DIR__ . "/review_report_modal.php");
     $sql="SELECT * FROM businesses WHERE id={$service['business_id']}";
     $result = DatabaseHandler::make_select_query($sql);
     $business = $result[0];
+
+
+    // Reviews data retrieval
+    $reviews_per_page = 5;
+    $review_page = isset($_GET['review_page']) ? (int) $_GET['review_page'] : 1;
+    $review_offset = ($review_page - 1) * $reviews_per_page;
+
+    $sql="SELECT * FROM reviews WHERE service_id=$service_id";
+    $num_reviews = count(DatabaseHandler::make_select_query($sql));
+    $total_review_pages = ceil($num_reviews / $reviews_per_page);
+
+    $sort_by = isset($_GET['sort']) ? $_GET['sort'] : 'newest';
+
+    if($num_reviews > 0){
+        if ($sort_by == "newest"){
+            $sql.=" ORDER BY created_at DESC";
+        } else if ($sort_by == "highest"){
+            $sql.=" ORDER BY rating DESC";
+        } else if ($sort_by == "lowest"){
+            $sql.=" ORDER BY rating ASC";
+        }
+        $sql.=" LIMIT $review_offset, $reviews_per_page";
+    }
+    $reviews = DatabaseHandler::make_select_query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -44,16 +70,21 @@ require_once(__DIR__ . "/review_report_modal.php");
 
         <style>
             .information {
-                margin-top: 2vh;
-                margin-left: 2vw;
-                margin-right:2vw;
-                margin-bottom: 3vh;
+                margin: 0;
                 height: fit-content;
+                width: 80vw;
                 max-height: fit-content;
                 display: flex;
                 justify-content: space-between;
                 align-items: flex-start;
                 margin-top: auto;
+                background-color: #ddd2f1;
+                border-radius: 10px;
+                padding: 20px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+                border: 1px solid #d1c2e9;
+                margin-bottom: 20px;
             }
 
             .info-container {
@@ -95,9 +126,12 @@ require_once(__DIR__ . "/review_report_modal.php");
                 padding-top: 1vh;
             }
 
-            .tags {
-                color: #777;
-                padding-bottom: 0.25vh;
+            .tag {
+                background-color: #e0d8f3;
+                color: #49375a;
+                padding: 3px 8px;
+                border-radius: 20px;
+                font-size: 0.8rem;
             }
 
             .description-container {
@@ -113,8 +147,7 @@ require_once(__DIR__ . "/review_report_modal.php");
                 padding:1%;
                 border: 10px solid #E2D4F0;
                 width: 40%;
-                height: fit-content;
-                max-height: 50%;
+                height: 100%;
                 border-radius: 2%;
                 justify-content: center;
             }
@@ -124,14 +157,11 @@ require_once(__DIR__ . "/review_report_modal.php");
                 max-height: 50vw;
             } 
 
-            .price-container {
-                width: 50%;
-            }
-
             .price {
-                margin: auto;
                 background-color: #E2D4F0;
                 border-radius: 1vw;
+                width: fit-content;
+                padding: 1%;
             }
 
             .service_request {
@@ -139,7 +169,6 @@ require_once(__DIR__ . "/review_report_modal.php");
             }
 
             .service-request-btn {
-                margin-top: 2vh;
                 color: white;
                 background-color: #82689A; 
                 border-width: 5px; 
@@ -147,11 +176,18 @@ require_once(__DIR__ . "/review_report_modal.php");
                 border-radius: 1vw;
             }
 
+            .service-request-btn:hover {
+                color: black;
+                background-color: #E2D4F0; 
+                border-color: #82689A;
+            }
+
             /* Center container with responsive padding */
             .center-container {
                 max-width: 1200px;
                 margin: 0 auto;
                 padding: 40px;
+                padding-top: 20px;
             }
 
 
@@ -159,13 +195,7 @@ require_once(__DIR__ . "/review_report_modal.php");
             @media (min-width: 768px) {
                 .center-container {
                     padding: 80px;
-                }
-
-                .price-and-request {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-top: auto;
+                    padding-top: 20px;
                 }
             }
 
@@ -173,6 +203,7 @@ require_once(__DIR__ . "/review_report_modal.php");
             @media (min-width: 992px) {
                 .center-container {
                     padding: 100px;
+                    padding-top: 20px;
                 }
 
                 .service-request-btn {
@@ -192,6 +223,7 @@ require_once(__DIR__ . "/review_report_modal.php");
                 .center-container {
                     max-width: 1320px;
                     padding: 100px;
+                    padding-top: 20px;
                 }
                 .service-request-btn {
                     font-size: 1.75vw;
@@ -209,6 +241,7 @@ require_once(__DIR__ . "/review_report_modal.php");
             @media (max-width: 768px) {
                 .center-container {
                     padding: 40px;
+                    padding-top: 20px;
                 }
 
                 .service_request {
@@ -234,11 +267,13 @@ require_once(__DIR__ . "/review_report_modal.php");
 
                 .price {
                     width: 100%;
+                    text-align: center;
                 }
             }
             
              /* Reviews Section */
             .reviews-section {
+                margin-top: 50px;
                 margin-bottom: 30px;
             }
 
@@ -433,102 +468,110 @@ require_once(__DIR__ . "/review_report_modal.php");
             <?php include __DIR__ . '/../../templates/header.php'; ?>
         </div>
 
-        <div class="information">
-            <div class="info-container justify-content-center">
-                <div class="name-container">
-                    <h1 class="name"><?php echo $service['name'] ?></h1>
-                    <?php
-                    $url = "../business/profile.php?business_id=".$business['id'];
-                    echo '<a class="business-button" href='.$url.'> from '. $business['display_name'] .'</a>'; ?>
-                </div>
-                <div class="description-and-tags">
-                    <div class="description-container">
-                        <h5 class="description-title">DESCRIPTION</h5>
-                        <h5 class="description"><?php echo $service['description'] ?></h5>
-                    </div>
-                    <div class="tags-container">
-                        <?php 
-                        $tags_string="";
-                        if($service['tags']!=NULL){
-                            $tags_string=="Tags: ";
-                            $tags=explode(",", $service['tags'], 25);
-                            $i=0;
-                            while($i<count($tags)){
-                                $tags_string.=$tags[$i];
-                                if($i!=count($tags)-1){
-                                    $tags_string.= ", ";
-                                }
-                                $i++;
-                            }
-                        } else { 
-                            $tags_string = "No Tags";
-                        } ?>
-                        <p class="tags"><?php echo "Tags: ".$tags_string ?></p>
-                    </div>
-                </div>
-                <div class="price-and-request">
-                    <div class="price-container">
-                        <?php 
-                        if($service['min_price']==NULL){ ?>
-                            <h3 class="price"> <?php echo "€".$service['max_price']; ?> </h3>
-                        <?php } else { ?>
-                            <h3 class="price"> <?php echo "€".$service['min_price']." - €".$service['max_price']; ?></h3>
-                        <?php }
-                        ?>
-                    </div>
-                    <div class="service_request">
-                        <?php if($_SESSION['user_type'] == 'customer') { 
-                            if($service['min_price'] == NULL){
-                                $min_price = '0';
-                            } else {
-                                $min_price = $service['min_price'];
-                            }?>
-                            <button type="button" class="btn service-request-btn p-0" data-bs-toggle="modal" data-bs-target="#serviceRequestModal"
-                                data-price-min="<?php echo $min_price ?>" data-price-max="<?php echo $service['max_price']?>" 
-                                data-service-id="<?php echo $service['id']?>" >
-                                Request Service
-                            </button>
-                        <?php } ?>
-                    </div>
-                </div>
-            </div>
-            <div class="image-container">
-                <?php
-                if(!empty($service['image'])){ ?>
-                    <img src="../business/get_serviceImage.php?id=<?= $service['id'] ?>" class="card-img-top image" alt="Service Image">
-                <?php }else{?>
-                    <img src="../../public/images/default.png" class="card-img-top image" alt="Default Image">
-                <?php }
-                ?>
-            </div>
-        </div>
-
-        <!-- Reviews -->
-         <?php 
-            $reviews_per_page = 5;
-            $review_page = isset($_GET['review_page']) ? (int) $_GET['review_page'] : 1;
-            $review_offset = ($review_page - 1) * $reviews_per_page;
-
-            $sql="SELECT * FROM reviews WHERE service_id=$service_id";
-            $num_reviews = count(DatabaseHandler::make_select_query($sql));
-            $total_review_pages = ceil($num_reviews / $reviews_per_page);
-
-            $sort_by = isset($_GET['sort']) ? $_GET['sort'] : 'newest';
-
-            if($num_reviews > 0){
-                if ($sort_by == "newest"){
-                    $sql.=" ORDER BY created_at DESC";
-                } else if ($sort_by == "highest"){
-                    $sql.=" ORDER BY rating DESC";
-                } else if ($sort_by == "lowest"){
-                    $sql.=" ORDER BY rating ASC";
-                }
-                $sql.=" LIMIT $review_offset, $reviews_per_page";
-            }
-            $reviews = DatabaseHandler::make_select_query($sql);
-         ?>
-
         <div class="center-container">
+
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <!-- Profile Image Column -->
+                        <div class="col-md-4 text-center mb-3 mb-md-0">
+                            <?php if (!empty($service['image'])): ?>
+                                <img src="../business/get_serviceImage.php?id=<?= $service['id'] ?>" class="card-img-top image" alt="Service Image">
+                            <?php else: ?>
+                                <img src="../../public/images/default.png" class="card-img-top image" alt="Default Image">
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Profile Info Column -->
+                        <div class="col-md-8">
+                            <h2 class="card-title text-purple"><?php echo ($service['name']); ?></h2>
+
+                            <?php
+                                $url = "../business/profile.php?business_id=".$business['id'];
+                                echo '<a class="business-button text-muted mb-2" href='.$url.'> from '. $business['display_name'] .'</a>'; 
+                            ?>
+                            
+                            <!-- Business Description -->
+                            <div class="mb-3">
+                                <p><?php echo ($service['description']); ?></p>
+                            </div>
+
+                            <div class="tags">
+                                <?php if (!empty($service['tags'])){ ?>
+                                    <div class="service-tags">
+                                        <?php
+                                        $tags = explode(',', $service['tags']);
+                                        foreach ($tags as $tag){
+                                            if (trim($tag) !== ''){
+                                                ?>
+                                                <span class="tag"><?php echo htmlspecialchars(trim($tag)); ?></span>
+                                                <?php
+                                            };
+                                        };
+                                        ?>
+                                    </div>
+                                <?php }; ?>
+                            </div>
+
+                            <!-- Rating Summary -->
+                            <?php if ($num_reviews > 0): ?>
+                                <div class="mb-3">
+                                    <div class="d-inline-block bg-light-purple rounded-pill px-3 py-2">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stars me-2">
+                                                <?php
+                                                $full_stars = floor($service['reviews']);
+                                                $half_star = $service['reviews'] - $full_stars >= 0.5;
+                                                $empty_stars = 5 - $full_stars - ($half_star ? 1 : 0);
+
+                                                for ($i = 0; $i < $full_stars; $i++) {
+                                                    echo '<i class="bi bi-star-fill"></i>';
+                                                }
+
+                                                if ($half_star) {
+                                                    echo '<i class="bi bi-star-half"></i>';
+                                                }
+
+                                                for ($i = 0; $i < $empty_stars; $i++) {
+                                                    echo '<i class="bi bi-star"></i>';
+                                                }
+                                                ?>
+                                            </div>
+                                            <span><?php echo number_format($service['reviews'], 1); ?> out of 5
+                                                (<?php echo $num_reviews; ?> reviews)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                            <div>
+                                <?php 
+                                if($service['min_price']==NULL){ ?>
+                                    <h3 class="mb-3 price"> <?php echo "€".$service['max_price']; ?> </h3>
+                                <?php } else { ?>
+                                    <h3 class="mb-3 price"> <?php echo "€".$service['min_price']." - €".$service['max_price']; ?></h3>
+                                <?php }
+                                ?>
+                            </div>
+                            <div class="service_request">
+                                <?php if($_SESSION['user_type'] == 'customer') { 
+                                    if($service['min_price'] == NULL){
+                                        $min_price = '0';
+                                    } else {
+                                        $min_price = $service['min_price'];
+                                    }?>
+                                    <button type="button" class="btn service-request-btn" data-bs-toggle="modal" data-bs-target="#serviceRequestModal"
+                                        data-price-min="<?php echo $min_price ?>" data-price-max="<?php echo $service['max_price']?>" 
+                                        data-service-id="<?php echo $service['id']?>" >
+                                        Request Service
+                                    </button>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div> 
+                </div>   
+            </div>
+
             <div class="reviews-section">
                 <div class="reviews-header">
                     <?php if ($num_reviews > 0){ ?>
