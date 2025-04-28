@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/registration-login/login.php");
+    header("Location: /the_artist_harbour/features/registration-login/login.php");
     exit();
 }
 
@@ -430,9 +430,7 @@ if ($_SESSION['user_type'] !== 'customer') {
                 </div>
 
                 <div class="modal-body px-5 py-4">
-                    <form
-                        action="/CS4116-Project-Group-3/the_artist_harbour/features/service/submit_service_request.php"
-                        method="get">
+                    <form action="/the_artist_harbour/features/service/submit_service_request.php" method="get">
                         <!-- hidden inputs -->
                         <input type="hidden" name="sender_id" id="sender_id"
                             value="<?php echo $_SESSION['user_id']; ?>">

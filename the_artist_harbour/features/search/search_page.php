@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /CS4116-Project-Group-3/the_artist_harbour/features/registration-login/login.php");
+    header("Location: /the_artist_harbour/features/registration-login/login.php");
     exit();
 }
 
@@ -389,15 +389,13 @@ if ($_SESSION['user_type'] != 'customer') {
             <div class="price-range">
                 <div class="min-price">
                     <label for="min_price">Minimum Price:</label>
-                    <input type="number" name="min_price" id="min_price"
-                        value="<?php if (isset($_GET['min_price']))
-                            echo "{$_GET['min_price']}"; ?>">
+                    <input type="number" name="min_price" id="min_price" value="<?php if (isset($_GET['min_price']))
+                        echo "{$_GET['min_price']}"; ?>">
                 </div>
                 <div class="max-price">
                     <label for="max_price">Maximum Price:</label>
-                    <input type="number" name="max_price" id="max_price"
-                        value="<?php if (isset($_GET['max_price']))
-                            echo "{$_GET['max_price']}"; ?>">
+                    <input type="number" name="max_price" id="max_price" value="<?php if (isset($_GET['max_price']))
+                        echo "{$_GET['max_price']}"; ?>">
                 </div>
             </div>
             <!-- apply a desired rating -->
@@ -757,11 +755,10 @@ if ($_SESSION['user_type'] != 'customer') {
                 </div>
 
                 <div class="modal-body px-5 py-4">
-                    <form
-                        action="/CS4116-Project-Group-3/the_artist_harbour/features/service/submit_service_request.php"
-                        method="get">
+                    <form action="/the_artist_harbour/features/service/submit_service_request.php" method="get">
                         <!-- hidden inputs -->
-                        <input type="hidden" name="sender_id" id="sender_id" value="<?php echo $_SESSION['user_id']; ?>">
+                        <input type="hidden" name="sender_id" id="sender_id"
+                            value="<?php echo $_SESSION['user_id']; ?>">
                         <input type="hidden" name="price_min" id="priceMin">
                         <input type="hidden" name="price_max" id="priceMax">
                         <input type="hidden" name="service_id" id="serviceId">
