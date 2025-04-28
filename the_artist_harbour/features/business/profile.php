@@ -1041,11 +1041,15 @@ require_once(__DIR__ . "/../service/review_report_modal.php");
                                             }
                                             ?>
                                         </div>
-                                        <?php if (!isset($is_own_profile) || !$is_own_profile): // Only show request button if not the owner ?>
+                                        <?php if (!isset($is_own_profile) || !$is_own_profile): // Only show request button if not the owner 
+                                            if($service['min_price'] == NULL){
+                                                $min_price = '0';
+                                            } else {
+                                                $min_price = $service['min_price'];
+                                            }?>
                                             <button type="button" class="btn btn-purple request-btn" data-bs-toggle="modal"
-                                                data-bs-target="#serviceRequestModal" data-service-id="<?= $service['id'] ?>"
-                                                data-price-final="<?= isset($service['max_price']) ? $service['max_price'] : '0' ?>"
-                                                data-business-user-id="<?= $business['user_id'] ?>"
+                                                data-bs-target="#serviceRequestModal" data-price-min="<?php echo $min_price ?>" 
+                                                data-price-max="<?php echo $service['max_price']?>" data-service-id="<?php echo $service['id'] ?>"
                                                 onclick="event.preventDefault(); event.stopPropagation();">
                                                 <i class="bi bi-calendar-check me-1"></i> Request
                                             </button>
@@ -1242,6 +1246,64 @@ require_once(__DIR__ . "/../service/review_report_modal.php");
                 <p>No reviews yet.</p>
             <?php endif; ?>
         </div>
+
+        <!-- Service Request Modal -->
+        <div id="serviceRequestModal" class="modal fade" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content shadow-lg rounded-4">
+                    <div class="modal-header text-white rounded-top-4">
+                        <h5 class="modal-title" id="serviceRequestModalLabel">Request Service</h5>
+                        <button class="btn-close btn-close-white me-2" data-bs-dismiss="modal" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body px-5 py-4">
+                        <form action="/../service/submit_service_request.php" method="get">
+                            <!-- hidden inputs -->
+                            <input type="hidden" name="sender_id" id="sender_id" value="<?php echo $_SESSION['user_id'];?>">
+                            <input type="hidden" name="price_min" id="priceMin">
+                            <input type="hidden" name="price_max" id="priceMax">
+                            <input type="hidden" name="service_id" id="serviceId">
+
+                            <div class="mb-4">
+                                <label for="message" class="form-label fw-semibold">Message</label>
+                                <textarea class="form-control rounded-3 border" id="message" name="message" rows="4"
+                                    placeholder="Please add any extra details or requests here..." required></textarea>
+                            </div>
+
+                            <div class="modal-footer d-flex justify-content-between border-0 px-0">
+                                <button type="button" class="btn btn-outline-secondary px-4"
+                                    data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="submit-btn btn px-4">Send Service Request</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Service Request Script -->
+        <script>
+            var serviceRequestModal = document.getElementById('serviceRequestModal')
+
+            serviceRequestModal.addEventListener('show.bs.modal', function (event) {
+                // Get the button that triggered the modal
+                var button = event.relatedTarget;
+
+                // Extract data attributes from the button (message ID and reported user ID)
+                var priceMin = button.getAttribute('data-price-min');
+                var priceMax = button.getAttribute('data-price-max');
+                var serviceId = button.getAttribute('data-service-id');
+
+                var modalPriceMin = serviceRequestModal.querySelector('#priceMin');
+                var modalPriceMax = serviceRequestModal.querySelector('#priceMax');
+                var modalServiceId = serviceRequestModal.querySelector('#serviceId');
+                
+                modalPriceMin.value = priceMin;
+                modalPriceMax.value = priceMax;
+                modalServiceId.value = serviceId;
+                
+            });
+        </script>   
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
